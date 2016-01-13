@@ -15,7 +15,7 @@ int counterInSeq=0;
 /* uncomment only one platform target identifier */
 
 //#define WINDOWSGUI
-#define WINDOWSCONSOLE
+//#define WINDOWSCONSOLE
 //#define UNIXCONSOLE
 //#define UNIXGUI
 
@@ -23,6 +23,12 @@ int counterInSeq=0;
 #if (defined(WINDOWSGUI)+defined(WINDOWSCONSOLE)+defined(UNIXGUI)+\
 		defined(UNIXCONSOLE))>1
 #error Only one Platform can be defined in tr30dat.h
+#endif
+
+/* make sure at least one platform is defined */
+#if (defined(WINDOWSGUI)+defined(WINDOWSCONSOLE)+defined(UNIXGUI)+\
+		defined(UNIXCONSOLE))==0
+#error At least one Platform can be defined in tr30dat.h
 #endif
 
 #ifdef UNIXCONSOLE
