@@ -86,7 +86,10 @@ int counterInSeq=0;
 /* #define MAXWRAPLENGTHCONST 500000 */
 /* 11/17/15 G. Benson */
 /* makeMAXWRAPLENGTHCONST longer to accomodate long centromeric repeats */
-#define MAXWRAPLENGTHCONST 5000000
+/* #define MAXWRAPLENGTHCONST 5000000 */
+/* 01/13/16 Y. Hernandez */
+/* makeMAXWRAPLENGTHCONST longer to accomodate longer repeat in Human chr 18, HG38 */
+#define MAXWRAPLENGTHCONST 10000000
 int MAXWRAPLENGTH = 0;
 
 /* Added by Yevgeniy Gelfand on Jan 27, 2010  */
