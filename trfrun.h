@@ -24,6 +24,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* Added by Yozen to explicitly include header for windows GUI definitons on Jan 25, 2016 */
+#ifdef WINDOWSGUI
+ #include <windef.h>
+#endif
+
 /* These declarations moved by Yevgeniy Gelfand on Jan 27, 2010  */
 /* To have smaller sequences not send results */
 /* to disc to improve performance             */
