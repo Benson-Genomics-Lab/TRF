@@ -26,7 +26,9 @@
 
 /* Added by Yozen to explicitly include header for windows GUI definitons on Jan 25, 2016 */
 #ifdef WINDOWSGUI
+ #include <windows.h>
  #include <windef.h>
+ #include <winuser.h>
 #endif
 
 /* These declarations moved by Yevgeniy Gelfand on Jan 27, 2010  */
