@@ -1,16 +1,16 @@
 VERSION       	= 409
 C_SRCS        	= trf.c
-C_FLAGS       	= -O2
-C_FLAGS_DEBUG 	= -O2 -ggdb -DDEBUG
+CFLAGS       	= -O2
+CFLAGS_DEBUG 	= -ggdb -DDEBUG
 LD_FLAGS      	= -lm
 UNIX_DEFINES  	= -DUNIXCONSOLE
 WIN_DEFINES   	= -DWINDOWSGUI
 DOS_DEFINES     = -DWINDOWSCONSOLE
-C_FLAGS_LINUX64 = -m64
-C_FLAGS_LINUX32 = -m32
-C_FLAGS_WINGUI  = -mwin32 -mwindows
-C_FLAGS_WINCMD  = -mwin32 -mconsole
-C_FLAGS_APPLE   = -arch x86_64 -arch i386 -arch ppc64 -arch ppc
+CFLAGS_LINUX64  = -m64
+CFLAGS_LINUX32  = -m32
+CFLAGS_WINGUI   = -mwin32 -mwindows
+CFLAGS_WINCMD   = -mwin32 -mconsole
+CFLAGS_APPLE    = -arch x86_64 -arch i386 -arch ppc64 -arch ppc
 TRF_SRCS      	= tr30dat.c tr30dat.h trf.c trfclean.h trfrun.h
 TRF_EXE       	= trf$(VERSION).$@.exe
 WINGUI_CHECK    = win32-gui/trf.c \
@@ -38,28 +38,28 @@ win: win64 win32
 dos: dos64 dos32
 
 linux64: $(TRF_SRCS)
-	gcc $(C_FLAGS) $(C_FLAGS_LINUX64) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	gcc $(CFLAGS) $(CFLAGS_LINUX64) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
 
 linux32: $(TRF_SRCS)
-	gcc $(C_FLAGS) $(C_FLAGS_LINUX32) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	gcc $(CFLAGS) $(CFLAGS_LINUX32) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
 
 win64: $(TRF_SRCS)
-	x86_64-w64-mingw32-gcc $(C_FLAGS) $(C_FLAGS_WINGUI) $(WIN_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	x86_64-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINGUI) $(WIN_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
 
 win32: $(TRF_SRCS)
-	i686-pc-mingw32-gcc $(C_FLAGS) $(C_FLAGS_WINGUI) $(WIN_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	i686-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINGUI) $(WIN_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
 
 dos64: $(TRF_SRCS)
-	x86_64-w64-mingw32-gcc $(C_FLAGS) $(C_FLAGS_WINCMD) $(DOS_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	x86_64-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINCMD) $(DOS_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
 
 dos32: $(TRF_SRCS)
-	i686-pc-mingw32-gcc $(C_FLAGS) $(C_FLAGS_WINCMD) $(DOS_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	i686-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINCMD) $(DOS_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
 
 mac: $(TRF_SRCS)
-	gcc $(C_FLAGS) $(C_FLAGS_APPLE) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	gcc $(CFLAGS) $(CFLAGS_APPLE) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
 
 win_gui: trf.c trf.h trfdlg.h trfcomm.h trffile.h trfrun.h trfini.h tr30dat.c tr30dat.h trfclean.h dirdlg.h
 win_res: trf.h trf.ico toolbar.bmp trf.rc
 
-clean: *.o trf*.exe
-	rm *.o trf*.exe
+clean: *.o trf*.exe debug build
+	rm -r *.o trf*.exe debug build
