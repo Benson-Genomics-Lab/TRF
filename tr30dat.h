@@ -95,7 +95,7 @@ int counterInSeq=0;
 /* 01/26/16 Y. Hernandez */
 /* Let MAXWRAPLENGTHCONST be definable on the command line. Easier to update without changing source. */
 #ifndef MAXWRAPLENGTHCONST
-#define MAXWRAPLENGTHCONST 20000000
+#define MAXWRAPLENGTHCONST 10000000
 #endif
 int MAXWRAPLENGTH = 0;
 
