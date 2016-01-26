@@ -617,8 +617,9 @@ void TRF(FASTASEQUENCE* pseq)
 		PrintError("Unable to allocate memory for S array");
 		exit(-1);
 	}
-	stemp = (int *) malloc(((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(int));
-	memset(stemp,0,((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(int));
+	// stemp = (int *) malloc(((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(int));
+	stemp = (int *) calloc(((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)), sizeof(int));
+	// memset(stemp,0,((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(int));
 	if(stemp==NULL)
 	{
 		PrintError("Unable to allocate memory for stemp array");
