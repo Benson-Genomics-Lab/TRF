@@ -1,8 +1,11 @@
+# TODO Handle debug/release build directories to not pollute source directory
+# TODO Windows GUI version (maybe move to something like Qt to be cross-platform?)
+
 VERSION       	= 409
 C_SRCS        	= trf.c
 CFLAGS       	= -O2
 CFLAGS_DEBUG 	= -ggdb -DDEBUG
-LD_FLAGS      	= -lm
+LDFLAGS      	= -lm
 UNIX_DEFINES  	= -DUNIXCONSOLE
 WIN_DEFINES   	= -DWINDOWSGUI
 DOS_DEFINES     = -DWINDOWSCONSOLE
@@ -38,25 +41,25 @@ win: win64 win32
 dos: dos64 dos32
 
 linux64: $(TRF_SRCS)
-	gcc $(CFLAGS) $(CFLAGS_LINUX64) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	gcc $(CFLAGS) $(CFLAGS_LINUX64) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LDFLAGS)
 
 linux32: $(TRF_SRCS)
-	gcc $(CFLAGS) $(CFLAGS_LINUX32) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	gcc $(CFLAGS) $(CFLAGS_LINUX32) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LDFLAGS)
 
 win64: $(TRF_SRCS)
-	x86_64-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINGUI) $(WIN_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	x86_64-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINGUI) $(WIN_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LDFLAGS)
 
 win32: $(TRF_SRCS)
-	i686-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINGUI) $(WIN_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	i686-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINGUI) $(WIN_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LDFLAGS)
 
 dos64: $(TRF_SRCS)
-	x86_64-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINCMD) $(DOS_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	x86_64-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINCMD) $(DOS_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LDFLAGS)
 
 dos32: $(TRF_SRCS)
-	i686-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINCMD) $(DOS_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	i686-w64-mingw32-gcc $(CFLAGS) $(CFLAGS_WINCMD) $(DOS_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LDFLAGS)
 
 mac: $(TRF_SRCS)
-	gcc $(CFLAGS) $(CFLAGS_APPLE) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LD_FLAGS)
+	gcc $(CFLAGS) $(CFLAGS_APPLE) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LDFLAGS)
 
 win_gui: trf.c trf.h trfdlg.h trfcomm.h trffile.h trfrun.h trfini.h tr30dat.c tr30dat.h trfclean.h dirdlg.h
 win_res: trf.h trf.ico toolbar.bmp trf.rc

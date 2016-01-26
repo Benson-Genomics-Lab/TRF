@@ -92,7 +92,11 @@ int counterInSeq=0;
 /* #define MAXWRAPLENGTHCONST 10000000 */
 /* 01/22/16 Y. Hernandez */
 /* make MAXWRAPLENGTHCONST longer to accomodate longer repeat in Human chr 18, HG38 */
+/* 01/26/16 Y. Hernandez */
+/* Let MAXWRAPLENGTHCONST be definable on the command line. Easier to update without changing source. */
+#ifndef MAXWRAPLENGTHCONST
 #define MAXWRAPLENGTHCONST 20000000
+#endif
 int MAXWRAPLENGTH = 0;
 
 /* Added by Yevgeniy Gelfand on Jan 27, 2010  */

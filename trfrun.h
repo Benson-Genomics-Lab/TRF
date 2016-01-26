@@ -618,11 +618,15 @@ void TRF(FASTASEQUENCE* pseq)
 		exit(-1);
 	}
 	// stemp = (int *) malloc(((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(int));
-	stemp = (int *) calloc(((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)), sizeof(int));
 	// memset(stemp,0,((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(int));
+	/* Yozen Jan 26, 2016: We control the compilation and we're going to be using C99
+	or greater standard C; don't need to cast, and we can use the pointer to determine the size.
+	Also, use calloc instead of malloc+memset. */
+	stemp = calloc(((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)), sizeof(*stemp));
 	if(stemp==NULL)
 	{
 		PrintError("Unable to allocate memory for stemp array");
+		// printf("Unable to allocate %lu bytes for stemp array (%s:%d)\n", ((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
 		exit(-1);
 	}
 	for(i=0;i<=MAXWRAPLENGTH;i++)
