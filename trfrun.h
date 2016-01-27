@@ -626,7 +626,7 @@ void TRF(FASTASEQUENCE* pseq)
 	if(stemp==NULL)
 	{
 		// PrintError("Unable to allocate memory for stemp array");
-		printf("Unable to allocate %u bytes for stemp array (%s:%d)\n", ((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
+		fprintf(stderr, "Unable to allocate %u bytes for stemp array (%s:%d)\n", ((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
 		exit(-1);
 	}
 	for(i=0;i<=MAXWRAPLENGTH;i++)
