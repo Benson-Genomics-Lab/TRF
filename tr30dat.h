@@ -28,7 +28,7 @@ int counterInSeq=0;
 /* make sure at least one platform is defined */
 #if (defined(WINDOWSGUI)+defined(WINDOWSCONSOLE)+defined(UNIXGUI)+\
 		defined(UNIXCONSOLE))==0
-#error At least one Platform can be defined in tr30dat.h
+#error At least one Platform must be defined in tr30dat.h
 #endif
 
 #ifdef UNIXCONSOLE
