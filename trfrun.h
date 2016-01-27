@@ -625,9 +625,9 @@ void TRF(FASTASEQUENCE* pseq)
 	stemp = calloc(((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)), sizeof(*stemp));
 	if(stemp==NULL)
 	{
-		// PrintError("Unable to allocate memory for stemp array");
-		fprintf(stderr, "Size of stemp: %lu, MAXWRAPLENGTH: %u, MAXBANDWIDTH: %u, product of MAXs: %u\n", sizeof(*stemp), MAXWRAPLENGTH, MAXBANDWIDTH, (MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1));
-		fprintf(stderr, "Unable to allocate %lu bytes for stemp array (%s:%d)\n", ((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
+		char errmsg[255];
+		snprintf(errmsg, 255, "Unable to allocate %lu bytes for stemp array (%s:%d)\n", ((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
+		PrintError(errmsg);
 		exit(-1);
 	}
 	for(i=0;i<=MAXWRAPLENGTH;i++)
