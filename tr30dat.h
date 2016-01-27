@@ -97,7 +97,7 @@ int counterInSeq=0;
 #ifndef MAXWRAPLENGTHCONST
 #define MAXWRAPLENGTHCONST 10000000
 #endif
-int MAXWRAPLENGTH = 0;
+unsigned int MAXWRAPLENGTH = 0;
 
 /* Added by Yevgeniy Gelfand on Jan 27, 2010  */
 /* To have smaller sequences not send results */
