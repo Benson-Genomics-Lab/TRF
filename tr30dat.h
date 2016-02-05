@@ -436,6 +436,7 @@ typedef struct
 	int flankinglength;
 	int HTMLoff;
 	int redundoff;
+	int maxwraplength;
 	int ngs;
 	int use_stdin;
 
