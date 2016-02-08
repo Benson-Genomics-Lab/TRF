@@ -319,11 +319,47 @@ double Cell_total, Wasted_total;
 #define GLOBAL 0
 #define LOCAL 1
 
+
+typedef struct
+{
+	int match;
+	int mismatch;
+	int indel;
+	int minscore;
+	int maxperiod;
+	int PM;
+	int PI;
+	int datafile;
+	int maskedfile;
+	int flankingsequence;
+	int flankinglength;
+	int HTMLoff;
+	int redundoff;
+	int ngs;
+	int use_stdin;
+	unsigned int maxwraplength;
+
+	char inputfilename[_MAX_PATH]; /* constant defined in stdlib */
+	char outputprefix[_MAX_PATH];
+	char outputdirectory[_MAX_PATH];
+	char outputfilename[_MAX_PATH];
+	int  multisequencefile; /* flags if file has more than one sequence */
+	int  sequenceordinal; /* holds seq. index starting on 1 */
+	int  outputcount; /* repeats found */
+	int guihandle; /* this variable is only used in the GUI version */
+	int  running;
+	int  endstatus;
+	int  percent;
+} TRFPARAMSET;
+
+TRFPARAMSET paramset; /* this global controls the algorithm */
+
 /* G. Benson */
 /* 1/26/10 */
 /* change MAXWRAPLENGTH to MAXWRAPLENGTHCONST so MAXWRAPLENGTH can be used as an int */
 /* int Bandcenter[MAXWRAPLENGTH+1]; */
-int Bandcenter[paramset.maxwraplength+1];
+// int Bandcenter[paramset.maxwraplength+1];
+int *Bandcenter = NULL;
 
 /* version 2A changes this */
 /* int S[MAXWRAPLENGTH+1][MAXDISTANCE+1];*/
@@ -426,39 +462,6 @@ int print_flanking=0;
 #define CTRL_BADFORMAT  -2
 #define CTRL_NOTHINGPROCESSED  -3
 
-typedef struct
-{
-	int match;
-	int mismatch;
-	int indel;
-	int minscore;
-	int maxperiod;
-	int PM;
-	int PI;
-	int datafile;
-	int maskedfile;
-	int flankingsequence;
-	int flankinglength;
-	int HTMLoff;
-	int redundoff;
-	int maxwraplength;
-	int ngs;
-	int use_stdin;
-
-	char inputfilename[_MAX_PATH]; /* constant defined in stdlib */
-	char outputprefix[_MAX_PATH];
-	char outputdirectory[_MAX_PATH];
-	char outputfilename[_MAX_PATH];
-	int  multisequencefile; /* flags if file has more than one sequence */
-	int  sequenceordinal; /* holds seq. index starting on 1 */
-	int  outputcount; /* repeats found */
-	int guihandle; /* this variable is only used in the GUI version */
-	int  running;
-	int  endstatus;
-	int  percent;
-} TRFPARAMSET;
-
-
 /* the following structure is used to pass a sequence to the algorithm */
 #define MAXSEQNAMELEN 200
 
@@ -472,7 +475,6 @@ typedef struct
 
 } FASTASEQUENCE;
 
-TRFPARAMSET paramset; /* this global controls the algorithm */
 
 void trf_message(char *format, ... )   { 
 

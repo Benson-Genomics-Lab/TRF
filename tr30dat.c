@@ -167,7 +167,13 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 	/*** 6/9/05 G. Benson ***/ 
 	int mincolbandcenter,zeroat,mincolposition;
 
-
+	/* G. Benson */
+	/* 1/26/10 */
+	/* change MAXWRAPLENGTH to MAXWRAPLENGTHCONST so MAXWRAPLENGTH can be used as an int */
+	/* int Bandcenter[MAXWRAPLENGTH+1]; */
+	if (Bandcenter == NULL) {
+		Bandcenter = calloc(paramset.maxwraplength+1, sizeof(*Bandcenter));
+	}
 
 	w=bandradius;
 	if(MAXBANDWIDTH<2*w+1)
@@ -412,7 +418,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 
 		/* compute until end of trace */      
 		end_of_trace=FALSE;  
-		while ((!end_of_trace) && (realr<Length) && (r<MAXWRAPLENGTH))
+		while ((!end_of_trace) && (realr<Length) && (r<paramset.maxwraplength))
 		{
 			r++;
 			realr++;

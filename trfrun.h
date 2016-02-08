@@ -145,6 +145,7 @@ int TRFControlRoutine(void)
 		PrintError("Error while loading sequence");
 		paramset.endstatus = CTRL_BADFORMAT; /* ok for now */
 		paramset.running = 0;
+		fclose(srcfp);
 		return CTRL_BADFORMAT;
 	}
 
@@ -626,7 +627,11 @@ void TRF(FASTASEQUENCE* pseq)
 	if(stemp==NULL)
 	{
 		char errmsg[255];
+		#if __x86_64__
 		snprintf(errmsg, 255, "Unable to allocate %lu bytes for stemp array (%s:%d)\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
+		#else
+		snprintf(errmsg, 255, "Unable to allocate %u bytes for stemp array (%s:%d)\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
+		#endif
 		PrintError(errmsg);
 		exit(-1);
 	}
