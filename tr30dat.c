@@ -1,6 +1,7 @@
 #ifndef TR30DAT_C
 #define TR30DAT_C
 
+#include <stdlib.h> /* has calloc definition */
 #include <math.h>
 
 
@@ -185,7 +186,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 	/* backward wdp */
 	maxscore=0;
 	realr=start+1;
-	r=MAXWRAPLENGTH;
+	r=paramset.maxwraplength;
 	Bandcenter[r]=0;
 	matches_in_diagonal=0;
 	matchatmax_col=-2;
@@ -588,7 +589,7 @@ void newwrap(int start, int size, int consensuspresent)
 	/* backward wdp */
 	maxscore=0;
 	realr=start+1;
-	r=MAXWRAPLENGTH;
+	r=paramset.maxwraplength;
 
 	adjlength=size-1;
 	adjmone=adjlength-1;
@@ -683,7 +684,7 @@ void newwrap(int start, int size, int consensuspresent)
 	}
 
 	end_of_trace=FALSE;  
-	while ((!end_of_trace) && (realr<Length) && (r<MAXWRAPLENGTH))
+	while ((!end_of_trace) && (realr<Length) && (r<paramset.maxwraplength))
 	{
 		r++;
 		realr++;
@@ -773,7 +774,7 @@ void newwrap(int start, int size, int consensuspresent)
 		}
 
 		end_of_trace=FALSE;  
-		while ((!end_of_trace) && (realr<Length) && (r<MAXWRAPLENGTH))
+		while ((!end_of_trace) && (realr<Length) && (r<paramset.maxwraplength))
 		{
 			r++;
 			realr++;

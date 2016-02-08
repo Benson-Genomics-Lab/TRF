@@ -26,7 +26,7 @@ int main(int ac, char** av)
 	paramset.flankinglength = 500;
 	paramset.HTMLoff = 0;
 	paramset.redundoff = 0;
-	paramset.maxwraplength = 0;
+	paramset.maxwraplength = 2000000;
 	paramset.ngs = 0;
 
 	if(ac==10 || ac==11 || ac==12 || ac==13 || ac==14 || ac==15 || ac==16) {
@@ -58,18 +58,8 @@ int main(int ac, char** av)
 						else if(!strcmp(av[11],"-l") || !strcmp(av[11],"-L")) paramset.maxwraplength=1;
 							else if(!strcmp(av[11],"-ngs") || !strcmp(av[11],"-Ngs") || !strcmp(av[11],"-NGS") || !strcmp(av[11],"-N") || !strcmp(av[11],"-n")) paramset.ngs=1;
 								else ac=30; /* to force error message */
-	} // TODO finish updating for new option: needs to scan from 13 to 16, all indexes in block are 12, not 11 (and so on for next blocks)
-	if(ac==12 || ac==13 || ac==14 || ac==15) {
-		if(!strcmp(av[11],"-m") || !strcmp(av[11],"-M")) paramset.maskedfile=1;
-		else if(!strcmp(av[11],"-f") || !strcmp(av[11],"-F")) paramset.flankingsequence=1;
-			else if(!strcmp(av[11],"-d") || !strcmp(av[11],"-D")) paramset.datafile=1;
-				else if(!strcmp(av[11],"-h") || !strcmp(av[11],"-H")) paramset.HTMLoff=1;
-					else if(!strcmp(av[11],"-r") || !strcmp(av[11],"-R")) paramset.redundoff=1;
-						else if(!strcmp(av[11],"-l") || !strcmp(av[11],"-L")) paramset.maxwraplength=1;
-							else if(!strcmp(av[11],"-ngs") || !strcmp(av[11],"-Ngs") || !strcmp(av[11],"-NGS") || !strcmp(av[11],"-N") || !strcmp(av[11],"-n")) paramset.ngs=1;
-								else ac=30; /* to force error message */
 	}
-	if(ac==13 || ac==14 || ac==15) {
+	if(ac==13 || ac==14 || ac==15 || ac==16) {
 		if(!strcmp(av[12],"-m") || !strcmp(av[12],"-M")) paramset.maskedfile=1;
 		else if(!strcmp(av[12],"-f") || !strcmp(av[12],"-F")) paramset.flankingsequence=1;
 			else if(!strcmp(av[12],"-d") || !strcmp(av[12],"-D")) paramset.datafile=1;
@@ -79,7 +69,7 @@ int main(int ac, char** av)
 							else if(!strcmp(av[12],"-ngs") || !strcmp(av[12],"-Ngs") || !strcmp(av[12],"-NGS") || !strcmp(av[12],"-N") || !strcmp(av[12],"-n")) paramset.ngs=1;
 								else ac=30; /* to force error message */
 	}
-	if(ac==14 || ac==15) {
+	if(ac==14 || ac==15 || ac==16) {
 		if(!strcmp(av[13],"-m") || !strcmp(av[13],"-M")) paramset.maskedfile=1;
 		else if(!strcmp(av[13],"-f") || !strcmp(av[13],"-F")) paramset.flankingsequence=1;
 			else if(!strcmp(av[13],"-d") || !strcmp(av[13],"-D")) paramset.datafile=1;
@@ -89,7 +79,7 @@ int main(int ac, char** av)
 							else if(!strcmp(av[13],"-ngs") || !strcmp(av[13],"-Ngs") || !strcmp(av[13],"-NGS") || !strcmp(av[13],"-N") || !strcmp(av[13],"-n")) paramset.ngs=1;
 								else ac=30; /* to force error message */
 	}
-	if(ac==15) {
+	if(ac==15 || ac==16) {
 		if(!strcmp(av[14],"-m") || !strcmp(av[14],"-M")) paramset.maskedfile=1;
 		else if(!strcmp(av[14],"-f") || !strcmp(av[14],"-F")) paramset.flankingsequence=1;
 			else if(!strcmp(av[14],"-d") || !strcmp(av[14],"-D")) paramset.datafile=1;
@@ -97,6 +87,16 @@ int main(int ac, char** av)
 					else if(!strcmp(av[14],"-r") || !strcmp(av[14],"-R")) paramset.redundoff=1;
 						else if(!strcmp(av[14],"-l") || !strcmp(av[14],"-L")) paramset.maxwraplength=1;
 							else if(!strcmp(av[14],"-ngs") || !strcmp(av[14],"-Ngs") || !strcmp(av[14],"-NGS") || !strcmp(av[14],"-N") || !strcmp(av[14],"-n")) paramset.ngs=1;
+								else ac=30; /* to force error message */
+	}
+	if(ac==16) {
+		if(!strcmp(av[15],"-m") || !strcmp(av[15],"-M")) paramset.maskedfile=1;
+		else if(!strcmp(av[15],"-f") || !strcmp(av[15],"-F")) paramset.flankingsequence=1;
+			else if(!strcmp(av[15],"-d") || !strcmp(av[15],"-D")) paramset.datafile=1;
+				else if(!strcmp(av[15],"-h") || !strcmp(av[15],"-H")) paramset.HTMLoff=1;
+					else if(!strcmp(av[15],"-r") || !strcmp(av[15],"-R")) paramset.redundoff=1;
+						else if(!strcmp(av[15],"-l") || !strcmp(av[15],"-L")) paramset.maxwraplength=1;
+							else if(!strcmp(av[15],"-ngs") || !strcmp(av[15],"-Ngs") || !strcmp(av[15],"-NGS") || !strcmp(av[15],"-N") || !strcmp(av[15],"-n")) paramset.ngs=1;
 								else ac=30; /* to force error message */
 	}
 
@@ -113,7 +113,7 @@ int main(int ac, char** av)
 	}
 
 
-	if ( ((ac!=9) && (ac!=10) && (ac!=11) && (ac!=12) && (ac!=13) && (ac!=14)) || (atoi(av[8])==0))
+	if ( ((ac!=9) && (ac!=10) && (ac!=11) && (ac!=12) && (ac!=13) && (ac!=14) && (ac!=15) && (ac!=16)) || (atoi(av[8])==0))
 	{
 		fprintf(stderr,"\n\nPlease use: %s File Match Mismatch Delta PM PI Minscore MaxPeriod [options]\n", av[0]);
 		fprintf(stderr,"\nWhere: (all weights, penalties, and scores are positive)");

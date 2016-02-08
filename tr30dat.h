@@ -28,7 +28,8 @@ int counterInSeq=0;
 /* make sure at least one platform is defined */
 #if (defined(WINDOWSGUI)+defined(WINDOWSCONSOLE)+defined(UNIXGUI)+\
 		defined(UNIXCONSOLE))==0
-#error At least one Platform must be defined in tr30dat.h
+#pragma message ( "You forgot to define a platform when compiling. Setting UNIXCONSOLE." )
+#define UNIXCONSOLE
 #endif
 
 #ifdef UNIXCONSOLE
@@ -94,10 +95,14 @@ int counterInSeq=0;
 /* make MAXWRAPLENGTHCONST longer to accomodate longer repeat in Human chr 18, HG38 */
 /* 01/26/16 Y. Hernandez */
 /* Let MAXWRAPLENGTHCONST be definable on the command line. Easier to update without changing source. */
-#ifndef MAXWRAPLENGTHCONST
-#define MAXWRAPLENGTHCONST 10000000
-#endif
-unsigned int MAXWRAPLENGTH = 0;
+/* 02/05/16 Y. Hernandez */
+/* End use of MAXWRAPLENGTHCONST macro, use a command line option instead. */
+//#ifndef MAXWRAPLENGTHCONST
+//#define MAXWRAPLENGTHCONST 10000000
+//#endif
+/* 02/05/16 Y. Hernandez */
+/* Since this is no longer a macro, use all lower case to avoid confusion. */
+unsigned int maxwraplength = 0;
 
 /* Added by Yevgeniy Gelfand on Jan 27, 2010  */
 /* To have smaller sequences not send results */
@@ -318,7 +323,7 @@ double Cell_total, Wasted_total;
 /* 1/26/10 */
 /* change MAXWRAPLENGTH to MAXWRAPLENGTHCONST so MAXWRAPLENGTH can be used as an int */
 /* int Bandcenter[MAXWRAPLENGTH+1]; */
-int Bandcenter[MAXWRAPLENGTHCONST+1];
+int Bandcenter[paramset.maxwraplength+1];
 
 /* version 2A changes this */
 /* int S[MAXWRAPLENGTH+1][MAXDISTANCE+1];*/
