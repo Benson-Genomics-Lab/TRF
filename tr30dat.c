@@ -2408,7 +2408,7 @@ int GetTopPeriods(char* pattern, int length, int* toparray)
 		/* this should be long enough to deter finding periods that are not the most frequent */
 		/* Without this change, this procudure is quadratic in the length, which could be several million */
 		/* and caused the program to hang with long centromeric repeats */
-		/* /* for(curr=i;history[curr]!=-1;curr=history[curr])*/
+		/* for(curr=i;history[curr]!=-1;curr=history[curr])*/
 		dist = 0;
 		for(curr=i;((history[curr]!=-1)&&(dist<(MAXDISTANCECONSTANT*3)));curr=history[curr])
 		{
