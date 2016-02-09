@@ -1,6 +1,7 @@
 #ifndef TR30DAT_C
 #define TR30DAT_C
 
+#include <stdlib.h> /* has calloc definition */
 #include <math.h>
 
 
@@ -166,7 +167,13 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 	/*** 6/9/05 G. Benson ***/ 
 	int mincolbandcenter,zeroat,mincolposition;
 
-
+	/* G. Benson */
+	/* 1/26/10 */
+	/* change MAXWRAPLENGTH to MAXWRAPLENGTHCONST so MAXWRAPLENGTH can be used as an int */
+	/* int Bandcenter[MAXWRAPLENGTH+1]; */
+	if (Bandcenter == NULL) {
+		Bandcenter = calloc(paramset.maxwraplength+1, sizeof(*Bandcenter));
+	}
 
 	w=bandradius;
 	if(MAXBANDWIDTH<2*w+1)
@@ -185,7 +192,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 	/* backward wdp */
 	maxscore=0;
 	realr=start+1;
-	r=MAXWRAPLENGTH;
+	r=paramset.maxwraplength;
 	Bandcenter[r]=0;
 	matches_in_diagonal=0;
 	matchatmax_col=-2;
@@ -411,7 +418,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 
 		/* compute until end of trace */      
 		end_of_trace=FALSE;  
-		while ((!end_of_trace) && (realr<Length) && (r<MAXWRAPLENGTH))
+		while ((!end_of_trace) && (realr<Length) && (r<paramset.maxwraplength))
 		{
 			r++;
 			realr++;
@@ -588,7 +595,7 @@ void newwrap(int start, int size, int consensuspresent)
 	/* backward wdp */
 	maxscore=0;
 	realr=start+1;
-	r=MAXWRAPLENGTH;
+	r=paramset.maxwraplength;
 
 	adjlength=size-1;
 	adjmone=adjlength-1;
@@ -683,7 +690,7 @@ void newwrap(int start, int size, int consensuspresent)
 	}
 
 	end_of_trace=FALSE;  
-	while ((!end_of_trace) && (realr<Length) && (r<MAXWRAPLENGTH))
+	while ((!end_of_trace) && (realr<Length) && (r<paramset.maxwraplength))
 	{
 		r++;
 		realr++;
@@ -773,7 +780,7 @@ void newwrap(int start, int size, int consensuspresent)
 		}
 
 		end_of_trace=FALSE;  
-		while ((!end_of_trace) && (realr<Length) && (r<MAXWRAPLENGTH))
+		while ((!end_of_trace) && (realr<Length) && (r<paramset.maxwraplength))
 		{
 			r++;
 			realr++;

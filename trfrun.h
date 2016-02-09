@@ -145,6 +145,7 @@ int TRFControlRoutine(void)
 		PrintError("Error while loading sequence");
 		paramset.endstatus = CTRL_BADFORMAT; /* ok for now */
 		paramset.running = 0;
+		fclose(srcfp);
 		return CTRL_BADFORMAT;
 	}
 
@@ -608,10 +609,10 @@ void TRF(FASTASEQUENCE* pseq)
 	/* G. Benson */
 	/* 1.26.10 */
 	/* make MAXWRAPLENGTH = 1000 for smaller for small sequences */
-	MAXWRAPLENGTH = min(MAXWRAPLENGTHCONST,pseq->length);
+	maxwraplength = min(paramset.maxwraplength,pseq->length);
 
 	/* allocate memory */
-	S = (int **) malloc((MAXWRAPLENGTH+1) *  sizeof(int *));
+	S = (int **) malloc((maxwraplength+1) *  sizeof(int *));
 	if(S==NULL)
 	{
 		PrintError("Unable to allocate memory for S array");
@@ -622,15 +623,19 @@ void TRF(FASTASEQUENCE* pseq)
 	/* Yozen Jan 26, 2016: We control the compilation and we're going to be using C99
 	or greater standard C; don't need to cast, and we can use the pointer to determine the size.
 	Also, use calloc instead of malloc+memset. */
-	stemp = calloc(((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)), sizeof(*stemp));
+	stemp = calloc(((maxwraplength+1)*(MAXBANDWIDTH+1)), sizeof(*stemp));
 	if(stemp==NULL)
 	{
 		char errmsg[255];
-		snprintf(errmsg, 255, "Unable to allocate %lu bytes for stemp array (%s:%d)\n", ((MAXWRAPLENGTH+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
+		#if __x86_64__
+		snprintf(errmsg, 255, "Unable to allocate %lu bytes for stemp array (%s:%d)\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
+		#else
+		snprintf(errmsg, 255, "Unable to allocate %u bytes for stemp array (%s:%d)\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
+		#endif
 		PrintError(errmsg);
 		exit(-1);
 	}
-	for(i=0;i<=MAXWRAPLENGTH;i++)
+	for(i=0;i<=maxwraplength;i++)
 	{
 		S[i]= stemp;
 		stemp+=MAXBANDWIDTH+1;
@@ -639,10 +644,10 @@ void TRF(FASTASEQUENCE* pseq)
 
 	/* AlignPair holds the characters and alignments of the current */
 	/* primary and secondary sequences  */
-	AlignPair.textprime=newAlignPairtext(2*MAXWRAPLENGTH);
-	AlignPair.textsecnd=newAlignPairtext(2*MAXWRAPLENGTH);
-	AlignPair.indexprime=newAlignPairindex(2*MAXWRAPLENGTH);
-	AlignPair.indexsecnd=newAlignPairindex(2*MAXWRAPLENGTH);
+	AlignPair.textprime=newAlignPairtext(2*maxwraplength);
+	AlignPair.textsecnd=newAlignPairtext(2*maxwraplength);
+	AlignPair.indexprime=newAlignPairindex(2*maxwraplength);
+	AlignPair.indexsecnd=newAlignPairindex(2*maxwraplength);
 
 	/* set algorithm's parameters */
 	Alpha = paramset.match;
