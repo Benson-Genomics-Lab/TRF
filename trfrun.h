@@ -627,7 +627,7 @@ void TRF(FASTASEQUENCE* pseq)
 	if(stemp==NULL)
 	{
 		char errmsg[255];
-		#if __x86_64__
+		#if (__x86_64__ + __x86_64 + __amd64 + __amd64__ + _M_AMD64 + _M_X64) > 1
 		snprintf(errmsg, 255, "Unable to allocate %lu bytes for stemp array. Please set a lower value for the longest TR length. (%s:%d)\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
 		#else
 		snprintf(errmsg, 255, "Unable to allocate %u bytes for stemp array. Please set a lower value for the longest TR length. (%s:%d)\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
