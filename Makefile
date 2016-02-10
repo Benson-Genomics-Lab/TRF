@@ -17,7 +17,7 @@ CFLAGS_WINGUI	= -mwin32 -mwindows
 CFLAGS_WINCMD	= -mwin32 -mconsole
 # CFLAGS_APPLE64	= -arch x86_64
 # CFLAGS_APPLE32	= -arch i386
-CFLAGS_APPLE    = -arch x86_64 -arch i386 -arch ppc64 -arch ppc
+CFLAGS_APPLE    = -arch x86_64 -arch i386
 TRF_SRCS		= tr30dat.c tr30dat.h trf.c trfclean.h trfrun.h
 TRF_EXE			= trf$(VERSION).$@.exe
 WINGUI_CHECK	= win32-gui/trf.c \
@@ -45,7 +45,7 @@ win: win64 win32
 dos: dos64 dos32
 
 # mac: mac64 mac32
-mac: macuni
+# mac: macuni
 
 linux64: $(TRF_SRCS)
 	gcc $(CFLAGS) $(CFLAGS_LINUX64) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LDFLAGS)
@@ -71,7 +71,7 @@ dos32: $(TRF_SRCS)
 # mac32: $(TRF_SRCS)
 # 	gcc $(CFLAGS) $(CFLAGS_APPLE32) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LDFLAGS)
 
-macuni: $(TRF_SRCS)
+mac: $(TRF_SRCS)
 	gcc $(CFLAGS) $(CFLAGS_APPLE) $(UNIX_DEFINES) -o $(TRF_EXE) $(C_SRCS) $(LDFLAGS)
 
 win_gui: trf.c trf.h trfdlg.h trfcomm.h trffile.h trfrun.h trfini.h tr30dat.c tr30dat.h trfclean.h dirdlg.h
