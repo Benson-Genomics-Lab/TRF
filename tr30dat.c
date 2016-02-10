@@ -3,6 +3,7 @@
 
 #include <stdlib.h> /* has calloc definition */
 #include <math.h>
+#include "tr30dat.h"
 
 
 /* March 3,1999 removed main to replace with OnStartSearch() . AR */

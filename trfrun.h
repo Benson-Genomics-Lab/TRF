@@ -588,7 +588,7 @@ int TRFControlRoutine(void)
  **************************************************/
 void TRF(FASTASEQUENCE* pseq)
 {
-	int i;  /* used at the end to free memory */
+	unsigned int i;  /* used at the end to free memory */
 	int *stemp;
 	char htmlstring[_MAX_PATH], txtstring[_MAX_PATH],
 	     paramstring[_MAX_PATH],datstring[_MAX_PATH],
@@ -628,9 +628,9 @@ void TRF(FASTASEQUENCE* pseq)
 	{
 		char errmsg[255];
 		#if __x86_64__
-		snprintf(errmsg, 255, "Unable to allocate %lu bytes for stemp array (%s:%d)\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
+		snprintf(errmsg, 255, "Unable to allocate %lu bytes for stemp array. Please set a lower value for the longest TR length. (%s:%d)\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
 		#else
-		snprintf(errmsg, 255, "Unable to allocate %u bytes for stemp array (%s:%d)\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
+		snprintf(errmsg, 255, "Unable to allocate %u bytes for stemp array. Please set a lower value for the longest TR length. (%s:%d)\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp), __FILE__, __LINE__);
 		#endif
 		PrintError(errmsg);
 		exit(-1);

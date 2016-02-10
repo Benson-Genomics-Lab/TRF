@@ -26,9 +26,9 @@ const char *usage = "\n\nPlease use: %s File Match Mismatch Delta PM PI Minscore
 "\n               -d    	data file"
 "\n               -h    	suppress html output"
 "\n               -r		no redundancy elimination"
-"\n               -l <n>	maximum TR length expected (eg, -l 3000000 or -l=3000000)"
+"\n               -l <n>	maximum TR length expected (in millions) (eg, -l 3 or -l=3 for 3 million)"
 #if (defined(UNIXGUI)+defined(UNIXCONSOLE))>=1
-"\n               -ngs  more compact .dat output on multisequence files, returns 0 on success. You may pipe input in with this option using - for file name. Short 50 flanks are appended to .dat output. See more information on TRF Unix Help web page."
+"\n               -ngs      more compact .dat output on multisequence files, returns 0 on success. Output is written to standard out, not a file. You may pipe input in with this option using - for file name. Short 50 flanks are appended to .dat output. See more information on TRF Unix Help web page."
 #endif
 "\n"
 "\nNote the sequence file should be in FASTA format:"
@@ -47,26 +47,17 @@ int main(int ac, char** av)
 {
 	char *pname;
 
+	/* Handle a lone -v argument ourselves */
+	if ( (ac == 1) && ((strcmp(av[1], "-v") == 0) || (strcmp(av[1], "-V") == 0)) ) {
+		PrintBanner();
+		exit(0);
+	}
+
 	/* Expects exactly 8 non-option arguments */
-	if (ac < 8) {
+	if ( (ac < 9) && ((strcmp(av[1], "-v") != 0) && (strcmp(av[1], "-V") != 0)) ) {
 		fprintf(stderr, usage, av[0]);
 		exit(1);
 	}
-
-	/* get input parameters */
-	strcpy(paramset.inputfilename,av[1]);
-	paramset.use_stdin = 0;
-	pname = GetNamePartAddress(av[1]);
-	strcpy(paramset.outputprefix,pname);
-	paramset.match    = atoi(av[2]);
-	paramset.mismatch = atoi(av[3]);
-	paramset.indel    = atoi(av[4]);
-	paramset.PM = atoi(av[5]);
-	paramset.PI = atoi(av[6]);
-	paramset.minscore = atoi(av[7]);
-	paramset.maxperiod = atoi(av[8]);
-	paramset.guihandle=0;
-	if(paramset.HTMLoff) paramset.datafile=1;
 
 	/* set option defaults */
 	paramset.datafile = 0;
@@ -79,7 +70,10 @@ int main(int ac, char** av)
 	paramset.ngs = 0; /* this is for unix systems only */
 
 	/* Parse command line options */
-	optind = 9;
+	/* Assume that since the first checks were passed, options start at argument 8
+	getopt ignores the first array element, so start at element 8 */
+	char **opt_arr = &av[8];
+	int remaining_opts = ac - 8;
 	while (1){
 		static struct option long_options[] = {
 			{"help", no_argument, 0, 'u'}, /* -u, -U */
@@ -101,7 +95,7 @@ int main(int ac, char** av)
 		int option_index = 0;
 
 		/* Accept upper and lower-case variants of options */
-		int c = getopt_long_only(ac, av, "uvdmfhrUVDMFHRl:L:",
+		int c = getopt_long_only(remaining_opts, opt_arr, "uvdmfhrUVDMFHRl:L:",
 			long_options, &option_index);
 
 		/* Detect the end of the options. */
@@ -166,10 +160,10 @@ int main(int ac, char** av)
 			case 'l':
 			case 'L':
 			if ((atol(optarg) < 1)){
-				fprintf(stderr, "Error: sequence length must be above 0\n");
+				fprintf(stderr, "Error: max TR length must be at least 1 million\n");
 				exit(2);
 			}
-			paramset.maxwraplength = atol(optarg);
+			paramset.maxwraplength = atof(optarg) * 1e6;
 
 			break;
 
@@ -181,6 +175,21 @@ int main(int ac, char** av)
 			break;
 		}
 	}
+
+	/* get input parameters */
+	strcpy(paramset.inputfilename,av[1]);
+	paramset.use_stdin = 0;
+	pname = GetNamePartAddress(av[1]);
+	strcpy(paramset.outputprefix,pname);
+	paramset.match    = atoi(av[2]);
+	paramset.mismatch = atoi(av[3]);
+	paramset.indel    = atoi(av[4]);
+	paramset.PM = atoi(av[5]);
+	paramset.PI = atoi(av[6]);
+	paramset.minscore = atoi(av[7]);
+	paramset.maxperiod = atoi(av[8]);
+	paramset.guihandle=0;
+	if(paramset.HTMLoff) paramset.datafile=1;
 
 	if  (paramset.ngs == 1) {
 		paramset.datafile=1;
