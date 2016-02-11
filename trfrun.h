@@ -103,7 +103,7 @@ extern void set_progress_bar( double fraction );
 
 int TRFControlRoutine(void)
 {
-	FILE *srcfp,*outmfp,*outdfp,*destmfp,*destdfp;
+	FILE *srcfp,*outmfp,*outdfp,*destmfp,*destdfp = NULL;
 	char  source[_MAX_PATH],input[_MAX_PATH],outm[_MAX_PATH],outd[_MAX_PATH],
 	      prefix[_MAX_PATH],destm[_MAX_PATH],destd[_MAX_PATH],
 	      desth[_MAX_PATH],paramstring[_MAX_PATH],outh[_MAX_PATH];
