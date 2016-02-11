@@ -358,7 +358,6 @@ TRFPARAMSET paramset; /* this global controls the algorithm */
 /* 1/26/10 */
 /* change MAXWRAPLENGTH to MAXWRAPLENGTHCONST so MAXWRAPLENGTH can be used as an int */
 /* int Bandcenter[MAXWRAPLENGTH+1]; */
-// int Bandcenter[paramset.maxwraplength+1];
 int *Bandcenter = NULL;
 
 /* version 2A changes this */

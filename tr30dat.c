@@ -173,7 +173,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 	/* change MAXWRAPLENGTH to MAXWRAPLENGTHCONST so MAXWRAPLENGTH can be used as an int */
 	/* int Bandcenter[MAXWRAPLENGTH+1]; */
 	if (Bandcenter == NULL) {
-		Bandcenter = calloc(paramset.maxwraplength+1, sizeof(*Bandcenter));
+		Bandcenter = calloc(maxwraplength+1, sizeof(*Bandcenter));
 	}
 
 	w=bandradius;
@@ -193,7 +193,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 	/* backward wdp */
 	maxscore=0;
 	realr=start+1;
-	r=paramset.maxwraplength;
+	r=maxwraplength;
 	Bandcenter[r]=0;
 	matches_in_diagonal=0;
 	matchatmax_col=-2;
@@ -419,7 +419,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 
 		/* compute until end of trace */      
 		end_of_trace=FALSE;  
-		while ((!end_of_trace) && (realr<Length) && (r<paramset.maxwraplength))
+		while ((!end_of_trace) && (realr<Length) && (r<maxwraplength))
 		{
 			r++;
 			realr++;
@@ -691,7 +691,7 @@ void newwrap(int start, int size, int consensuspresent)
 	}
 
 	end_of_trace=FALSE;  
-	while ((!end_of_trace) && (realr<Length) && (r<paramset.maxwraplength))
+	while ((!end_of_trace) && (realr<Length) && (r<maxwraplength))
 	{
 		r++;
 		realr++;
@@ -781,7 +781,7 @@ void newwrap(int start, int size, int consensuspresent)
 		}
 
 		end_of_trace=FALSE;  
-		while ((!end_of_trace) && (realr<Length) && (r<paramset.maxwraplength))
+		while ((!end_of_trace) && (realr<Length) && (r<maxwraplength))
 		{
 			r++;
 			realr++;
