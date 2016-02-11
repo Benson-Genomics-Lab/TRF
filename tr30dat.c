@@ -596,7 +596,7 @@ void newwrap(int start, int size, int consensuspresent)
 	/* backward wdp */
 	maxscore=0;
 	realr=start+1;
-	r=paramset.maxwraplength;
+	r=maxwraplength;
 
 	adjlength=size-1;
 	adjmone=adjlength-1;
