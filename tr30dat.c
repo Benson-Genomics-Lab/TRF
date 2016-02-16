@@ -172,9 +172,12 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 	/* 1/26/10 */
 	/* change MAXWRAPLENGTH to MAXWRAPLENGTHCONST so MAXWRAPLENGTH can be used as an int */
 	/* int Bandcenter[MAXWRAPLENGTH+1]; */
-	if (Bandcenter == NULL) {
-		Bandcenter = calloc(maxwraplength+1, sizeof(*Bandcenter));
-	}
+	// if (Bandcenter == NULL) {
+	// 	Bandcenter = calloc(maxwraplength+1, sizeof(*Bandcenter));
+	// }
+	/* Changed by Yozen on Feb 16, 2016.
+	Always initialize here. Freed in get_narrowband_pair_alignment_with_copynumber. */
+	Bandcenter = calloc(maxwraplength+1, sizeof(*Bandcenter));
 
 	w=bandradius;
 	if(MAXBANDWIDTH<2*w+1)
@@ -1488,6 +1491,11 @@ else
 			}
 		}
 	}
+	/* Added by Yozen on Feb 16, 2016.
+	Need to free this in order to prevent buffer overruns.
+	OK to free here since this function runs after narrowbandwrap
+	which initializes Bandcenter.  */
+	free(Bandcenter);
 }
 
 /************************************************************/ 
