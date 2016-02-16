@@ -177,9 +177,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 	// if (Bandcenter == NULL) {
 	// 	Bandcenter = calloc(maxwraplength+1, sizeof(*Bandcenter));
 	// }
-	/* Changed by Yozen on Feb 16, 2016.
-	Always initialize here. Freed in get_narrowband_pair_alignment_with_copynumber. */
-	Bandcenter = calloc(maxwraplength+1, sizeof(*Bandcenter));
+	/* Bandcenter init removed by Yozen on Feb 16, 2016. */
 
 	w=bandradius;
 	if(MAXBANDWIDTH<2*w+1)
@@ -1495,11 +1493,6 @@ else
 			}
 		}
 	}
-	/* Added by Yozen on Feb 16, 2016.
-	Need to free this in order to prevent buffer overruns.
-	OK to free here since this function runs after narrowbandwrap
-	which initializes Bandcenter.  */
-	free(Bandcenter);
 }
 
 /************************************************************/ 
@@ -3937,6 +3930,11 @@ void newtupbo(void)
 	double oldcopynumber;
 	int pass_multiples_test;
 
+	/* Moved here by Yozen on Feb 16, 2016.
+	Always initialize here. Freed at the end of this function.
+	maxwraplength has already been initialized in the calling
+	function, TRF */
+	Bandcenter = calloc(maxwraplength+1, sizeof(*Bandcenter));
 
 	/* Jan 27, 2006, Gelfand, changed to use Similarity Matrix to avoid N matching itself */
 	/* This function may be called multiple times (for different match/mismatch scores) */
@@ -4235,6 +4233,8 @@ void newtupbo(void)
 	paramset.percent = -1;
 	if (paramset.ngs != 1) SetProgressBar();
 
+	/* Added by Yozen on Feb 16, 2016. */
+	free(Bandcenter);
 }
 
 
