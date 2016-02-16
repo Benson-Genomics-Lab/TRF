@@ -2,3 +2,5 @@
 Release/
 Debug/
 *.sublime-*
+*.html
+*.dat
