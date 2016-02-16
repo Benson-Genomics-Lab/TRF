@@ -159,7 +159,7 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 {
 	int g;
 	register int *pup, *pdiag, *pcurr,pleft;
-	int c,r,realr,end_of_trace,
+	int c,realr,end_of_trace,
 	    maxscore,maxrow,maxcol,mincol;
 	int maxrealrow, minrealrow;
 	char currchar;
@@ -167,6 +167,8 @@ void narrowbandwrap(int start, int size,int bandradius, int bandradiusforward,
 	    lastmatchatmax_col,match_yes_no;
 	/*** 6/9/05 G. Benson ***/ 
 	int mincolbandcenter,zeroat,mincolposition;
+	/* Feb 16, 2016 Yozen */
+	unsigned int r;
 
 	/* G. Benson */
 	/* 1/26/10 */
@@ -585,9 +587,11 @@ void newwrap(int start, int size, int consensuspresent)
 {
 	int g;
 	register int *pup, *pdiag, *pcurr,pleft;
-	int adjlength,adjmone,c,r,realr,end_of_trace,
+	int adjlength,adjmone,c,realr,end_of_trace,
 	    maxscore,minrow,maxrow,maxcol,modstart,maxrealrow;
 	char currchar;
+	/* Feb 16, 2016 Yozen */
+	unsigned int r;
 
 	/* fill EC */
 	if(consensuspresent)

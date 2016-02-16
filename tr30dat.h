@@ -466,7 +466,8 @@ int print_flanking=0;
 
 typedef struct
 {
-	int length;
+	/* Changed to unsigned Feb 16, 2016 Yozen */
+	unsigned int length;
 	int composition[26];
 	int nucleotides;
 	char name[MAXSEQNAMELEN];
