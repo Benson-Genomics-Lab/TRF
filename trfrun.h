@@ -623,7 +623,7 @@ void TRF(FASTASEQUENCE* pseq)
 	/* Yozen Jan 26, 2016: We control the compilation and we're going to be using C99
 	or greater standard C; don't need to cast, and we can use the pointer to determine the size.
 	Also, use calloc instead of malloc+memset. */
-	stemp = calloc(((maxwraplength+1)*(MAXBANDWIDTH+1)), sizeof(*stemp));
+	stemp = calloc(((size_t)(maxwraplength+1)*(MAXBANDWIDTH+1)), sizeof(*stemp));
 	if(stemp==NULL)
 	{
 		char errmsg[255];
