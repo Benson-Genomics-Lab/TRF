@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 
 /* Added by Yozen to explicitly include header for windows GUI definitons on Jan 25, 2016 */
 #ifdef WINDOWSGUI
@@ -624,7 +625,8 @@ void TRF(FASTASEQUENCE* pseq)
 	or greater standard C; don't need to cast, and we can use the pointer to determine the size.
 	Also, use calloc instead of malloc+memset. */
 	stemp = calloc(((maxwraplength+1)*(MAXBANDWIDTH+1)), sizeof(*stemp));
-	if(stemp==NULL)
+	printf("Allocating %lu bytes for stemp array\n", ((maxwraplength+1)*(MAXBANDWIDTH+1)) * sizeof(*stemp));
+	if(errno==ENOMEM)
 	{
 		char errmsg[255];
 		#if (__x86_64__ + __x86_64 + __amd64 + __amd64__ + _M_AMD64 + _M_X64) > 1
