@@ -54,7 +54,7 @@ int main(int ac, char** av)
 	char *pname;
 
 	/* Handle a lone -v argument ourselves */
-	if ( (ac == 1) && ((strcmp(av[1], "-v") == 0) || (strcmp(av[1], "-V") == 0)) ) {
+	if ( (ac == 2) && ((strcmp(av[1], "-v") == 0) || (strcmp(av[1], "-V") == 0)) ) {
 		PrintBanner();
 		exit(0);
 	}
