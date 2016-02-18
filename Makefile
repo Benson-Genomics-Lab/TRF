@@ -1,7 +1,6 @@
 # TODO Handle debug/release build directories to not pollute source directory
 # TODO Windows GUI version (maybe move to something like Qt to be cross-platform?)
-# NOTE Redefine CFLAGS in the make command to set MAXWRAPLENGTHCONST
-#    ex: make CFLAGS="-02 -DMAXWRAPLENGTHCONST=20000000"
+# FIXME clean doesn't work
 
 VERSION       	= 409
 C_SRCS        	= trf.c
