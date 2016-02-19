@@ -1,0 +1,215 @@
+Version 4.09 fixes: 02/19/2016
+--------------------------------------------
+Major changes:
+* New option, -l/-L, allows user to define expected length of longest TR,
+in millions of bases. Default is 2.
+* Using getopt for option handling.
+
+Makefile:
+* New file
+* Simple Makefile to produce binaries for Windows (dos), Linux, and
+Mac OS X.
+
+tr30dat.h:
+* Platform defining macros are now given on the command line when
+compiling (see Makefile).
+* If one of the platform macros is not given, a message is displayed
+and UNIXCONSOLE is chosen.
+* MAXWRAPLENGTHCONST is no longer used. Now replaced by an option
+(-l/-L) supplied by the user.
+* Changed all instances of MAXWRAPLENGTH with paramset.maxwraplength
+* Bandcenter is now dynamically allocated because this array depended
+on the macro MAXWRAPLENGTHCONST being defined. It could not be
+inizialized using maxwraplength or paramset.maxwraplength since these
+are undefined during compile time, and it may exceed the limits of the
+stack if maxwraplength is large.
+* maxwraplength is a unsigned int, to avoid improper casting and to
+count to count a larger range.
+* Added member maxwraplength to TRFPARAMSET, which stores the options
+given to TRF. It is an unsigned int, like the maxwraplength global
+above.
+* FASTASEQUENCE struct member length changed to unsigned int.
+
+tr30dat.c:
+* Bandcenter is allocated at the start of newtupbo and free'd at the
+end of that function.
+* Changed all instances of MAXWRAPLENGTH with paramset.maxwraplength
+* Some ints changed to unsigned ints to try and prevent overflow
+issues. Specifically, the counting variable "r".
+* Changed all instances of MAXWRAPLENGTH with paramset.maxwraplength
+
+trfrun.h:
+* Including windows .h files when WINDOWSGUI macro is defined. Meant
+to eventually replace redundant copy under win32-gui directory.
+* More informative error messages are produced when the program is
+unable to allocate memory for stemp variable.
+* maxwraplength now using the minimum of paramset.maxwraplength
+(provided by user or with default) and pseq->length. The former is due
+to the changes mentioned earlier.
+* stemp now initialized using calloc instead of a malloc followed by
+memset.
+* stemp allocation uses a cast to size_t to avoid integer overflow
+since the result of the multiplication may exceed limits of unsigned
+ints.
+* Added an fclose to quiet cppcheck complaint of a resource leak from
+not closing a file handle on an error.
+* Added a check for word size when printing memory allocation error
+message, since the return type of sizeof varies by platform word
+length.
+
+trf.c:
+* Now using getopt for ease of new option addition and for options
+with agruments
+* Updated documentation for new option
+* Usage string is now a global const char*.
+
+
+Version 4.08 fixes: 
+--------------------------------------------
+* added a check for fgets in trfclean.h because it might enter infinite loop
+(we had our tandem drive filled up with junk data, this was prob the cause)
+
+Version 4.07b fixes: 10/01/12
+--------------------------------------------
+* fixed alignment files "file K of N", K was off by 1 before
+* seems bestlist structure was not cleared 
+  or dellocated properly, fixed now, was making multiple sequence files run slower and slower
+
+Version 4.07 fixes: 8/14/12
+--------------------------------------------
+changes from trf4.06
+in tr30dat.h
+/*changes by Gary Benson on 8/14/12 */
+#define versionstring "4.07"
+
+/*changes by Gary Benson on 8/14/12 */
+#define MIXED 2
+
+in tr30dat.c
+in newtupbo
+/*changes by Gary Benson on 8/14/12 */
+/* Allows traceback to go all the way back to row zero and doesn't stop at first zero score (like GLOBAL) but allows column c to wraparound (like LOCAL) */
+/* Second call, further below, is still with LOCAL, but occurs after consensus has been found, and still stops traceback at first score of zero */
+get_narrowband_pair_alignment_with_copynumber( d, min(2*max(MINBANDRADIUS,d_range(d)), (d/3) ), MIXED);
+
+in get_narrowband_pair_alignment_with_copynumber									
+/*changes by Gary Benson on 8/14/12 */
+/* macros for get_narrowband_pair_alignment_with_copynumber now include ((option==LOCAL)||(option==MIXED)) which replaces (option==LOCAL) */
+
+/*changes by Gary Benson on 8/14/12 */
+/* Allows traceback to go all the way back to row zero and doesn't stop at first zero score (like GLOBAL) but allows column c to wraparound (like LOCAL) */
+/* ((option==GLOBAL)||(option==MIXED)) now replaces (option==GLOBAL) */
+/* (c==-1) removed */
+if (((option==LOCAL)&&(S[r][i]<=0))||(((option==GLOBAL)||(option==MIXED))&&(r==0)))
+
+Version 4.06 fixes:
+1) Changed memory allocations in newdistancelist to be smaller. (Y.Gelfand)
+2) Doing multiple sequences now does not write to disc (Y.Gelfand)
+3) Added -ngs sqitch to output less verbose .dat output for multiple sequences (Y.Gelfand)
+4) Added check to make sure all required paramters are entered from commandline (Y.Gelfand)
+
+Version 4.05 fixes:
+1) Changed memory allocation of S array to be smaller when fasta sequences are small (supposedly callocs were taking too much time)
+
+Version 4.04 fixes:
+1) Martin Frith finds another problem and Dr. Benson tracks it down to radius of narrowband being too small and alignment never getting back.
+
+Version 4.03 fixes:
+1) Martin Frith finds a problem with vanishing tandem repeat and Dr. Benson tracks it down as a line in the redundancy algorithm being in the wrong loop.
+
+Version 4.02 fixes:
+1) Yevgeniy removes all references to long
+
+Version 4.01 fixes:
+1) Yevgeniy finds and fixes a bug when N characters being part of pattern cause problems
+
+Version 4.00 fixes on 12/13/2004:
+
+1) Yevgeniy makes needed changes for UNIX_GUI implementation using gtk+.
+2) Dr. Benson replaces new_meet_criteria() with new_meet_criteria_3().
+3) Alfredo and Dr. Benson replace multiples_criteria() and find_smallest_multiple()
+   with multiples_criteria_4() and GetTopPeriods().
+4) Yevgeniy makes change to LoadSequenceFromFile adding a check for EOF in one of 
+   the while loops.
+5) -h for suppressing HTML output was added. this includes new routine trf_message().
+6) Corrected output of tuple distances to html file. Was printing 'MAXDISTANCE'
+   instead of value of MAXDISTANCE variable.
+7) Modified add_to_bestperiodlist(int d) and adjust_bestperiod_entry(int d).  Added d to parameter list so could check if distance was 1.  Due to change in multiples_criteria_4 which doesn't compute periods if the distance is 1.
+8) Modified narrowbandwrap.  After reverse alignment, find bandcenter of row with maximum score.  This is made bandcenter of first row of forward alignment, rather than mincol.  Zero is set at mincolumn rather than bandcenter (when they are different).  This allows the alignment to start up the same way it ended.  Changed because a repeat in the set of 39 was lost this way.  It may cause other repeats to be lost in future. 
+9) Substitute distanceseenarray for distanceseenlist. List maintains one record at most for each pattern size aligned either with or without consensus.  The most recent alignment with the pattern size is stored.  The array and associated functions are installed and distanceseenlist and functions are commented out.
+10) Change NUMBER_OF_PERIODS definition so that top 5 are copied into Sortmultiples for compatibility with best_period data structure, although I don't think we still need this.  It has not been removed.
+11) Changed alignment routines so that *longest* best scoring alignment is found.  This is done by changing a test from > to >=.  (2/17/05)(3/14/05)
+12) Changed alignment routines so that zeroth row has gap penalties for not starting in zeroth column, and -1000 penalties for starting out of bounds. (3/14/05)
+13) Modifications to distanceseenlist routines which are now superceded. (3/14/05)
+14) In searching for best periods, search only up to the MAXDISTANCE so larger periods don't kill good ones in range.
+15) Reduced minimum copy number for larger patterns.  1.9 for patternsize<=50, 1.8 for patternsize>100, ramp from 1.9 down to 1.8 for patternsize >50 and <=100. (2/17/05)
+16) Bug fix in trfclean.h to create files even if no repeats are returned.
+
+
+
+
+Version 3.30 fixes:
+
+A bug that caused buffer overrun and crashed the program was
+corrected. Files affected: tr30dat.h, tr30dat.c, and  trfrun.h.
+
+Explanation:
+
+Variable ConsClasslength was updated by get_consesus() and then that
+value was used to save to an array. The array was incorrectly sized
+Consensus_count[MAXPATTERNSIZE+1], one for each "possible" pattern
+size. The problem was that sometimes the updated ConsClasslength was
+greater than the expected MAXPATTERNSIZE so the statement:
+
+    Consensus_count[Classlength]++;
+
+updated memory outside of the originaly allocated block. This would
+manifest itself as the program crashing as it attempted to free the
+Consensus_count array. Presumably this process corrupted the memory
+manager's "free list".
+
+
+
+These are the changes made for while working on a new gtk version
+on Aug 27, 2003
+
+1) changed the "type *functionname(length)" to "type *functionname(int length)"
+   in dtr30dat.c. This error was not caught before because some compilers
+   default the undeclared type to int automatically.
+
+
+
+
+These are the changes made for bug-fix release v3.21 on Jan 16, 2003
+
+1) Fix bug concerning end of line character on the sequence name. This
+   change was on file trfrun.h
+
+
+
+
+These are the changes made for new release v3.20 on Jan 9, 2003.
+
+
+1)  Changed trfini.h:
+    There was a string declared as static (i.e. char *string="  ";) that
+    was being modified by the code.
+    Changed to char string[] = {' ',' ','\0'}; so changing it no longer
+    is a problem.
+
+2)  Changed trfrun.h:
+    Allocated more space for Statistics_Distance array. Number of units
+    allocated befored was MAXDISTANCE+d_range(MAXDISTANCE)+1. This was
+    causing problems on the get_statistcis routine where due to alignment
+    insertions there was more space required.
+    Now we just allocate MAXDISTANCE*4.
+
+3)  Changed trfclean.h:
+    Made changes to the redundancy criteria as to how it uses the overlap
+    to remove redundant repeats. The old way was breaking inner loop too
+    early. This use to leave some redundant repeats in the file which
+    should had been removed.
+
+4)  Changed tr30dat.c:
+    Made additional check in get_statistics to ensure that even with the
+    change #2 we did not write past the allocated memory.
