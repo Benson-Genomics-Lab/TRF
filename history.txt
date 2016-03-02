@@ -1,8 +1,22 @@
 Version 4.09 fixes: 02/19/2016
 --------------------------------------------
 Major changes:
+* Allowed longer maximum length for a TR by a change to
+MAXWRAPLENGTHCONST (see below). Now set to 2 million bases by default and
+allowed to be increased by user using -l/-L option below.  (Changed, because
+original size was 500,000 and this was too small for HG38 which has a TR of
+length 5.3 million bases.)
+* Changed function GetTopPeriods.  This function records distances between
+identical two-letter words in the TR array in order to determine the most
+commonly encountered periods.  It is used to exclude periods that are not
+common, yet detect a TR.  The original function allowed a two-letter word to
+record it's distance to a match back to the beginning of the TR array,
+essentially a O(n^2) operation.  Now, each two letter word can only record a
+distance at most up to MAXDISTANCECONSTANT*3 = 6,000 bases. This makes the
+code much faster for long TRs.  Before the change, the program seemed to
+hang, but was just in the quadratic time loop.
 * New option, -l/-L, allows user to define expected length of longest TR,
-in millions of bases. Default is 2.
+in millions of bases. Default is 2 (= 2 million).
 * Using getopt for option handling.
 
 Makefile:
@@ -17,26 +31,29 @@ compiling (see Makefile).
 and UNIXCONSOLE is chosen.
 * MAXWRAPLENGTHCONST is no longer used. Now replaced by an option
 (-l/-L) supplied by the user.
-* Changed all instances of MAXWRAPLENGTH with paramset.maxwraplength
+* Changed all instances of MAXWRAPLENGTH to paramset.maxwraplength
 * Bandcenter is now dynamically allocated because this array depended
 on the macro MAXWRAPLENGTHCONST being defined. It could not be
-inizialized using maxwraplength or paramset.maxwraplength since these
+initialized using maxwraplength or paramset.maxwraplength since these
 are undefined during compile time, and it may exceed the limits of the
 stack if maxwraplength is large.
-* maxwraplength is a unsigned int, to avoid improper casting and to
-count to count a larger range.
+* maxwraplength is an unsigned int, to avoid improper casting and to
+allow a larger range.
 * Added member maxwraplength to TRFPARAMSET, which stores the options
 given to TRF. It is an unsigned int, like the maxwraplength global
 above.
 * FASTASEQUENCE struct member length changed to unsigned int.
 
 tr30dat.c:
+* Changed function GetTopPeriods so that running time is closer to linear
+instead of quadratic.  Changed the maximum lookback distance test for a two-
+letter word to "dist<(MAXDISTANCECONSTANT*3)" which is 6000 bases.
+MAXDISTANCECONSTANT is the longest period reported, which is 2000 bases.
 * Bandcenter is allocated at the start of newtupbo and free'd at the
 end of that function.
-* Changed all instances of MAXWRAPLENGTH with paramset.maxwraplength
+* Changed all instances of MAXWRAPLENGTH to paramset.maxwraplength
 * Some ints changed to unsigned ints to try and prevent overflow
 issues. Specifically, the counting variable "r".
-* Changed all instances of MAXWRAPLENGTH with paramset.maxwraplength
 
 trfrun.h:
 * Including windows .h files when WINDOWSGUI macro is defined. Meant
