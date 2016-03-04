@@ -60,7 +60,7 @@ int main(int ac, char** av)
 	}
 
 	/* Expects exactly 8 non-option arguments */
-	if ( (ac < 9) && ((strcmp(av[1], "-v") != 0) && (strcmp(av[1], "-V") != 0)) ) {
+	if (ac < 9) {
 		fprintf(stderr, usage, av[0]);
 		exit(1);
 	}
