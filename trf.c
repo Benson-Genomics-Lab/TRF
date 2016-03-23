@@ -217,10 +217,8 @@ int main(int ac, char** av)
 #endif
 
 	/* call the fuction on trfrun.h that controls execution */
+	int rc = TRFControlRoutine();
 	if (paramset.ngs) {
-
-		int rc = TRFControlRoutine();
-
 		if (rc>=1) 
 			return 0;
 		if (rc==0) 
@@ -228,7 +226,7 @@ int main(int ac, char** av)
 		else 
 			return rc;
 	} else {
-		return TRFControlRoutine();
+		return paramset.endstatus;
 	}
 }
 
