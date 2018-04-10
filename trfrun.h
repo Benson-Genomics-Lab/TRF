@@ -86,7 +86,7 @@ void    FreeList(IL * headptr);
 
 int LoadSequenceFromFileEugene(FASTASEQUENCE *pseq,FILE* fp); /* may use stdin and better file reading for handling large files over 2GB */
 int LoadSequenceFromFileBenson(FASTASEQUENCE *pseq,FILE* fp); /* old function, uses filepos, 32bit version of this would not process a file over 2GB properly */
-int  TRFControlRoutine(void);
+void TRFControlRoutine(void);
 void TRF(FASTASEQUENCE* pseq);
 void PrintError(char* errortext);
 void PrintProgress(char* progresstext);
@@ -102,10 +102,10 @@ extern void set_progress_bar( double fraction );
  *   as it needs to.
  ************************************************/
 
-int TRFControlRoutine(void)
+void TRFControlRoutine(void)
 {
-	FILE *srcfp,*outmfp,*outdfp,*destmfp,*destdfp = NULL;
-	char  source[_MAX_PATH],input[_MAX_PATH],outm[_MAX_PATH],outd[_MAX_PATH],
+	FILE *srcfp,*outmfp,*destmfp,*destdfp = NULL;
+	char  source[_MAX_PATH],input[_MAX_PATH],outm[_MAX_PATH],
 	      prefix[_MAX_PATH],destm[_MAX_PATH],destd[_MAX_PATH],
 	      desth[_MAX_PATH],paramstring[_MAX_PATH],outh[_MAX_PATH];
 	int a,i,loadstatus,foundsome=0;
@@ -131,7 +131,8 @@ int TRFControlRoutine(void)
 			PrintError(line);
 			paramset.endstatus = "Bad filename";
 			paramset.running = 0;
-			return CTRL_BADFNAME;
+			// return CTRL_BADFNAME;
+			return;
 		}
 	}
 
@@ -148,7 +149,8 @@ int TRFControlRoutine(void)
 		paramset.endstatus = "Bad format."; /* ok for now */
 		paramset.running = 0;
 		fclose(srcfp);
-		return CTRL_BADFORMAT;
+		// return CTRL_BADFORMAT;
+		return;
 	}
 
 
@@ -295,7 +297,8 @@ int TRFControlRoutine(void)
 
 		paramset.endstatus = NULL;
 		paramset.running = 0;
-		return 0;
+		// return CTRL_SUCCESS;
+		return;
 	}
 	paramset.multisequencefile = 1;
 	paramset.sequenceordinal = 1;
@@ -582,7 +585,8 @@ int TRFControlRoutine(void)
 
 	paramset.endstatus = NULL;
 	paramset.running = 0;
-	return CTRL_SUCCESS;
+	// return CTRL_SUCCESS;
+	return;
 }
 
 /*************************************************
