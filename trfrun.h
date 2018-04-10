@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 
 /* Added by Yozen to explicitly include header for windows GUI definitons on Jan 25, 2016 */
 #ifdef WINDOWSGUI
@@ -126,7 +127,7 @@ int TRFControlRoutine(void)
 		srcfp = fopen(source,"rb");
 		if(srcfp==NULL)
 		{
-			sprintf(line,"%s not found",source);
+			sprintf(line,"Error opening %s: %s\n",source, strerror(errno));
 			PrintError(line);
 			paramset.endstatus = "Bad filename";
 			paramset.running = 0;
@@ -907,7 +908,7 @@ void PrintError(char* errortext)
 #elif defined(UNIXGUI)
 	unix_gui_error("\nError: %s",errortext);
 #elif defined(UNIXCONSOLE)
-	fprintf(stderr,"\nError: %s",errortext);
+	fprintf(stderr,"Error: %s",errortext);
 #endif
 
 	return;

@@ -219,7 +219,7 @@ int main(int ac, char** av)
 	/* call the fuction on trfrun.h that controls execution */
 	int rc = TRFControlRoutine();
 	
-	if (paramset.outputcount && !paramset.endstatus) {
+	if (paramset.outputcount == 0 && !paramset.endstatus) {
 		fprintf(stderr, "No TRs found. Exiting...\n");
 		return 0;
 	}
