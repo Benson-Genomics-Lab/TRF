@@ -108,6 +108,7 @@ int TRFControlRoutine(void)
 	      prefix[_MAX_PATH],destm[_MAX_PATH],destd[_MAX_PATH],
 	      desth[_MAX_PATH],paramstring[_MAX_PATH],outh[_MAX_PATH];
 	int a,i,loadstatus,foundsome=0;
+	unsigned int tr_count = 0;
 	char  line[1000];
 	FILE  *desthfp;
 	FASTASEQUENCE seq;
@@ -127,7 +128,7 @@ int TRFControlRoutine(void)
 		{
 			sprintf(line,"%s not found",source);
 			PrintError(line);
-			paramset.endstatus = CTRL_BADFNAME;
+			paramset.endstatus = "Bad filename";
 			paramset.running = 0;
 			return CTRL_BADFNAME;
 		}
@@ -143,7 +144,7 @@ int TRFControlRoutine(void)
 	if(loadstatus<0)
 	{
 		PrintError("Error while loading sequence");
-		paramset.endstatus = CTRL_BADFORMAT; /* ok for now */
+		paramset.endstatus = "Bad format."; /* ok for now */
 		paramset.running = 0;
 		fclose(srcfp);
 		return CTRL_BADFORMAT;
@@ -264,6 +265,7 @@ int TRFControlRoutine(void)
 					}
 					
 					fprintf(destdfp,"\n");
+					++tr_count;
 				}
 
 
@@ -290,9 +292,9 @@ int TRFControlRoutine(void)
 
 		if(destdfp) { fclose(destdfp); destdfp = NULL; }
 
-		paramset.endstatus = CTRL_SUCCESS;
+		paramset.endstatus = NULL;
 		paramset.running = 0;
-		return 1;
+		return 0;
 	}
 	paramset.multisequencefile = 1;
 	paramset.sequenceordinal = 1;
@@ -577,9 +579,9 @@ int TRFControlRoutine(void)
 	/* set output file name to the summary table */
 	strcpy(paramset.outputfilename,desth);
 
-	paramset.endstatus = CTRL_SUCCESS;
+	paramset.endstatus = NULL;
 	paramset.running = 0;
-	return i;
+	return CTRL_SUCCESS;
 }
 
 /*************************************************

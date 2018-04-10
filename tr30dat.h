@@ -319,6 +319,13 @@ double Cell_total, Wasted_total;
 #define GLOBAL 0
 #define LOCAL 1
 
+/* Struct to handle the possible exit states of TRFControlRoutine */
+/* Added on April 10, 2018 by Yozen Hernandez */
+typedef struct trf_err_s
+{
+	unsigned int trs_processed;
+	char const *error;
+} trf_err_s;
 
 typedef struct
 {
@@ -348,7 +355,7 @@ typedef struct
 	int  outputcount; /* repeats found */
 	int guihandle; /* this variable is only used in the GUI version */
 	int  running;
-	int  endstatus;
+	char *endstatus;
 	int  percent;
 } TRFPARAMSET;
 

@@ -218,15 +218,17 @@ int main(int ac, char** av)
 
 	/* call the fuction on trfrun.h that controls execution */
 	int rc = TRFControlRoutine();
-	if (paramset.ngs) {
-		if (rc>=1) 
-			return 0;
-		if (rc==0) 
-			return CTRL_NOTHINGPROCESSED;
-		else 
-			return rc;
-	} else {
-		return paramset.endstatus;
+	
+	if (paramset.outputcount && !paramset.endstatus) {
+		fprintf(stderr, "No TRs found. Exiting...\n");
+		return 0;
+	}
+	else if (paramset.endstatus) {
+		fprintf(stderr, "Error processing input: %s\n", paramset.endstatus);
+		return 1;
+	}
+	else {
+		return 0;
 	}
 }
 
