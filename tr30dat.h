@@ -157,12 +157,12 @@ int MAXPATTERNSIZE = 500;
 /* G. Benson 1/28/2004 */
 /* size of EC increased to avoid memory error when consensus length exceeds MAXPATTERNSIZECONSTANT
    after returning from get_consensus(d) */
-char EC[2 * (MAXPATTERNSIZECONSTANT + 1)];
+unsigned char EC[2 * (MAXPATTERNSIZECONSTANT + 1)];
 
 int *Index;
 int *ACGTcount;
 
-char *Sequence;
+unsigned char *Sequence;
 int Length;
 
 /* int S[MAXWRAPLENGTH+1][MAXPATTERNSIZE];*/

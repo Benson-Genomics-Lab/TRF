@@ -1324,7 +1324,7 @@ else
 {
 
 	int i,length,fullcopy;
-	char *x,*y;
+	unsigned char *x,*y;
 	int realr,r,c,w;
 	int upi,k;
 	int legitimateZero;
@@ -1520,7 +1520,7 @@ void get_pair_alignment_with_copynumber(int size)
 {
 
 	int i,j,si,length,adjlength,fullcopy;
-	char *x,*y;
+	unsigned char *x,*y;
 
 
 
@@ -2281,7 +2281,7 @@ void link_Distance_window(int d)
 		/* f is first linked index below d */
 		if (f==d)trf_message("\nTag error following links.  f==d=%d",d);
 	}
-	else if(Tag[t]==d)
+	else //if(Tag[t]==d) // 'if' Not needed; only remaining case
 	{
 		trf_message("\nTag error Tag[%d]=%d",t,d);
 		exit(-2);
@@ -2379,7 +2379,7 @@ int no_matches_so_unlink_Distance(int d, int location,
 
 
 
-int GetTopPeriods(char* pattern, int length, int* toparray)
+int GetTopPeriods(unsigned char* pattern, int length, int* toparray)
 {
 	int topind;
 	double topval;
@@ -2483,7 +2483,7 @@ int multiples_criteria_4(int found_d)
 {
 	int g,lowerindex,upperindex;
 	int topperiods[NUMBER_OF_PERIODS];
-	char* pattern;
+	unsigned char* pattern;
 	int length;
 
 	lowerindex=AlignPair.indexprime[AlignPair.length];

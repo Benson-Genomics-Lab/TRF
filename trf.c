@@ -217,14 +217,17 @@ int main(int ac, char** av)
 #endif
 
 	/* call the fuction on trfrun.h that controls execution */
-	int rc = TRFControlRoutine();
+	TRFControlRoutine();
 	
+	/* Check the status by looking at the output count and the endstatus
+	   members of the paramset struct */
 	if (paramset.outputcount == 0 && !paramset.endstatus) {
-		fprintf(stderr, "No TRs found. Exiting...\n");
+		/* If no TRs were found, print informative message to STDERR */
+		printf("No TRs found. Exiting...\n");
 		return 0;
 	}
 	else if (paramset.endstatus) {
-		fprintf(stderr, "Error processing input: %s\n", paramset.endstatus);
+		printf("Error processing input: %s\n", paramset.endstatus);
 		return 1;
 	}
 	else {
