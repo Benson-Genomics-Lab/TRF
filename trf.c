@@ -8,7 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
-#include "trfrun.h"
+#include <errno.h> // ERANGE
+#include <limits.h> // LONG_MIN, LONG_MAX
+#include "trfrun.h" // paramset struct (via tr30dat.h), others
 
 const char *usage = "\n\nPlease use: %s File Match Mismatch Delta PM PI Minscore MaxPeriod [options]\n"
 "\nWhere: (all weights, penalties, and scores are positive)"
@@ -47,12 +49,11 @@ const char *usage = "\n\nPlease use: %s File Match Mismatch Delta PM PI Minscore
 
 char* GetNamePartAddress(char* name);
 void PrintBanner(void);
-
+static int ParseInt(const char *str, int *dest);
+static int ParseUInt(const char *str, unsigned int *dest);
 
 int main(int ac, char** av)
 {
-	char *pname;
-
 	/* Handle a lone -v argument ourselves */
 	if ( (ac == 2) && ((strcmp(av[1], "-v") == 0) || (strcmp(av[1], "-V") == 0)) ) {
 		PrintBanner();
@@ -66,6 +67,7 @@ int main(int ac, char** av)
 	}
 
 	/* set option defaults */
+	paramset.use_stdin = 0;
 	paramset.datafile = 0;
 	paramset.maskedfile = 0;
 	paramset.flankingsequence = 0;
@@ -74,6 +76,7 @@ int main(int ac, char** av)
 	paramset.redundoff = 0;
 	paramset.maxwraplength = 2000000;
 	paramset.ngs = 0; /* this is for unix systems only */
+	paramset.guihandle=0;
 
 	/* Parse command line options */
 	/* Assume that since the first checks were passed, options start at argument 8
@@ -169,7 +172,12 @@ int main(int ac, char** av)
 				fprintf(stderr, "Error: max TR length must be at least 1 million\n");
 				exit(2);
 			}
-			paramset.maxwraplength = atof(optarg) * 1e6;
+
+			if (ParseUInt(av[8], &paramset.maxwraplength) == 0) {
+				fprintf(stderr, "Stopped while parsing max TR length (option '-L') value\n");
+				exit(1);
+			}
+			paramset.maxwraplength *= 1e6;
 
 			break;
 
@@ -184,18 +192,47 @@ int main(int ac, char** av)
 
 	/* get input parameters */
 	strcpy(paramset.inputfilename,av[1]);
-	paramset.use_stdin = 0;
-	pname = GetNamePartAddress(av[1]);
-	strcpy(paramset.outputprefix,pname);
-	paramset.match    = atoi(av[2]);
-	paramset.mismatch = atoi(av[3]);
-	paramset.indel    = atoi(av[4]);
-	paramset.PM = atoi(av[5]);
-	paramset.PI = atoi(av[6]);
-	paramset.minscore = atoi(av[7]);
-	paramset.maxperiod = atoi(av[8]);
-	paramset.guihandle=0;
-	if(paramset.HTMLoff) paramset.datafile=1;
+	strcpy(paramset.outputprefix,GetNamePartAddress(av[1]));
+
+	/* Validate these parameters */
+	if (ParseInt(av[2], &paramset.match) == 0) {
+		fprintf(stderr, "Stopped while parsing match value\n");
+		exit(1);
+	}
+	if (ParseInt(av[3], &paramset.mismatch) == 0) {
+		fprintf(stderr, "Stopped while parsing mismatch value\n");
+		exit(1);
+	}
+	if (ParseInt(av[4], &paramset.indel) == 0) {
+		fprintf(stderr, "Stopped while parsing indel value\n");
+		exit(1);
+	}
+	if (ParseInt(av[5], &paramset.PM) == 0) {
+		fprintf(stderr, "Stopped while parsing PM value\n");
+		exit(1);
+	}
+	if (ParseInt(av[6], &paramset.PI) == 0) {
+		fprintf(stderr, "Stopped while parsing PI value\n");
+		exit(1);
+	}
+	if (ParseInt(av[7], &paramset.minscore) == 0) {
+		fprintf(stderr, "Stopped while parsing Minscore value\n");
+		exit(1);
+	}
+
+	if (ParseUInt(av[8], &paramset.maxperiod) == 0) {
+		fprintf(stderr, "Stopped while parsing MaxPeriod value\n");
+		exit(1);
+	}
+
+	/* Validation for maxperiod */
+	// Set maxperiod to 2000 if over 2000 was specified.
+	(paramset.maxperiod > 2000) && (paramset.maxperiod = 2000);
+	// Set maxperiod to 1 if 0 was specified.
+	(paramset.maxperiod == 0) && (paramset.maxperiod = 1);
+
+	// paramset.datafile must be set if HTMLoff is set
+	paramset.datafile |= paramset.HTMLoff;
 
 	if  (paramset.ngs == 1) {
 		paramset.datafile=1;
@@ -256,6 +293,40 @@ char* GetNamePartAddress(char* name)
 	}
 	if(*pname==dirsymbol) pname++;
 	return pname;
+}
+
+// Use these two function for parameter validation
+// TODO Move declarations to other header file
+static int ParseInt(const char *str, int *dest)
+{
+    errno = 0;
+    char *temp;
+    long val = strtol(str, &temp, 0);
+
+    // Print message and return false (0) if unable
+    // to convert to a valid int
+    if (temp == str || *temp != '\0' ||
+        ((val == LONG_MIN || val == LONG_MAX) && errno == ERANGE)) {
+        fprintf(stderr, "Error parsing parameter '%s' as integer value. Leftover string is: '%s'\n",
+                str, temp);
+   		return 0;
+	}
+
+	// Set dest pointer and return true (1) if successful
+	*dest = val;
+    return 1;
+}
+
+static int ParseUInt(const char *str, unsigned int *dest)
+{
+	int temp;
+
+    int success = ParseInt(str, &temp);
+
+	// Return truth value of: conversion successful
+	// AND the value is positive. Also set *dest if
+	// those conditions are satisfied.
+    return (success && (temp >= 0)) && (*dest = temp);
 }
 
 void    PrintBanner(void)

@@ -324,7 +324,7 @@ typedef struct {
     int mismatch;
     int indel;
     int minscore;
-    int maxperiod;
+    unsigned int maxperiod;
     int PM;
     int PI;
     int datafile;
