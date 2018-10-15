@@ -57,7 +57,11 @@ int counterInSeq = 0;
 #include <stdarg.h> /* for trf_message() function */
 
 /* use semantic versioning, please: https://semver.org/ */
+#ifndef VERSION
 #define versionstring "4.10.0"
+#else
+#define versionstring VERSION
+#endif
 
 #define farcalloc calloc
 
