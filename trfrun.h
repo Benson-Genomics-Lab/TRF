@@ -179,6 +179,10 @@ void TRFControlRoutine(void)
 		counterInSeq=0;
 		TRF(&seq);
 
+		if (paramset.endstatus) {
+			return;
+		}
+
 		if(paramset.datafile)
 		{
 
@@ -652,9 +656,21 @@ void TRF(FASTASEQUENCE* pseq)
 	/* AlignPair holds the characters and alignments of the current */
 	/* primary and secondary sequences  */
 	AlignPair.textprime=newAlignPairtext(2*maxwraplength);
+	if (paramset.endstatus) {
+		return;
+	}
 	AlignPair.textsecnd=newAlignPairtext(2*maxwraplength);
+	if (paramset.endstatus) {
+		return;
+	}
 	AlignPair.indexprime=newAlignPairindex(2*maxwraplength);
+	if (paramset.endstatus) {
+		return;
+	}
 	AlignPair.indexsecnd=newAlignPairindex(2*maxwraplength);
+	if (paramset.endstatus) {
+		return;
+	}
 
 	/* set algorithm's parameters */
 	Alpha = paramset.match;

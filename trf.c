@@ -21,7 +21,7 @@ const char *usage = "\n\nPlease use: %s File Match Mismatch Delta PM PI Minscore
 "\n  PM = match probability (whole number)"
 "\n  PI = indel probability (whole number)"
 "\n  Minscore = minimum alignment score to report"
-"\n  MaxPeriod = maximum period size to report"
+"\n  MaxPeriod = maximum period size to report. Must be between 1 and 2000, inclusive"
 "\n  [options] = one or more of the following:"
 "\n        -m        masked sequence file"
 "\n        -f        flanking sequence"
@@ -170,11 +170,13 @@ int main(int ac, char** av)
 			case 'L':
 			if ((atol(optarg) < 1)){
 				fprintf(stderr, "Error: max TR length must be at least 1 million\n");
+				PrintBanner();
 				exit(2);
 			}
 
 			if (ParseUInt(av[8], &paramset.maxwraplength) == 0) {
-				fprintf(stderr, "Stopped while parsing max TR length (option '-L') value\n");
+				fprintf(stderr, "Error while parsing max TR length (option '-L') value\n");
+				PrintBanner();
 				exit(1);
 			}
 			paramset.maxwraplength *= 1e6;
@@ -195,41 +197,42 @@ int main(int ac, char** av)
 	strcpy(paramset.outputprefix,GetNamePartAddress(av[1]));
 
 	/* Validate these parameters */
-	if (ParseInt(av[2], &paramset.match) == 0) {
-		fprintf(stderr, "Stopped while parsing match value\n");
-		exit(1);
+	if (ParseUInt(av[2], &paramset.match) == 0) {
+		paramset.endstatus = "Error parsing match parameter."
+		" Value must be a positive integer.";
 	}
-	if (ParseInt(av[3], &paramset.mismatch) == 0) {
-		fprintf(stderr, "Stopped while parsing mismatch value\n");
-		exit(1);
+	else if (ParseUInt(av[3], &paramset.mismatch) == 0) {
+		paramset.endstatus = "Error parsing mismatch parameter."
+		" Value must be a positive integer.";
 	}
-	if (ParseInt(av[4], &paramset.indel) == 0) {
-		fprintf(stderr, "Stopped while parsing indel value\n");
-		exit(1);
+	else if (ParseUInt(av[4], &paramset.indel) == 0) {
+		paramset.endstatus = "Error parsing indel parameter."
+		" Value must be a positive integer.";
 	}
-	if (ParseInt(av[5], &paramset.PM) == 0) {
-		fprintf(stderr, "Stopped while parsing PM value\n");
-		exit(1);
+	else if (ParseUInt(av[5], &paramset.PM) == 0) {
+		paramset.endstatus = "Error parsing PM parameter."
+		" Value must be a positive integer.";
 	}
-	if (ParseInt(av[6], &paramset.PI) == 0) {
-		fprintf(stderr, "Stopped while parsing PI value\n");
-		exit(1);
+	else if (ParseUInt(av[6], &paramset.PI) == 0) {
+		paramset.endstatus = "Error parsing PI parameter."
+		" Value must be a positive integer.";
 	}
-	if (ParseInt(av[7], &paramset.minscore) == 0) {
-		fprintf(stderr, "Stopped while parsing Minscore value\n");
-		exit(1);
+	else if (ParseUInt(av[7], &paramset.minscore) == 0) {
+		paramset.endstatus = "Error parsing Minscore parameter."
+		" Value must be a positive integer.";
+	}
+	else if ((ParseUInt(av[8], &paramset.maxperiod) == 0) ||
+		(paramset.maxperiod > 2000) || (paramset.maxperiod == 0)) {
+		paramset.endstatus = "Error parsing MaxPeriod parameter."
+		" Value must be between 1 and 2000, inclusive.";
 	}
 
-	if (ParseUInt(av[8], &paramset.maxperiod) == 0) {
-		fprintf(stderr, "Stopped while parsing MaxPeriod value\n");
+	/* Error if any validation failed */
+	if(paramset.endstatus) {
+		printf("%s\n\n", paramset.endstatus);
+		printf("Please run with -h for help, or visit https://tandem.bu.edu/trf/trf.unix.help.html\n");
 		exit(1);
 	}
-
-	/* Validation for maxperiod */
-	// Set maxperiod to 2000 if over 2000 was specified.
-	(paramset.maxperiod > 2000) && (paramset.maxperiod = 2000);
-	// Set maxperiod to 1 if 0 was specified.
-	(paramset.maxperiod == 0) && (paramset.maxperiod = 1);
 
 	// paramset.datafile must be set if HTMLoff is set
 	paramset.datafile |= paramset.HTMLoff;
@@ -307,8 +310,8 @@ static int ParseInt(const char *str, int *dest)
     // to convert to a valid int
     if (temp == str || *temp != '\0' ||
         ((val == LONG_MIN || val == LONG_MAX) && errno == ERANGE)) {
-        fprintf(stderr, "Error parsing parameter '%s' as integer value. Leftover string is: '%s'\n",
-                str, temp);
+        // fprintf(stderr, "Error parsing parameter '%s' as integer value.\n",
+        //         str);
    		return 0;
 	}
 
@@ -326,7 +329,13 @@ static int ParseUInt(const char *str, unsigned int *dest)
 	// Return truth value of: conversion successful
 	// AND the value is positive. Also set *dest if
 	// those conditions are satisfied.
-    return (success && (temp >= 0)) && (*dest = temp);
+    if (success && (temp >= 0)) {
+    	*dest = temp;
+    	return 1;
+    }
+    else {
+    	return 0;
+    }
 }
 
 void    PrintBanner(void)

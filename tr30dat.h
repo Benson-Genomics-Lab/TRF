@@ -56,7 +56,8 @@ int counterInSeq = 0;
 #include <math.h> /* for ceil function */
 #include <stdarg.h> /* for trf_message() function */
 
-#define versionstring "4.09"
+/* use semantic versioning, please: https://semver.org/ */
+#define versionstring "4.10.0"
 
 #define farcalloc calloc
 
@@ -72,7 +73,7 @@ int counterInSeq = 0;
 
 #define WEIGHTCONSENSUS 0
 #define REPEATCONSENSUS 0
-#define MAXDISTANCECONSTANT 2000 /* replaced by a variable */
+#define MAXDISTANCECONSTANT 2000 /* should replaced by a variable, later */
 #define MINDISTANCE 10
 #define MINBANDRADIUS 6
 #define RECENTERCRITERION 3
@@ -157,6 +158,12 @@ int MAXPATTERNSIZE = 500;
 /* G. Benson 1/28/2004 */
 /* size of EC increased to avoid memory error when consensus length exceeds MAXPATTERNSIZECONSTANT
    after returning from get_consensus(d) */
+/* Y. Hernandez 10/15/2018 */
+/* If patternsize over 2000 is ever allowed, must change how this
+ * variable is initialized. Must be a dynamically allocated array,
+ * should use MAXPATTERNSIZE instead (but set elsewhere, after
+ * user parameters have been processed).
+ */
 unsigned char EC[2 * (MAXPATTERNSIZECONSTANT + 1)];
 
 int *Index;
@@ -320,17 +327,17 @@ double Cell_total, Wasted_total;
 #define LOCAL 1
 
 typedef struct {
-    int match;
-    int mismatch;
-    int indel;
-    int minscore;
+    unsigned int match;
+    unsigned int mismatch;
+    unsigned int indel;
+    unsigned int minscore;
     unsigned int maxperiod;
-    int PM;
-    int PI;
+    unsigned int PM;
+    unsigned int PI;
     int datafile;
     int maskedfile;
     int flankingsequence;
-    int flankinglength;
+    unsigned int flankinglength;
     int HTMLoff;
     int redundoff;
     int ngs;

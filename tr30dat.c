@@ -18,11 +18,11 @@
 #define new1Darrayfunc(type,functionname,length)\
 	type *functionname(int length)\
 {\
-	type *objptr=(type *)calloc(length,sizeof(type));\
+	type *objptr=calloc(length,sizeof(*objptr));\
 	if(objptr==NULL)\
 	{\
-		trf_message("\n functionname: Out of memory!");\
-		exit(-1);\
+		paramset.endstatus = "functionname: Out of memory!";\
+		return NULL;\
 	}\
 	return(objptr);\
 }
@@ -2023,7 +2023,12 @@ void get_consensus(int patternlength)
 
 	/* initialize counts */
 
-	for (c=0;c<=2*(MAXPATTERNSIZE);c++)
+	/* Y. Hernandez Oct 15, 2018 */
+	/* Changed from MAXPATTERNSIZE to MAXPATTERNSIZECONSTANT since that
+	 * is what is used to init the arrays in Consensus. Using
+	 * MAXPATTERNSIZE will result in an out-of-bounds error if > 2000.
+	 */
+	for (c=0;c<=2*(MAXPATTERNSIZECONSTANT);c++)
 	{
 		Consensus.A[c]=0;
 		Consensus.C[c]=0;
@@ -3807,8 +3812,6 @@ void init_and_fill_coin_toss_stats2000_with_4tuplesizes(void)
 	int g,d;
 	int *waitdata, *sumdata;
 
-
-
 	/* random walk range */
 	trf_message("\nPmatch=%3.2f,Pindel=%3.2f",(float)PM/100,(float)PI/100);
 	Pindel=(float)PI/100;
@@ -3878,8 +3881,14 @@ void init_and_fill_coin_toss_stats2000_with_4tuplesizes(void)
 
 	/* StepFunction(waitdata+1, MAXDISTANCE);*/
 
+	/* Oct 15, 2018 Yozen: truncate value of MAXDISTANCE to 2000
+	 * if it exceeds that value, to avoid out-of-bounds crashes here.
+	 * Arrays are only as large as 2004. This is a temporary change
+	 * while we figure out the best approach to larger pattern sizes.
+	 * We may also decide that patterns larger than that are simply
+	 * out of scope for TRF */
 	for(d=1;d<=MAXDISTANCE;d++)
-		Distance[d].waiting_time_criteria = waitdata[d];
+		Distance[d].waiting_time_criteria = waitdata[min(2000, d)];
 
 	/* k_run_sums_criteria */
 
@@ -3900,8 +3909,9 @@ void init_and_fill_coin_toss_stats2000_with_4tuplesizes(void)
 		exit(-13);
 	}
 
+	/* Oct 15, 2018 Yozen: truncate value of MAXDISTANCE to 2000 */
 	for(d=1;d<=MAXDISTANCE;d++)
-		Distance[d].k_run_sums_criteria = sumdata[d];
+		Distance[d].k_run_sums_criteria = sumdata[min(2000, d)];
 
 }
 
