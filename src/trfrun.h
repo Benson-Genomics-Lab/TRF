@@ -145,7 +145,7 @@ void TRFControlRoutine(void)
 
 	if(loadstatus<0)
 	{
-		PrintError("Error while loading sequence");
+		PrintError("Could not load sequence. Empty file or bad format.");
 		paramset.endstatus = "Bad format."; /* ok for now */
 		paramset.running = 0;
 		fclose(srcfp);
@@ -924,11 +924,11 @@ void PrintError(char* errortext)
 	MessageBox((HWND)paramset.guihandle,errortext,"TRF",
 			MB_ICONERROR|MB_OK);
 #elif defined(WINDOWSCONSOLE)
-	fprintf(stderr,"\nError: %s",errortext);
+	fprintf(stderr,"Error: %s\n",errortext);
 #elif defined(UNIXGUI)
-	unix_gui_error("\nError: %s",errortext);
+	unix_gui_error("Error: %s\n",errortext);
 #elif defined(UNIXCONSOLE)
-	fprintf(stderr,"Error: %s",errortext);
+	fprintf(stderr,"Error: %s\n",errortext);
 #endif
 
 	return;
