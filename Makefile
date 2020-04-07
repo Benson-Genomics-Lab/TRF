@@ -1,6 +1,7 @@
 # TODO Handle debug/release build directories to not pollute source directory
 # FIXME clean doesn't work
 
+# use semantic versioning, please: https://semver.org/
 VERSION       	= 4.10.0-rc.1
 CFLAGS       	= -O2 -DVERSION=\"$(VERSION)\"
 CFLAGS_DEBUG 	= -ggdb -DDEBUG

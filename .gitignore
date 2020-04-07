@@ -4,3 +4,7 @@ Debug/
 *.sublime-*
 *.html
 *.dat
+*.code-workspace
+.vscode
+.vstags
+build/
