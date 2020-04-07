@@ -3,7 +3,7 @@
 
 # use semantic versioning, please: https://semver.org/
 VERSION       	= 4.10.0-rc.1
-CFLAGS       	= -O2 -DVERSION=\"$(VERSION)\"
+CFLAGS       	= -O2 -fno-align-functions -fno-align-loops -DVERSION=\"$(VERSION)\"
 CFLAGS_DEBUG 	= -ggdb -DDEBUG
 LDFLAGS      	= -lm
 UNIX_DEFINES  	= -DUNIXCONSOLE
