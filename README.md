@@ -5,7 +5,7 @@ Tandem Repeats Finder https://tandem.bu.edu/trf/trf.html
 [TRF Definitions](#trf-definitions)  
 [Using Command Line Version of Tandem Repeats Finder](#using-command-line-version-of-tandem-repeats-finder)  
 [How does Tandem Repeats Finder work?](#how-does-tandem-repeats-finder-work)  
-[What's New](#what's-new)
+[What's New](#whats-new)
 
 ## Purpose ## 
 ## Reference ##
