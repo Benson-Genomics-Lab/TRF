@@ -1,5 +1,6 @@
 # TRF
-Tandem Repeats Finder https://tandem.bu.edu/trf/trf.html
+**Tandem Repeats Finder:** https://tandem.bu.edu/trf/trf.html  
+**Tandem Repeats Database:** http://tandem.bu.edu/cgi-bin/trdb/trdb.exe
 
 ## Table of Contents ##
 [TRF Definitions](#trf-definitions)  
@@ -227,7 +228,7 @@ Tandem Repeats Finder finds repeats for period sizes in the range from 1 to 2000
 ## What's New ##
 
 ### New For Version 4.09 (Feb 22, 2016) ###
-
+ - this version fixes issues with centromeres in HG38
  - new -l/-L flag allows the user to specify the length of the longest expected TR array in the input sequence, in millions. The default value is 2, for 2 million bp. For HG38, a value of 6 is necessary.
 
 	Example usage:
