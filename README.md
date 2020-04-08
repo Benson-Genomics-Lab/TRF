@@ -3,14 +3,21 @@
 **Tandem Repeats Database:** http://tandem.bu.edu/cgi-bin/trdb/trdb.exe
 
 ## Table of Contents ##
-[TRF Definitions](#trf-definitions)  
-[Using Command Line Version of Tandem Repeats Finder](#using-command-line-version-of-tandem-repeats-finder)  
-[How does Tandem Repeats Finder work?](#how-does-tandem-repeats-finder-work)  
-[What's New](#whats-new)
+ - [Purpose](#purpose)   
+ - [Reference](#reference)  
+ - [Instructions for Compiling](#instructions-for-compiling)  
+ - [TRF Definitions](#trf-definitions)  
+ 	- [FASTA Format](#fasta-format)
+    - [Table Explanation](#table-explanation)
+    - [Alignment Explanation](#alignment-explanation)
+    - [Program Parameters](#program-parameters)
+    - [Options](#options)
+ - [Using Command Line Version of Tandem Repeats Finder](#using-command-line-version-of-tandem-repeats-finder)  
+ - [How does Tandem Repeats Finder work?](#how-does-tandem-repeats-finder-work)  
+ - [What's New](#whats-new)
 
 ## Purpose ## 
 ## Reference ##
-## Usage ##
 ## Instructions for Compiling ##
 
 ## TRF Definitions ##
@@ -108,7 +115,7 @@ Where: (all weights, penalties, and scores are positive)
 ```
 Note the sequence file should be in FASTA format:
 
-```
+```bash
 >Name of sequence
 aggaaacctgccatggcctcctggtgagctgtcctcatccactgctcgctgcctctccag
 atactctgacccatggatcccctgggtgcagccaagccacaatggccatggcgccgctgt
@@ -116,7 +123,7 @@ actcccacccgccccaccctcctgatcctgctatggacatggcctttccacatccctgtg
 ```
 The program accepts a minimum of eight parameters. Options can be specified to generate additional files.
 
-The following is a more detailed description of the parameters:
+The following is a more detailed description of the **parameters**:
 
 - **File:** The sequence file to be analyzed in FASTA format( see for details). Multiple sequence in the same file are allowed.
  - **Match, Mismatch, and Delta:** Weights for match, mismatch and indels. These parameters are for Smith-Waterman style local alignment using wraparound dynamic programming. Lower weights allow alignments with more mismatches and indels. A match weight of 2 has proven effective with mismatch and indel penalties in the range of 3 to 7. Mismatch and indel weights are interpreted as negative numbers. A 3 is more permissive and a 7 less permissive. The recomended values for Match Mismatch and Delta are 2, 7, and 7 respectively.
