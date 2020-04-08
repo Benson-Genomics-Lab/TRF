@@ -1,12 +1,92 @@
 # TRF
 Tandem Repeats Finder https://tandem.bu.edu/trf/trf.html
 
+## Table of Contents ##
+[TRF Definitions](## TRF-Definitions ##)
+
+
 ## Purpose ## 
 ## Reference ##
 ## Usage ##
 ## Instructions for Compiling ##
 
+## TRF Definitions ##
 
+### FASTA Format: ###
+
+The FASTA format is a plain text format which looks something like this:
+
+>myseq
+AGTCGTCGCT AGCTAGCTAG CATCGAGTCT TTTCGATCGA GGACTAGACT TCTAGCTAGC TAGCATAGCA TACGAGCATA TCGGTCATGA GACTGATTGG GCTTTAGCTA GCTAGCATAG CATACGAGCA TATCGGTAGA CTGATTGGGT TTAGGTTACC
+
+The first line starts with a greater than sign ">" and contains a name or other identifier for the sequence. This is the sequence header and must be in a single line. The remaining lines contain the sequence data. The sequence can be in upper or lower case letters. Anything other than letters (numbers for example) is ignored. Multiple sequences can be present in the same file as long as each sequence has its own header.
+Table Explanation:
+
+The summary table includes the following information:
+
+    Indices of the repeat relative to the start of the sequence.
+    Period size of the repeat.
+    Number of copies aligned with the consensus pattern.
+    Size of consensus pattern (may differ slightly from the period size).
+    Percent of matches between adjacent copies overall.
+    Percent of indels between adjacent copies overall.
+    Alignment score.
+    Percent composition for each of the four nucleotides.
+    Entropy measure based on percent composition. 
+
+If the output contains more than 120 repeats, multiple linked tables are produced. The links to the other tables appear at the top and bottom of each table.
+
+Note: If you save multiple linked summary table files, use the default names supplied by your browser to preserve the automatic linking.
+Alignment Explanation:
+
+The alignment is presented as follows:
+
+    In each pair of lines, the actual sequence is on the top and a consensus sequence for all the copies is on the bottom.
+    Each pair of lines is one period except for very small patterns.
+    The 10 sequence characters before and after a repeat are shown.
+    Symbol * indicates a mismatch.
+    Symbol - indicates an insertion or deletion.
+    Statistics refers to the matches, mismatches and indels overall between adjacent copies in the sequence, not between the sequence and the consensus pattern.
+    Distances between matching characters at corresponding positions are listed as distance, number at that distance, percentage of all matches.
+    ACGTcount is percentage of each nucleotide in the repeat sequence.
+    Consensus sequence is shown by itself.
+    If chosen as an option, 500 characters of flanking sequence on each side of the repeat are shown. 
+
+Note: If you save the alignment file, use the default name supplied by your browser to preserve the automatic cross-referencing with the summary table.
+Program Parameters:
+
+Input to the program consists of a sequence file and the following parameters:
+
+    Alignment Parameters. Weights for match, mismatch and indels. These parameters are for Smith-Waterman style local alignment using wraparound dynamic programming. Lower weights allow alignments with more mismatches and indels. Match weight is +2 in all options here. Mismatch and indel weights (interpreted as negative numbers) are either 3, 5, or 7. A 3 is more permissive and a 7 less permissive of these types of alignments choices.
+    Minimum Alignment Score. The alignment score must meet or exceed this value for the repeat to be reported.
+    Maximum Period Size. The period size must be no larger than this value for the repeat to be reported. Period size is the program’s best guess at the pattern size of the tandem repeat. The program will find all repeats with period size between 1 and 2000.
+    Maximum TR array size. Specifies the longest TR array (the complete repeating sequence) expected to be found in the input, in millions of base pairs. Some sequences have very long TR arrays, such as chromosome 18 in HG38 which has an array measuring over 5.3 million base pairs.
+    Detection Parameters. Matching probability Pm and indel probability Pi. Pm = .80 and Pi = .10 by default and cannot be modified in this version of the program. 
+
+Options:
+
+    Flanking sequence. Flanking sequence consists of the 500 nucleotides on each side of a repeat. Flanking sequence is recorded in the alignment file. This may be useful for PCR primer determination.
+    Masked Sequence File. The masked sequence file is a FASTA format file containing a copy of the sequence with every character that occurred in a tandem repeat changed to the letter 'N'. The word "masked" is added to the sequence description line just after the '>' character.
+    Data File. The data file is a text file which contains the same information, in the same order, as the repeat table file, plus consensus and repeat sequences. This file contains no labeling and is suitable for additional processing, for example with a perl script, outside of the program. 
+
+		 
+
+    Home
+
+    What's New
+
+    Submit Page
+
+    Downloads
+
+ 
+
+ 
+
+ 
+Last revised February 22, 2016
+Send any questions or comments to:
+Yozen Hernandez 
 ## How does Tandem Repeats Finder work? ##
 ### Probabilistic Model of Tandem Repeats ###
 
