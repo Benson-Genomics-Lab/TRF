@@ -2,7 +2,7 @@
 Tandem Repeats Finder https://tandem.bu.edu/trf/trf.html
 
 ## Table of Contents ##
-[TRF Definitions](## TRF-Definitions ##)
+[TRF Definitions](##TRF-Definitions)
 
 
 ## Purpose ## 
@@ -10,7 +10,7 @@ Tandem Repeats Finder https://tandem.bu.edu/trf/trf.html
 ## Usage ##
 ## Instructions for Compiling ##
 
-## TRF Definitions ##
+##TRF Definitions ##
 
 ### FASTA Format: ###
 
