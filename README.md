@@ -5,6 +5,7 @@ Tandem Repeats Finder https://tandem.bu.edu/trf/trf.html
 [TRF Definitions](#trf-definitions)  
 [Using Command Line Version of Tandem Repeats Finder](#using-command-line-version-of-tandem-repeats-finder)  
 [How does Tandem Repeats Finder work?](#how-does-tandem-repeats-finder-work)  
+[What's New](#what's-new)
 
 ## Purpose ## 
 ## Reference ##
@@ -221,3 +222,123 @@ Input to the program consists of a sequence file and the following parameters ( 
 ### Redundancy ###
 
 Tandem Repeats Finder finds repeats for period sizes in the range from 1 to 2000 nucleotides. If a repeat contains many copies, then the same repeat will be detected at various period sizes. This is restricted to the three best scoring period sizes. For example if a tandem repeat has period size 3 and contains 30 copies, then it will most likely also be detected at size 6 with 15 copies and size 9 with 7.5 copies. Also, the same period size may be detected more than once with different scores and slightly different indices. 
+
+  
+## What's New ##
+
+### New For Version 4.09 (Feb 22, 2016) ###
+
+ - new -l/-L flag allows the user to specify the length of the longest expected TR array in the input sequence, in millions. The default value is 2, for 2 million bp. For HG38, a value of 6 is necessary.
+
+	Example usage:
+```
+	trf409.linux64.exe hg38.fasta 2 5 7 80 10 50 2000 -l 6  
+```  
+
+ - Setting a sufficiently high value may result in a crash, very long execution time, or a sharp drop in available memory on your system. We have only tested up to a value of 25.
+
+ - For workloads requiring over 3GB of RAM (any value of -l above 5), the 32-bit builds cannot be used.
+
+ - New -v/-V flag allows you to quickly check your version of TRF.
+
+ - New -u/-U flag allows you to quickly display the usage help text.
+
+ 
+### New For Version 4.07b ###
+
+ - new -ngs flag allows more compact output and piping of input on linux systems, returns standard linux exit value of 0 on success
+
+ - temporary output is no longer written to disk
+
+ - changed alignment to go further when score drops to 0 on first pass, more repeats are reported now
+
+ - fixed bestlist structure deallocations, this significantly improves run speed on multi-sequence fasta files
+
+ - fixed line in alignment files "file K of N", K was off by 1 before
+
+ - Added check to make sure all required parameters are entered from the commandline
+
+ 
+### New For Version 4.04 ###
+
+ - Widened radius of narrowband alignment to avoid losing alignment in some cases
+
+ 
+### New For Version 4.03 ### 
+
+ - Added -R switch to produce output without redundancy if desired
+
+ - Fixed a bug in the redundancy algorithm which sometimes caused repeats to vanish
+
+ - Fixed a bug when N characters being part of pattern cause problems
+
+ 
+### New For Version 4.00 ### 
+
+ - Improved longer period detection and period 1 detection
+
+ - Improved alignment
+
+ - Added a flag to suppress HTML output (-h)
+
+ - Fixed a loading sequence problem with incomplete FASTA format files
+
+ - Increased minimum period for larger repeats from 1.9 to 1.8 (patternsize > 50)
+
+ - Added Linux GUI version (GTK+)
+
+ 
+### New For Version 3.21 ### 
+
+ - Fixed Sequence Name Bug: This bug affected the parsing of FASTA header on Windows versions of the program. The bug caused the program to report a sequence name that had a control character appended at the end and a missing parameters line in the output data file. This bug surfaced as a result of version 3.20 fixes.
+
+ 
+### New For Version 3.20 ### 
+
+ - Improved Redundancy Control: We have improved the program's ability to remove redundant versions of the same tandem repeat. On earlier versions certain conditions could cause the algorithm to leave a redundant version in the output. The new version properly identifies these and removes them.
+
+ - Improved End-of-Line Identification: Different operating systems use different conventions for end of line (EOL) character sequence in text files. We have made improvements in the routines that allows TRF to read sequence text from files using various EOL conventions.
+
+ - Fixed Memory Overrun Bug: We have corrected a problem where some large-pattern, low-scoring repeats could cause a memory fault in previous versions. Thanks to Angie Hinrichs at UC Santa Cruz's Genome Bioinformatics group for the bug report and the offending sequence.
+ 
+### Previous Update (Version 3.01) ### 
+
+ - Unlimited Sequence Size: We have eliminated the sequence size restriction of previous versions. In this version you are only limited by the memory available in your system.
+
+ - Multi-Sequence Files: The program handles files containing multiple sequences. Each sequence must contain its own FASTA header. A summary page is produced which links to the results of individual sequences.
+
+ - Data File Includes Repeat Sequence: We now include complete repeat sequence for each repeat record reported in the data file.
+
+ - Smaller Scores: The downloadable versions of the program are now able to report matches with scores as low as 20. We recommend caution when using this feature since very large output files can be generated at this score level.
+
+ - Longer Patter Sizes: The program finds repeats with period size as large as 2000 base pairs.
+
+ - New File Naming Convention: For input files containing a single sequence the naming convention for output files has not been changed. For input files containing multiple sequences a summary page is produced. This file has the extension "summary.html" and contains links to the repeat tables of the individual sequences. In the name of each of those repeat tables and their alignment files, an additional identifier ".sn." ( n an integer, for example: ".s3.") has been inserted before the parameters to indicate the sequence index in the input file.
+
+ - Repeat Table Changes: Each table now shows the total number of repeats found in the sequence and links to other tables have been added at the bottom of the page.
+
+ - Longer Flanking Sequence: 500 characters of flanking sequence on each side of the repeat are now reported.
+
+ 
+
+### Previous Update (Version 2.02) ### 
+
+ - Multiple Repeat Tables: If the output contains more than 140 repeats, multiple linked repeat tables and alignment files will be produced. This will speed downloading time and overcome problems with tables too big for web browsers to format.
+
+ - Consensus Sequence: The program prints the consensus sequence for each repeat in the alignment file, below the alignment.
+
+ - Flanking Sequence: As an option, the program prints 200 characters of flanking sequence from each side of the repeat. This may be useful for PCR primer determination. Find it in the alignment file.
+
+ - Masked Sequence File: As an option, the program returns a copy of the original sequence with the tandem repeats "masked" out. The masked sequence file is a FASTA format file with every tandem repeat character changed to the letter 'N'. The word "masked" is added to the sequence description line just after the '>' character.
+
+ - Data File: As an option, the program returns a text file containing the same data, in the same order, as the summary table file, plus consensus sequences, but without any labels or formatting instructions. This file is suitable for automated processing, for example with a perl script.
+
+ - Select Parameters: Now you can select parameters when you submit a sequence, or simply use the default parameters. Visit the Submit Options Page for more details.
+
+ - Sequence Alphabet: The program now handles sequences containing letter other than A, C, G, and T.
+
+ - Enhanced Alignment File: We have modified the presentation of the alignment file. The output should be easier to view and print.
+
+ - Automatic Redundancy Removal: The program now reports only the smallest period size for a repeat unless a larger period size has a significantly higher score.
+
+ - Windows Version Now Available: A Windows version of the program is now available for download. This version of the the program can be run under Windows 95/98 and Windows NT 4. Please visit our Download Page for more details.
