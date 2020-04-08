@@ -76,8 +76,8 @@ Input to the program consists of a sequence file and the following parameters:
 ### Options: ###
 
 1. **Flanking sequence.** Flanking sequence consists of the 500 nucleotides on each side of a repeat. Flanking sequence is recorded in the alignment file. This may be useful for PCR primer determination.
-2. **Masked Sequence File.** The masked sequence file is a FASTA format file containing a copy of the sequence with every character that occurred in a tandem repeat changed to the letter 'N'. The word "masked" is added to the sequence description line just after the '>' character.
-3. **Data File.** The data file is a text file which contains the same information, in the same order, as the repeat table file, plus consensus and repeat sequences. This file contains no labeling and is suitable for additional processing, for example with a perl script, outside of the program. 
+2. **Masked Sequence File.** The masked sequence file is a [FASTA format](#fasta-format) file containing a copy of the sequence with every character that occurred in a tandem repeat changed to the letter 'N'. The word "masked" is added to the sequence description line just after the '>' character.
+3. **Data File.** The data file is a text file which contains the same information, in the same order, as the [repeat table file](#table-explanation), plus consensus and repeat sequences. This file contains no labeling and is suitable for additional processing, for example with a perl script, outside of the program. 
 
 
 ## Using Command Line Version of Tandem Repeats Finder ##
