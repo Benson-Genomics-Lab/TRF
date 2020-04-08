@@ -4,7 +4,8 @@
 
 ## Table of Contents ##
  - [Purpose](#purpose)   
- - [Reference](#reference)  
+ - [Reference](#reference)
+ - [Authors](#authors)
  - [Instructions for Compiling](#instructions-for-compiling)  
  - [TRF Definitions](#trf-definitions)  
  	- [FASTA Format](#fasta-format)
@@ -17,7 +18,16 @@
  - [What's New](#whats-new)
 
 ## Purpose ## 
+
 ## Reference ##
+Benson G. **Tandem repeats finder: a program to analyze DNA sequences.** ***Nucleic Acids Res.*** 1999; 27(2):573–580. [doi:10.1093/nar/27.2.573](https://academic.oup.com/nar/article/27/2/573/1061099)
+
+## Authors ##
+Gary Benson  
+Yevgeniy Gelfand   
+Alfredo Rodriguez  
+Yozen Hernandez  
+
 ## Instructions for Compiling ##
 
 ## TRF Definitions ##
