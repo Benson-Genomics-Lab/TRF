@@ -7,7 +7,7 @@ Tandem Repeats Finder https://tandem.bu.edu/trf/trf.html
 ## Instructions for Compiling ##
 
 
-## How TRF works ##
+## How does Tandem Repeats Finder work? ##
 ### Probabilistic Model of Tandem Repeats ###
 
 We model alignment of two tandem copies of a pattern of length n by a sequence of n independent Bernoulli trials (coin-tosses). The probability of success, P(Heads), which we also call or matching probability, represents the average percent identity between the copies. Each head in the Bernoulli sequence is interpreted as a match between aligned nucleotides. Each tail is a mismatch, insertion or deletion. A second probability, or indel probability, specifies the average percentage of insertions and deletions between the copies. Figure 1 illustrates the underlying idea for the model.
