@@ -24,9 +24,10 @@ Benson G. **Tandem repeats finder: a program to analyze DNA sequences.** ***Nucl
 
 ## Authors ##
 Gary Benson  
+Yozen Hernandez  
 Yevgeniy Gelfand   
 Alfredo Rodriguez  
-Yozen Hernandez  
+
 
 ## Instructions for Compiling ##
 
