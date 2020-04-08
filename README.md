@@ -6,6 +6,7 @@
  - [Purpose](#purpose)   
  - [Reference](#reference)
  - [Authors](#authors)
+ - [License](#license)
  - [Instructions for Compiling](#instructions-for-compiling)  
  - [TRF Definitions](#trf-definitions)  
  	- [FASTA Format](#fasta-format)
@@ -28,6 +29,7 @@ Yozen Hernandez
 Yevgeniy Gelfand   
 Alfredo Rodriguez  
 
+## License ##
 
 ## Instructions for Compiling ##
 
