@@ -170,7 +170,7 @@ For more information on the output please see [Table Explanation](#table-explana
 
 We model *alignment* of two tandem copies of a pattern of length n by a sequence of n independent Bernoulli trials (coin-tosses). The probability of success, *P(Heads)*, which we also call *P<sub>M</sub>* or *matching probability*, represents the *average* percent identity between the copies. Each head in the Bernoulli sequence is interpreted as a match between aligned nucleotides. Each tail is a mismatch, insertion or deletion. A second probability, *P<sub>I</sub>* or *indel probability*, specifies the average percentage of insertions and deletions between the copies. Figure 1 illustrates the underlying idea for the model.
 
-<img src="images_for_readme/figure1.gif" width="200"/>
+<img src="images_for_readme/figure1.gif"/>
 
 We are interested in the distribution of Bernoulli sequences and the properties of alignments that they represent when dealing with a specific pair *(P<sub>M</sub>, P<sub>I</sub>)*, for example, *(P<sub>M</sub> = .80, P<sub>I</sub> = .10)*. Note that these *conservation parameters* serves as a type of extremal bound, i.e., as a quantitative description of the *most divergent copies* we hope to detect.
 
@@ -191,7 +191,7 @@ When a position *i* is added to *H<sub>p</sub>*, we scan *H<sub>p</sub>* for all
 
 List *D<sub>d</sub>* is updated every time a match at distance *d* is detected. Position *i* of the match is stored on the list and the total is increased. The right end of the window is set to *i* and matches that occurred before *j=i-d* are dropped from the list and subtracted from the total. Lists for other nearby distances are also updated at this time (see [Random Walk Distribution](#random-walk-distribution)), but only to reset their right ends to *i* and remove matches that have been passed by the advancing windows. Information in the updated distance lists is used for the [sum-of-heads](#sum-of-heads) and [apparent-size](#apparent-size-distribution) criteria tests. If both tests are successful, the program moves on to the analysis component.
 
-<img src="images_for_readme/figure2.gif" width="200"/>
+<img src="images_for_readme/figure2.gif"/>
 
 
 ### Statistical Criteria ###
