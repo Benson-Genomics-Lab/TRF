@@ -191,7 +191,7 @@ When a position *i* is added to *H<sub>p</sub>*, we scan *H<sub>p</sub>* for all
 
 List *D<sub>d</sub>* is updated every time a match at distance *d* is detected. Position *i* of the match is stored on the list and the total is increased. The right end of the window is set to *i* and matches that occurred before *j=i-d* are dropped from the list and subtracted from the total. Lists for other nearby distances are also updated at this time (see [Random Walk Distribution](#random-walk-distribution)), but only to reset their right ends to *i* and remove matches that have been passed by the advancing windows. Information in the updated distance lists is used for the [sum-of-heads](#sum-of-heads) and [apparent-size](#apparent-size-distribution) criteria tests. If both tests are successful, the program moves on to the analysis component.
 
-<img src="images_for_readme/figure2.gif"/>
+<img src="images_for_readme/figure2.gif" width="500"/>
 
 
 ### Statistical Criteria ###
