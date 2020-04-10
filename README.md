@@ -170,7 +170,7 @@ For more information on the output please see [Table Explanation](#table-explana
 
 We model *alignment* of two tandem copies of a pattern of length n by a sequence of n independent Bernoulli trials (coin-tosses). The probability of success, *P(Heads)*, which we also call *P<sub>M</sub>* or *matching probability*, represents the *average* percent identity between the copies. Each head in the Bernoulli sequence is interpreted as a match between aligned nucleotides. Each tail is a mismatch, insertion or deletion. A second probability, *P<sub>I</sub>* or *indel probability*, specifies the average percentage of insertions and deletions between the copies. Figure 1 illustrates the underlying idea for the model.
 
-<img src="images_for_readme/figure1.gif"/>
+<img src="images_for_readme/figure1.gif" width="500" />
 
 We are interested in the distribution of Bernoulli sequences and the properties of alignments that they represent when dealing with a specific pair *(P<sub>M</sub>, P<sub>I</sub>)*, for example, *(P<sub>M</sub> = .80, P<sub>I</sub> = .10)*. Note that these *conservation parameters* serves as a type of extremal bound, i.e., as a quantitative description of the *most divergent copies* we hope to detect.
 
