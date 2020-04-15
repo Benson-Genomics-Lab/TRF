@@ -7,7 +7,8 @@
  - [Reference](#reference)
  - [Authors](#authors)
  - [License](#license)
- - [Instructions for Compiling](#instructions-for-compiling)  
+ - [Instructions for Compiling](#instructions-for-compiling) 
+ - [Quick Start](#quick-start)
  - [TRF Definitions](#trf-definitions)  
  	- [FASTA Format](#fasta-format)
     - [Table Explanation](#table-explanation)
@@ -33,6 +34,11 @@ Alfredo Rodriguez
 
 ## Instructions for Compiling ##
 
+## Quick Start ##
+The following is a recommended command line to run TRF.  Parameters are explained further below.
+```bash
+trf yourfile.fa 2 5 7 80 10 50 2000
+```
 ## TRF Definitions ##
 
 ### FASTA Format: ###
@@ -138,7 +144,7 @@ The program accepts a minimum of eight parameters. Options can be specified to g
 
 The following is a more detailed description of the **parameters**:
 
-- **File:** The sequence file to be analyzed in FASTA format( see for details). Multiple sequence in the same file are allowed.
+- **File:** The sequence file to be analyzed in FASTA format (see for details). Multiple sequence in the same file are allowed.
  - **Match, Mismatch, and Delta:** Weights for match, mismatch and indels. These parameters are for Smith-Waterman style local alignment using wraparound dynamic programming. Lower weights allow alignments with more mismatches and indels. A match weight of 2 has proven effective with mismatch and indel penalties in the range of 3 to 7. Mismatch and indel weights are interpreted as negative numbers. A 3 is more permissive and a 7 less permissive. The recomended values for Match Mismatch and Delta are 2, 7, and 7 respectively.
  - **PM and PI:** Probabilistic data is available for PM values of 80 and 75 and PI values of 10 and 20. The best performance can be achieved with values of PM=80 and PI=10. Values of PM=75 and PI=20 give results which are very similar, but often require as much as ten times the processing time when compared with values of PM=80 and PI=10.
  - **Minscore:** The alignment of a tandem repeat must meet or exceed this alignment score to be reported. For example, if we set the matching weight to 2 and the minimun score to 50, assuming perfect alignment, we will need to align at least 25 characters to meet the minimum score (for example 5 copies with a period of size 5).
@@ -204,23 +210,23 @@ This distribution indicates how many matches are required for a specific distanc
 
 ### Random Walk Distribution ###
 
-This distribution describes how distances between matches may vary due to indels. Because indels change the distance between matching k -tuples (figure below), there will be situations where the pattern has size d, yet the distance between matching k-tuples is d±1, d±2, etc. In order to test the sum-of-heads criterion, we count the matches in , for Δd = 0,1,..., for some . In our model, indels are single nucleotide events occurring with probability . Insertions and deletions are considered equally likely and we treat the distance change as a problem of random walks. Let the random variable = the maximum displacement from the origin of a one dimensional random walk with expected number of steps equal to . It can be shown that 95% of the time the random walk ranges between ± . We set = | | . For example if = 0.1 and d = 100, then = 7.
+This distribution describes how distances between matches may vary due to indels. Because indels change the distance between matching *k-tuples* (figure below), there will be situations where the pattern has size *d*, yet the distance between matching *k-tuples* is *d±1*, *d±2*, etc. In order to test the sum-of-heads criterion, we count the matches in *D<sub>d±&Delta;d</sub>*, for *&Delta;d* = 0,1,...,*&Delta;d<sub>max</sub>* for some *&Delta;d<sub>max</sub>*. In our model, indels are single nucleotide events occurring with probability *P<sub>I</sub>. Insertions and deletions are considered equally likely and we treat the distance change as a problem of random walks. Let the random variable *W<sub>d,P<sub>I</sub></sub>* = the maximum displacement from the origin of a one dimensional random walk with expected number of steps equal to *P<sub>I</sub> &middot; d*. It can be shown that 95% of the time the random walk ranges between ± 2.3 &middot; &radic;(P<sub>I</sub> &middot; d). We set *&Delta;d<sub>max</sub> = floor(2.3 &middot; &radic;(P<sub>I</sub> &middot; d))*. For example if *P<sub>I</sub>* = 0.1 and *d* = 100, then *&Delta;d<sub>max</sub>* = 7.
 
 ### Apparent Size Distribution ###
 
-This distribution is used to distinguish between tandem repeats and non-tandem direct repeats (figure below). For tandem repeats, the leading tuple in matching k-tuples will be distributed throughout the interval from j to i, whereas for non-tandem repeats, they should be concentrated on the right side of the interval near i. Let the random variable = The distance between the first and last run of k heads in an iid Bernoulli sequence of length d with success probability .
+This distribution is used to distinguish between tandem repeats and non-tandem direct repeats (figure below). For tandem repeats, the leading tuple in matching *k-tuples* will be distributed throughout the interval from *j* to *i*, whereas for non-tandem repeats, they should be concentrated on the right side of the interval near *i*. Let the random variable S<sub>d,k,P<sub>M</sub></sub> = the distance between the first and last run of *k* heads in an iid Bernoulli sequence of length *d* with success probability *P<sub>M</sub>*.
 
-is the apparent size of the repeat when using k-tuples to find the matches and will usually be shorter than the pattern size d. We estimate the distribution of by simulation because we make it conditional on first meeting the sum-of-heads criterion. For given d,k, and , random Bernoulli sequences are generated using . For every sequence that meets or exceeds the sum-of-heads criteria, the distance between the first and last run of heads of length k or larger is recorded. From the distribution, we determine the maximum number y such that 95% of the time is greater than y . We use y as our apparent size criterion. For example, if = .75, k = 5 and d = 100, then the criterion is 56. In order to test the apparent- size criterion, we compute the distance between the first and last tuple on list . If the distance between the tuples is smaller than the criterion, we assume the repeat is not tandem or that we have not yet seen enough of it to be convinced.
+*S<sub>d,k,P<sub>M</sub></sub>* is the apparent size of the repeat when using *k-tuples* to find the matches and will usually be shorter than the pattern size *d*. We estimate the distribution of *S<sub>d,k,P<sub>M</sub></sub>* by simulation because we make it conditional on first meeting the sum-of-heads criterion. For given *d*, *k*, and *P<sub>M</sub>*, random Bernoulli sequences are generated using *P<sub>M</sub>*. For every sequence that meets or exceeds the sum-of-heads criteria, the distance between the first and last run of heads of length *k* or larger is recorded. From the distribution, we determine the maximum number *y* such that 95% of the time *S<sub>d,k,P<sub>M</sub></sub> > y*.  We use *y* as our *apparent size criterion*. For example, if *P<sub>M</sub>* = .75, *k* = 5 and *d* = 100, then the criterion is 56. In order to test the apparent-size criterion, we compute the distance between the first and last tuple on list *D<sub>d</sub>*. If the distance between the tuples is smaller than the criterion, we assume the repeat is not tandem or that we have not yet seen enough of it to be convinced.
 
 ### Waiting Time Distribution ###
 
-This distribution is used to pick tuple sizes. Tuple size has a significant inverse effect on the running time of the program because increasing tuple size causes an exponential decrease in the expected number of tuple matches. If the nucleotides occur with equal frequency, then increasing the tuple size by Δk increases the average distance between randomly matching tuples by a factor of . If k=5, the average distance between random matches is approximately 1Kb, but if k=7, the average distance is approximately 16Kb. Thus, by using a larger tuple size, we keep the history lists short. On the other hand, increasing the tuple size decreases the chance of noticing approximate copies because they may not contain a long, unbroken run of matches. Let the random variable = the number of iid Bernoulli trials with success probability until the first occurrence of a run of k successes. follows the geometric distribution of order k. If we let p = and q=1-p then the exact probability for x ≥ 0 is given by the recursive formula :
+This distribution is used to pick tuple sizes. Tuple size has a significant inverse effect on the running time of the program because increasing tuple size causes an exponential decrease in the expected number of tuple matches. If the nucleotides occur with equal frequency, then increasing the tuple size by *&Delta;k* increases the average distance between randomly matching tuples by a factor of *4<sup>&Delta;k</sup>*. If *k* = 5, the average distance between random matches is approximately 1Kb, but if *k* = 7, the average distance is approximately 16Kb. Thus, by using a larger tuple size, we keep the history lists short. On the other hand, increasing the tuple size decreases the chance of noticing approximate copies because they may not contain a long, unbroken run of matches. Let the random variable *T<sub>k,P<sub>M</sub></sub>* = the number of iid Bernoulli trials with success probability *P<sub>M</sub>* until the first occurrence of a run of *k* successes. *T<sub>k,P<sub>M</sub></sub>* follows the *geometric distribution of order k*. If we let *p* = *P<sub>M</sub>* and *q* = *1 - p*, then the exact probability *P(T<sub>k,P<sub>M</sub></sub> = x)* for *x* ≥ 0 is given by the recursive formula:
 
-For example, if = .75 and k = 5 then we need at least 31 trials (coin-tosses) to have a 95% chance of seeing a run of 5 heads. For patterns smaller than 31 characters, we need to use a smaller k-tuple. The waiting time distribution allows us to balance the running time and sensitivity of our algorithm by picking a set of tuple sizes, each applying to a different range of pattern sizes. The program processes the sequence once, simultaneously checking these different tuple sizes. We require that the smallest pattern for tuple size k have a sum-of-heads criterion of at least k+1. The table below shows the range of tuple sizes and the corresponding pattern sizes currently used by the program.
+For example, if *P<sub>M</sub>* = .75 and *k* = 5 then we need at least 31 trials (coin-tosses) to have a 95% chance of seeing a run of 5 heads. For patterns smaller than 31 characters, we need to use a smaller *k-tuple*. The waiting time distribution allows us to balance the running time and sensitivity of our algorithm by picking a set of tuple sizes, *each applying to a different range of pattern sizes*. The program processes the sequence once, simultaneously checking these different tuple sizes. We require that the smallest pattern for tuple size *k* have a sum-of-heads criterion of at least k+1. The table below shows the range of tuple sizes and the corresponding pattern sizes currently used by the program.
 
 ### Analysis Component ###
 
-If the information in the distance list passes the criteria tests, a candidate pattern consisting of positions j+1...i, is selected from the nucleotide sequence and aligned with the surrounding sequence using wraparound dynamic programming (WDP). If at least two copies of the pattern are aligned with the sequence, the tandem repeat is reported. Several implementation details of the analysis component are described below.
+If the information in the distance list passes the criteria tests, a candidate pattern consisting of positions *j+1...i*, is selected from the nucleotide sequence and aligned with the surrounding sequence using wraparound dynamic programming (WDP). If at least two copies of the pattern are aligned with the sequence, the tandem repeat is reported. Several implementation details of the analysis component are described below.
 
 ***Multiple Reporting of Repeat at Different Pattern Sizes :***
 
@@ -228,17 +234,17 @@ When a single tandem repeat contains many copies, several pattern sizes are poss
 
 ***Narrow Band Alignment :***
 
-Alignments are the program's most time intensive calculations. To decrease running time, we limit WDP calculations to a narrow diagonal band in the alignment matrix for patterns larger than 20 characters. In accordance with the random walk results, the band radius is . The band is periodically recentered around a run of matches in the current best alignment.
+Alignments are the program's most time intensive calculations. To decrease running time, we limit WDP calculations to a narrow diagonal band in the alignment matrix for patterns larger than 20 characters. In accordance with the random walk results, the band radius is *&Delta;d<sub>max</sub>*. The band is periodically recentered around a run of matches in the current best alignment.
 
 ***Consensus Pattern and Period Size :***
 
-An initial candidate pattern P is drawn from the sequence, but this is usually not the best pattern to align with the tandem repeat. To improve the alignment, we determine a consensus pattern by majority rule from the alignment of the copies with P. The consensus is used to realign the sequence and this final alignment is reported in the output. Period size is defined as the most common matching distance between corresponding characters in the alignment and may not be identical to consensus size.
+An initial candidate pattern *P* is drawn from the sequence, but this is usually not the best pattern to align with the tandem repeat. To improve the alignment, we determine a consensus pattern by majority rule from the alignment of the copies with *P*. The consensus is used to realign the sequence and this final alignment is reported in the output. Period size is defined as the most common matching distance between corresponding characters in the alignment and may not be identical to consensus size.
 
 ### Program Parameters ###
 
-Input to the program consists of a sequence file and the following parameters ( allowable parameters values are shown in the main window ) :
+Input to the program consists of a sequence file and the following parameters:
 
-1) Alignment weights for match, mismatch and indels. These parameters are for Smith-Waterman style local alignment using wraparound dynamic programming. Lower weights allow alignments with more mismatch and indels. Match weight is +2 in all options here. Mismatch and indel weights ( interpreted as negative numbers are either 3, 5, or 7. 3 is more permissive and 7 is less permissive of these types of alignments choices.
+1) Alignment weights for match, mismatch and indels. These parameters are for Smith-Waterman style local alignment using wraparound dynamic programming. Lower weights allow alignments with more mismatch and indels. Match weight is +2 in all options here. Mismatch and indel weights (interpreted as negative numbers) are either 3, 5, or 7. 3 is more permissive and 7 is less permissive of these types of alignments choices.
 
 2) Matching probability and indel probability . = .80 and = .10 by default and can only be modified in the console version of the program.
 
