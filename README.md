@@ -31,6 +31,7 @@ Yevgeniy Gelfand
 Alfredo Rodriguez  
 
 ## License ##
+Add license
 
 ## Instructions for Compiling ##
 
