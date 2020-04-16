@@ -33,7 +33,7 @@ Alfredo Rodriguez
 
 ## Pre-compiled Versions ##
 Current and/or earlier, pre-compiled versions of TRF can be found by:
- - locating and clicking on the `releases` tab at the top of this page
+ - locating and clicking on the `releases` link just above the green clone button near the top of this page
  - checking in each of the listed releases for executable files
  
 
