@@ -32,6 +32,12 @@ Alfredo Rodriguez
 
 ## Instructions for Compiling ##
 
+To compile TRF:
+ - Open a terminal window and change directory to the TRF directory created by a clone of this repository.
+ - Type `make` in the terminal.
+This will compile the code and create an executable version called TRF.
+ 
+
 ## Quick Start ##
 The following is a recommended command line to run TRF.  Parameters are explained further below.
 ```bash
