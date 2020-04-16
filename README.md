@@ -9,13 +9,11 @@
  - [License](#license)
  - [Instructions for Compiling](#instructions-for-compiling) 
  - [Quick Start](#quick-start)
+ - [Using Command Line Version of Tandem Repeats Finder](#using-command-line-version-of-tandem-repeats-finder)  
  - [TRF Definitions](#trf-definitions)  
  	- [FASTA Format](#fasta-format)
     - [Table Explanation](#table-explanation)
     - [Alignment Explanation](#alignment-explanation)
-    - [Program Parameters](#program-parameters)
-    - [Options](#options)
- - [Using Command Line Version of Tandem Repeats Finder](#using-command-line-version-of-tandem-repeats-finder)  
  - [How does Tandem Repeats Finder work?](#how-does-tandem-repeats-finder-work)  
  - [What's New](#whats-new)
 
@@ -31,7 +29,6 @@ Yevgeniy Gelfand
 Alfredo Rodriguez  
 
 ## License ##
-Add license
 
 ## Instructions for Compiling ##
 
@@ -40,6 +37,70 @@ The following is a recommended command line to run TRF.  Parameters are explaine
 ```bash
 trf yourfile.fa 2 5 7 80 10 50 2000
 ```
+## Using Command Line Version of Tandem Repeats Finder ##
+
+Once the program is installed you can run it with no parameters to obtain information on proper usage syntax.
+
+If you installed the program as trf then by typing trf at the command line you will see the following output: 
+
+```bash
+Please use: trf File Match Mismatch Delta PM PI Minscore MaxPeriod [options]
+
+Where: (all weights, penalties, and scores are positive)
+  File = sequences input file
+  Match  = matching weight
+  Mismatch  = mismatching penalty
+  Delta = indel penalty
+  PM = match probability (whole number)
+  PI = indel probability (whole number)
+  Minscore = minimum alignment score to report
+  MaxPeriod = maximum period size to report
+  [options] = one or more of the following:
+        -m        masked sequence file
+        -f        flanking sequence
+        -d        data file
+        -h        suppress html output
+        -r        no redundancy elimination
+        -l <n>    maximum TR length expected (in millions) (eg, -l 3 or -l=3 for 3 million)
+```
+Note the sequence file should be in FASTA format:
+
+```bash
+>Name of sequence
+aggaaacctgccatggcctcctggtgagctgtcctcatccactgctcgctgcctctccag
+atactctgacccatggatcccctgggtgcagccaagccacaatggccatggcgccgctgt
+actcccacccgccccaccctcctgatcctgctatggacatggcctttccacatccctgtg
+```
+The program accepts a minimum of eight parameters. Options can be specified to generate additional files.
+
+The following is a more detailed description of the **parameters**:
+
+- **File:** The sequence file to be analyzed in FASTA format (see for details). Multiple sequence in the same file are allowed.
+ - **Match, Mismatch, and Delta:** Weights for match, mismatch and indels. These parameters are for Smith-Waterman style local alignment using wraparound dynamic programming. Lower weights allow alignments with more mismatches and indels. A match weight of 2 has proven effective with mismatch and indel penalties in the range of 3 to 7. Mismatch and indel weights are interpreted as negative numbers. A 3 is more permissive and a 7 less permissive. The recomended values for Match Mismatch and Delta are 2, 7, and 7 respectively.
+ - **PM and PI:** Probabilistic data is available for PM values of 80 and 75 and PI values of 10 and 20. The best performance can be achieved with values of PM=80 and PI=10. Values of PM=75 and PI=20 give results which are very similar, but often require as much as ten times the processing time when compared with values of PM=80 and PI=10.
+ - **Minscore:** The alignment of a tandem repeat must meet or exceed this alignment score to be reported. For example, if we set the matching weight to 2 and the minimun score to 50, assuming perfect alignment, we will need to align at least 25 characters to meet the minimum score (for example 5 copies with a period of size 5).
+ - **Maxperiod:** Period size is the program's best guess at the pattern size of the tandem repeat. The program will find all repeats with period size between 1 and 2000, but the output can be limited to a smaller range.
+ - **-m:** This is an optional parameter and when present instructs the program to generate a masked sequence file. The masked sequence file is a FASTA format file containing a copy of the sequence with every location that occurred in a tandem repeat changed to the letter 'N'. The word "masked" is added to the sequence description line just after the '>' character.
+ - **-f:** If this option is present, flanking sequence around each repeat is recorded in the alignment file. This may be useful for PCR primer determination. Flanking sequence consists of the 500 nucleotides on each side of a repeat.
+ - **-d:** A data file is produced if this option is present. This file is a text file which contains the same information, in the same order, as the summary table file, plus consensus pattern and repeat sequences. This file contains no labeling and is suitable for additional processing, for example with a perl script, outside of the program.
+ - **-h:** suppress HTML output (this automatically switches -d to ON)
+ - **-l \<n\>:** Specifies that the longest TR array expected in the input is at most n million bp long. The default is 2 (for 2 million). Setting this option too high may result in an error message if you did not have enough availablememory. We have only tested this option uo to value 29.
+ - **-u:** Prints the help/usage message above
+ - **-v:** Prints the version information
+ - **-ngs:** More compact .dat output on multisequence files, returns 0 on success. You may pipe input in with this option using - for file name. Short 50 flanks are appended to .dat output. .dat output actually goes to stdout instead of file. Sequence headers are displayed in output as @header. Only headers containing repeats are shown. 
+
+Using recommended parameters the command line will look something like:  
+```
+ trf yoursequence.txt 2 7 7 80 10 50 500 -f -d -m
+```
+Once the program starts running it will print update messages to the screen. The word "Done" will be printed when the program finishes.
+
+For single sequence input files there will be at least two HTML format output files, a repeat table file and an alignment file. If the number of repeats found is greater than 120, multiple linked repeat tables are produced. The links to the other tables appear at the top and the bottom of each table. To view the results start by opening the first repeat table file with your web browser. This file has the extension ".1.html". Alignment files can be accessed from the repeat table files. Alignment files end with the ".txt.html" extension.
+
+For input files containing multiple sequences a summary page is produced that links to the output of individual sequences. This file has the extension "summary.html". You should start by opening this file if your input had multiple sequences in the same file. Also note that the output files of individual sequences will have an identifier of the form ".sn." ( n an integer) embedded in the name indicating the index of the sequence in the input file. The identifier is omitted for single sequence input files. 
+
+For more information on the output please see [Table Explanation](#table-explanation) and [Alignment Explanation](#alignment-explanation). 
+
 ## TRF Definitions ##
 
 ### FASTA Format: ###
@@ -90,87 +151,6 @@ The alignment is presented as follows:
 
 Note: If you save the alignment file, use the default name supplied by your browser to preserve the automatic cross-referencing with the summary table.
 
-### Program Parameters: ###
-
-Input to the program consists of a sequence file and the following parameters:
-
-1. **Alignment Parameters.** Weights for match, mismatch and indels. These parameters are for Smith-Waterman style local alignment using wraparound dynamic programming. Lower weights allow alignments with more mismatches and indels. Match weight is +2 in all options here. Mismatch and indel weights (interpreted as negative numbers) are either 3, 5, or 7. A 3 is more permissive and a 7 less permissive of these types of alignments choices.
-2. **Minimum Alignment Score.** The alignment score must meet or exceed this value for the repeat to be reported.
-3. **Maximum Period Size.** The period size must be no larger than this value for the repeat to be reported. Period size is the program’s best guess at the pattern size of the tandem repeat. The program will find all repeats with period size between 1 and 2000.
-4. **Maximum TR array size.** Specifies the longest TR array (the complete repeating sequence) expected to be found in the input, in millions of base pairs. Some sequences have very long TR arrays, such as chromosome 18 in HG38 which has an array measuring over 5.3 million base pairs.
-5. **Detection Parameters.** Matching probability Pm and indel probability Pi. Pm = .80 and Pi = .10 by default and cannot be modified in this version of the program. 
-
-### Options: ###
-
-1. **Flanking sequence.** Flanking sequence consists of the 500 nucleotides on each side of a repeat. Flanking sequence is recorded in the alignment file. This may be useful for PCR primer determination.
-2. **Masked Sequence File.** The masked sequence file is a [FASTA format](#fasta-format) file containing a copy of the sequence with every character that occurred in a tandem repeat changed to the letter 'N'. The word "masked" is added to the sequence description line just after the '>' character.
-3. **Data File.** The data file is a text file which contains the same information, in the same order, as the [repeat table file](#table-explanation), plus consensus and repeat sequences. This file contains no labeling and is suitable for additional processing, for example with a perl script, outside of the program. 
-
-
-## Using Command Line Version of Tandem Repeats Finder ##
-
-Once the program is installed you can run it with no parameters to obtain information on proper usage syntax.
-
-If you installed the program as trf then by typing trf at the command line you will see the following output: 
-
-```bash
-Please use: trf File Match Mismatch Delta PM PI Minscore MaxPeriod [options]
-
-Where: (all weights, penalties, and scores are positive)
-  File = sequences input file
-  Match  = matching weight
-  Mismatch  = mismatching penalty
-  Delta = indel penalty
-  PM = match probability (whole number)
-  PI = indel probability (whole number)
-  Minscore = minimum alignment score to report
-  MaxPeriod = maximum period size to report
-  [options] = one or more of the following:
-        -m        masked sequence file
-        -f        flanking sequence
-        -d        data file
-        -h        suppress html output
-        -r        no redundancy elimination
-        -l <n>    maximum TR length expected (in millions) (eg, -l 3 or -l=3 for 3 million)
-```
-Note the sequence file should be in FASTA format:
-
-```bash
->Name of sequence
-aggaaacctgccatggcctcctggtgagctgtcctcatccactgctcgctgcctctccag
-atactctgacccatggatcccctgggtgcagccaagccacaatggccatggcgccgctgt
-actcccacccgccccaccctcctgatcctgctatggacatggcctttccacatccctgtg
-```
-The program accepts a minimum of eight parameters. Options can be specified to generate additional files.
-
-The following is a more detailed description of the **parameters**:
-
-- **File:** The sequence file to be analyzed in FASTA format (see for details). Multiple sequence in the same file are allowed.
- - **Match, Mismatch, and Delta:** Weights for match, mismatch and indels. These parameters are for Smith-Waterman style local alignment using wraparound dynamic programming. Lower weights allow alignments with more mismatches and indels. A match weight of 2 has proven effective with mismatch and indel penalties in the range of 3 to 7. Mismatch and indel weights are interpreted as negative numbers. A 3 is more permissive and a 7 less permissive. The recomended values for Match Mismatch and Delta are 2, 7, and 7 respectively.
- - **PM and PI:** Probabilistic data is available for PM values of 80 and 75 and PI values of 10 and 20. The best performance can be achieved with values of PM=80 and PI=10. Values of PM=75 and PI=20 give results which are very similar, but often require as much as ten times the processing time when compared with values of PM=80 and PI=10.
- - **Minscore:** The alignment of a tandem repeat must meet or exceed this alignment score to be reported. For example, if we set the matching weight to 2 and the minimun score to 50, assuming perfect alignment, we will need to align at least 25 characters to meet the minimum score (for example 5 copies with a period of size 5).
- - **Maxperiod:** Period size is the program's best guess at the pattern size of the tandem repeat. The program will find all repeats with period size between 1 and 2000, but the output can be limited to a smaller range.
- - **-m:** This is an optional parameter and when present instructs the program to generate a masked sequence file. The masked sequence file is a FASTA format file containing a copy of the sequence with every location that occurred in a tandem repeat changed to the letter 'N'. The word "masked" is added to the sequence description line just after the '>' character.
- - **-f:** If this option is present, flanking sequence around each repeat is recorded in the alignment file. This may be useful for PCR primer determination. Flanking sequence consists of the 500 nucleotides on each side of a repeat.
- - **-d:** A data file is produced if this option is present. This file is a text file which contains the same information, in the same order, as the summary table file, plus consensus pattern and repeat sequences. This file contains no labeling and is suitable for additional processing, for example with a perl script, outside of the program.
- - **-h:** suppress HTML output (this automatically switches -d to ON)
- - **-l <n>:** Specifies that the longest TR array expected in the input is at most n million bp long. The default is 2 (for 2 million). Setting this option too high may result in an error message if you did not have enough availablememory. We have only tested this option uo to value 29.
- - **-u:** Prints the help/usage message above
- - **-v:** Prints the version information
- - **-ngs:** More compact .dat output on multisequence files, returns 0 on success. You may pipe input in with this option using - for file name. Short 50 flanks are appended to .dat output. .dat output actually goes to stdout instead of file. Sequence headers are displayed in output as @header. Only headers containing repeats are shown. 
-
-Using recommended parameters the command line will look something like:  
-```
- trf yoursequence.txt 2 7 7 80 10 50 500 -f -d -m
-```
-Once the program starts running it will print update messages to the screen. The word "Done" will be printed when the program finishes.
-
-For single sequence input files there will be at least two HTML format output files, a repeat table file and an alignment file. If the number of repeats found is greater than 120, multiple linked repeat tables are produced. The links to the other tables appear at the top and the bottom of each table. To view the results start by opening the first repeat table file with your web browser. This file has the extension ".1.html". Alignment files can be accessed from the repeat table files. Alignment files end with the ".txt.html" extension.
-
-For input files containing multiple sequences a summary page is produced that links to the output of individual sequences. This file has the extension "summary.html". You should start by opening this file if your input had multiple sequences in the same file. Also note that the output files of individual sequences will have an identifier of the form ".sn." ( n an integer) embedded in the name indicating the index of the sequence in the input file. The identifier is omitted for single sequence input files. 
-
-For more information on the output please see [Table Explanation](#table-explanation) and [Alignment Explanation](#alignment-explanation). 
-
 
 ## How does Tandem Repeats Finder work? ##
 ### Probabilistic Model of Tandem Repeats ###
@@ -213,17 +193,25 @@ This distribution indicates how many matches are required for a specific distanc
 
 This distribution describes how distances between matches may vary due to indels. Because indels change the distance between matching *k-tuples* (figure below), there will be situations where the pattern has size *d*, yet the distance between matching *k-tuples* is *d±1*, *d±2*, etc. In order to test the sum-of-heads criterion, we count the matches in *D<sub>d±&Delta;d</sub>*, for *&Delta;d* = 0,1,...,*&Delta;d<sub>max</sub>* for some *&Delta;d<sub>max</sub>*. In our model, indels are single nucleotide events occurring with probability *P<sub>I</sub>. Insertions and deletions are considered equally likely and we treat the distance change as a problem of random walks. Let the random variable *W<sub>d,P<sub>I</sub></sub>* = the maximum displacement from the origin of a one dimensional random walk with expected number of steps equal to *P<sub>I</sub> &middot; d*. It can be shown that 95% of the time the random walk ranges between ± 2.3 &middot; &radic;(P<sub>I</sub> &middot; d). We set *&Delta;d<sub>max</sub> = floor(2.3 &middot; &radic;(P<sub>I</sub> &middot; d))*. For example if *P<sub>I</sub>* = 0.1 and *d* = 100, then *&Delta;d<sub>max</sub>* = 7.
 
+<img src="images_for_readme/figure3.gif" width="500"/>
+
 ### Apparent Size Distribution ###
 
 This distribution is used to distinguish between tandem repeats and non-tandem direct repeats (figure below). For tandem repeats, the leading tuple in matching *k-tuples* will be distributed throughout the interval from *j* to *i*, whereas for non-tandem repeats, they should be concentrated on the right side of the interval near *i*. Let the random variable S<sub>d,k,P<sub>M</sub></sub> = the distance between the first and last run of *k* heads in an iid Bernoulli sequence of length *d* with success probability *P<sub>M</sub>*.
 
 *S<sub>d,k,P<sub>M</sub></sub>* is the apparent size of the repeat when using *k-tuples* to find the matches and will usually be shorter than the pattern size *d*. We estimate the distribution of *S<sub>d,k,P<sub>M</sub></sub>* by simulation because we make it conditional on first meeting the sum-of-heads criterion. For given *d*, *k*, and *P<sub>M</sub>*, random Bernoulli sequences are generated using *P<sub>M</sub>*. For every sequence that meets or exceeds the sum-of-heads criteria, the distance between the first and last run of heads of length *k* or larger is recorded. From the distribution, we determine the maximum number *y* such that 95% of the time *S<sub>d,k,P<sub>M</sub></sub> > y*.  We use *y* as our *apparent size criterion*. For example, if *P<sub>M</sub>* = .75, *k* = 5 and *d* = 100, then the criterion is 56. In order to test the apparent-size criterion, we compute the distance between the first and last tuple on list *D<sub>d</sub>*. If the distance between the tuples is smaller than the criterion, we assume the repeat is not tandem or that we have not yet seen enough of it to be convinced.
 
+<img src="images_for_readme/figure4.gif" width="500"/>
+
 ### Waiting Time Distribution ###
 
 This distribution is used to pick tuple sizes. Tuple size has a significant inverse effect on the running time of the program because increasing tuple size causes an exponential decrease in the expected number of tuple matches. If the nucleotides occur with equal frequency, then increasing the tuple size by *&Delta;k* increases the average distance between randomly matching tuples by a factor of *4<sup>&Delta;k</sup>*. If *k* = 5, the average distance between random matches is approximately 1Kb, but if *k* = 7, the average distance is approximately 16Kb. Thus, by using a larger tuple size, we keep the history lists short. On the other hand, increasing the tuple size decreases the chance of noticing approximate copies because they may not contain a long, unbroken run of matches. Let the random variable *T<sub>k,P<sub>M</sub></sub>* = the number of iid Bernoulli trials with success probability *P<sub>M</sub>* until the first occurrence of a run of *k* successes. *T<sub>k,P<sub>M</sub></sub>* follows the *geometric distribution of order k*. If we let *p* = *P<sub>M</sub>* and *q* = *1 - p*, then the exact probability *P(T<sub>k,P<sub>M</sub></sub> = x)* for *x* ≥ 0 is given by the recursive formula:
 
+<img src="images_for_readme/figure5.gif" width="500"/>
+
 For example, if *P<sub>M</sub>* = .75 and *k* = 5 then we need at least 31 trials (coin-tosses) to have a 95% chance of seeing a run of 5 heads. For patterns smaller than 31 characters, we need to use a smaller *k-tuple*. The waiting time distribution allows us to balance the running time and sensitivity of our algorithm by picking a set of tuple sizes, *each applying to a different range of pattern sizes*. The program processes the sequence once, simultaneously checking these different tuple sizes. We require that the smallest pattern for tuple size *k* have a sum-of-heads criterion of at least k+1. The table below shows the range of tuple sizes and the corresponding pattern sizes currently used by the program.
+
+<img src="images_for_readme/table1.gif" width="500"/>
 
 ### Analysis Component ###
 
@@ -241,17 +229,6 @@ Alignments are the program's most time intensive calculations. To decrease runni
 
 An initial candidate pattern *P* is drawn from the sequence, but this is usually not the best pattern to align with the tandem repeat. To improve the alignment, we determine a consensus pattern by majority rule from the alignment of the copies with *P*. The consensus is used to realign the sequence and this final alignment is reported in the output. Period size is defined as the most common matching distance between corresponding characters in the alignment and may not be identical to consensus size.
 
-### Program Parameters ###
-
-Input to the program consists of a sequence file and the following parameters:
-
-1) Alignment weights for match, mismatch and indels. These parameters are for Smith-Waterman style local alignment using wraparound dynamic programming. Lower weights allow alignments with more mismatch and indels. Match weight is +2 in all options here. Mismatch and indel weights (interpreted as negative numbers) are either 3, 5, or 7. 3 is more permissive and 7 is less permissive of these types of alignments choices.
-
-2) Matching probability and indel probability . = .80 and = .10 by default and can only be modified in the console version of the program.
-
-3) A maximum period size for patterns to report. Period size is the program’s best guess at the pattern size of the tandem repeat. The program will find all repeats with period size between 1 and 2000, but the output table can be limited to some other range.
-
-4) A minimum alignment score to report repeat. The alignment of a tandem repeat must meet or exceed the alignment score to be reported.
 
 ### Redundancy ###
 
