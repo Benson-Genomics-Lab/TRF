@@ -7,6 +7,7 @@
  - [Reference](#reference)
  - [Authors](#authors)
  - [License](#license)
+ - [Pre-compiled Versions](#pre-compiled-versions)
  - [Instructions for Compiling](#instructions-for-compiling) 
  - [Quick Start](#quick-start)
  - [Using Command Line Version of Tandem Repeats Finder](#using-command-line-version-of-tandem-repeats-finder)  
@@ -30,6 +31,12 @@ Alfredo Rodriguez
 
 ## License ##
 
+## Pre-compiled Versions ##
+Current and/or earlier, pre-compiled versions of TRF can be found by:
+ - locating and clicking on the `releases` tab at the top of this page
+ - checking in each of the listed releases for executable files
+ 
+
 ## Instructions for Compiling ##
 
 To compile TRF:
@@ -42,7 +49,7 @@ This will:
  - place the executable version in the build directory.  
  
 The file will be called `trf<version>.<operating system>.exe`.  
-For example the file on a linux 64 bit operating system for version 4.10.0 will be called `trf.10.0.linux64.exe`
+For example the file on a linux 64 bit operating system for version 4.10.0 will be called `trf4.10.0.linux64.exe`
 
  
 
