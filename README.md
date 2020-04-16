@@ -193,7 +193,7 @@ This distribution indicates how many matches are required for a specific distanc
 
 This distribution describes how distances between matches may vary due to indels. Because indels change the distance between matching *k-tuples* (figure below), there will be situations where the pattern has size *d*, yet the distance between matching *k-tuples* is *d±1*, *d±2*, etc. In order to test the sum-of-heads criterion, we count the matches in *D<sub>d±&Delta;d</sub>*, for *&Delta;d* = 0,1,...,*&Delta;d<sub>max</sub>* for some *&Delta;d<sub>max</sub>*. In our model, indels are single nucleotide events occurring with probability *P<sub>I</sub>. Insertions and deletions are considered equally likely and we treat the distance change as a problem of random walks. Let the random variable *W<sub>d,P<sub>I</sub></sub>* = the maximum displacement from the origin of a one dimensional random walk with expected number of steps equal to *P<sub>I</sub> &middot; d*. It can be shown that 95% of the time the random walk ranges between ± 2.3 &middot; &radic;(P<sub>I</sub> &middot; d). We set *&Delta;d<sub>max</sub> = floor(2.3 &middot; &radic;(P<sub>I</sub> &middot; d))*. For example if *P<sub>I</sub>* = 0.1 and *d* = 100, then *&Delta;d<sub>max</sub>* = 7.
 
-<img src="images_for_readme/figure3.gif" width="500"/>
+<img src="images_for_readme/figure3.gif" width="600"/>
 
 ### Apparent Size Distribution ###
 
@@ -201,17 +201,17 @@ This distribution is used to distinguish between tandem repeats and non-tandem d
 
 *S<sub>d,k,P<sub>M</sub></sub>* is the apparent size of the repeat when using *k-tuples* to find the matches and will usually be shorter than the pattern size *d*. We estimate the distribution of *S<sub>d,k,P<sub>M</sub></sub>* by simulation because we make it conditional on first meeting the sum-of-heads criterion. For given *d*, *k*, and *P<sub>M</sub>*, random Bernoulli sequences are generated using *P<sub>M</sub>*. For every sequence that meets or exceeds the sum-of-heads criteria, the distance between the first and last run of heads of length *k* or larger is recorded. From the distribution, we determine the maximum number *y* such that 95% of the time *S<sub>d,k,P<sub>M</sub></sub> > y*.  We use *y* as our *apparent size criterion*. For example, if *P<sub>M</sub>* = .75, *k* = 5 and *d* = 100, then the criterion is 56. In order to test the apparent-size criterion, we compute the distance between the first and last tuple on list *D<sub>d</sub>*. If the distance between the tuples is smaller than the criterion, we assume the repeat is not tandem or that we have not yet seen enough of it to be convinced.
 
-<img src="images_for_readme/figure4.gif" width="500"/>
+<img src="images_for_readme/figure4.gif" width="600"/>
 
 ### Waiting Time Distribution ###
 
 This distribution is used to pick tuple sizes. Tuple size has a significant inverse effect on the running time of the program because increasing tuple size causes an exponential decrease in the expected number of tuple matches. If the nucleotides occur with equal frequency, then increasing the tuple size by *&Delta;k* increases the average distance between randomly matching tuples by a factor of *4<sup>&Delta;k</sup>*. If *k* = 5, the average distance between random matches is approximately 1Kb, but if *k* = 7, the average distance is approximately 16Kb. Thus, by using a larger tuple size, we keep the history lists short. On the other hand, increasing the tuple size decreases the chance of noticing approximate copies because they may not contain a long, unbroken run of matches. Let the random variable *T<sub>k,P<sub>M</sub></sub>* = the number of iid Bernoulli trials with success probability *P<sub>M</sub>* until the first occurrence of a run of *k* successes. *T<sub>k,P<sub>M</sub></sub>* follows the *geometric distribution of order k*. If we let *p* = *P<sub>M</sub>* and *q* = *1 - p*, then the exact probability *P(T<sub>k,P<sub>M</sub></sub> = x)* for *x* ≥ 0 is given by the recursive formula:
 
-<img src="images_for_readme/figure5.gif" width="500"/>
+<img src="images_for_readme/BIGE.gif" width="500"/>
 
 For example, if *P<sub>M</sub>* = .75 and *k* = 5 then we need at least 31 trials (coin-tosses) to have a 95% chance of seeing a run of 5 heads. For patterns smaller than 31 characters, we need to use a smaller *k-tuple*. The waiting time distribution allows us to balance the running time and sensitivity of our algorithm by picking a set of tuple sizes, *each applying to a different range of pattern sizes*. The program processes the sequence once, simultaneously checking these different tuple sizes. We require that the smallest pattern for tuple size *k* have a sum-of-heads criterion of at least k+1. The table below shows the range of tuple sizes and the corresponding pattern sizes currently used by the program.
 
-<img src="images_for_readme/table1.gif" width="500"/>
+<img src="images_for_readme/table1.gif" width="200"/>
 
 ### Analysis Component ###
 
