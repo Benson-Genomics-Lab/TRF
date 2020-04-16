@@ -35,9 +35,14 @@ Alfredo Rodriguez
 To compile TRF:
  - Open a terminal window and change directory to the TRF directory created by a clone of this repository.
  - Type `make` in the terminal.  
-This will compile the code, create a `build/` director, place the executable version in the build directory.  
+ 
+This will:
+ - compile the code
+ - create a `build/` directory
+ - place the executable version in the build directory.  
+ 
 The file will be called `TRF<version>.<operating system>.exe`.  
-For example the file on a linux 64 bit operating system for version 4.10.0 will be called `TRF4.10.0linux64.exe`
+For example the file on a linux 64 bit operating system for version 4.10.0 will be called `TRF4.10.0.linux64.exe`
 
  
 
