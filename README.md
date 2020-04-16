@@ -41,13 +41,13 @@ This will:
  - create a `build/` directory
  - place the executable version in the build directory.  
  
-The file will be called `TRF<version>.<operating system>.exe`.  
-For example the file on a linux 64 bit operating system for version 4.10.0 will be called `TRF4.10.0.linux64.exe`
+The file will be called `trf<version>.<operating system>.exe`.  
+For example the file on a linux 64 bit operating system for version 4.10.0 will be called `trf.10.0.linux64.exe`
 
  
 
 ## Quick Start ##
-The following is a recommended command line to run TRF.  Parameters are explained further below.
+The following is a recommended command line to run TRF.  Parameters are explained further below. This assumes the executable has been renamed `trf`.
 ```bash
 trf yourfile.fa 2 5 7 80 10 50 2000
 ```
