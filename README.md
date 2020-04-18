@@ -19,6 +19,10 @@
  - [What's New](#whats-new)
 
 ## Purpose ## 
+A tandem repeat in DNA is two or more adjacent, approximate copies of a pattern of nucleotides. Tandem Repeats Finder is a program to locate and display tandem repeats in DNA sequences. In order to use the program, the user submits a sequence in FASTA format. There is no need to specify the pattern, the size of the pattern or any other parameter. The output consists of two files: a repeat table file and an alignment file. The repeat table, viewable in a web browser, contains information about each repeat, including its location, size, number of copies and nucleotide content. Clicking on the location indices for one of the table entries opens a second browser page that shows an alignment of the copies against a consensus pattern. The program is very fast, analyzing sequences on the order of .5Mb in just a few seconds. Submitted sequences may be of arbitrary length. Repeats with pattern size in the range from 1 to 2000 bases are detected. 
+
+This material is based upon work supported by the National Science Foundation under Grant No. CCR-9623532
+
 
 ## Reference ##
 Benson G. **Tandem repeats finder: a program to analyze DNA sequences.** ***Nucleic Acids Res.*** 1999; 27(2):573–580. [doi:10.1093/nar/27.2.573](https://academic.oup.com/nar/article/27/2/573/1061099)
