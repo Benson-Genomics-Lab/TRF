@@ -2,7 +2,7 @@
 **Tandem Repeats Finder:** https://tandem.bu.edu/trf/trf.html  
 **Tandem Repeats Database:** http://tandem.bu.edu/cgi-bin/trdb/trdb.exe
 
-**Notes**
+**Notes**  
 Need to find code for TRF website and include in repository so it can be moved to linux machine.
 
 ## Table of Contents ##
