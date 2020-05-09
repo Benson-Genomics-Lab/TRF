@@ -66,6 +66,15 @@ const char *usage = "\n\nPlease use: %s File Match Mismatch Delta PM PI Minscore
 "\naggaaacctgccatggcctcctggtgagctgtcctcatccactgctcgctgcctctccag"
 "\natactctgacccatggatcccctgggtgcagccaagccacaatggccatggcgccgctgt"
 "\nactcccacccgccccaccctcctgatcctgctatggacatggcctttccacatccctgtg"
+"\n"
+"\n"
+"\nTandem Repeats Finder"
+"\nCopyright (C) 1999-2020 Gary Benson"
+"\n"
+"\nThis program is free software: you can redistribute it and/or modify"
+"\nit under the terms of the GNU Affero General Public License as"
+"\npublished by the Free Software Foundation, either version 3 of"
+"\nthe License, or (at your option) any later version."
 "\n";
 
 char* GetNamePartAddress(char* name);
