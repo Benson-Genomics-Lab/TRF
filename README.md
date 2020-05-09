@@ -2,11 +2,16 @@
 **Tandem Repeats Finder:** https://tandem.bu.edu/trf/trf.html  
 **Tandem Repeats Database:** http://tandem.bu.edu/cgi-bin/trdb/trdb.exe
 
+**Notes**  
+Need to find code for TRF website and include in repository so it can be moved to linux machine.
+Look in oLd tandem trf/trf.html
+
 ## Table of Contents ##
  - [Purpose](#purpose)   
  - [Reference](#reference)
  - [Authors](#authors)
  - [License](#license)
+ - [Pre-compiled Versions](#pre-compiled-versions)
  - [Instructions for Compiling](#instructions-for-compiling) 
  - [Quick Start](#quick-start)
  - [Using Command Line Version of Tandem Repeats Finder](#using-command-line-version-of-tandem-repeats-finder)  
@@ -18,6 +23,10 @@
  - [What's New](#whats-new)
 
 ## Purpose ## 
+A tandem repeat in DNA is two or more adjacent, approximate copies of a pattern of nucleotides. Tandem Repeats Finder is a program to locate and display tandem repeats in DNA sequences. In order to use the program, the user submits a sequence in FASTA format. There is no need to specify the pattern, the size of the pattern or any other parameter. The output consists of two files: a repeat table file and an alignment file. The repeat table, viewable in a web browser, contains information about each repeat, including its location, size, number of copies and nucleotide content. Clicking on the location indices for one of the table entries opens a second browser page that shows an alignment of the copies against a consensus pattern. The program is very fast, analyzing sequences on the order of .5Mb in just a few seconds. Submitted sequences may be of arbitrary length. Repeats with pattern size in the range from 1 to 2000 bases are detected. 
+
+This material is based upon work supported by the National Science Foundation under Grant No. CCR-9623532
+
 
 ## Reference ##
 Benson G. **Tandem repeats finder: a program to analyze DNA sequences.** ***Nucleic Acids Res.*** 1999; 27(2):573–580. [doi:10.1093/nar/27.2.573](https://academic.oup.com/nar/article/27/2/573/1061099)
@@ -29,6 +38,12 @@ Yevgeniy Gelfand
 Alfredo Rodriguez  
 
 ## License ##
+
+## Pre-compiled Versions ##
+To obtain current and/or earlier, pre-compiled versions of TRF:
+ - locate and click on the `releases` link just above the green clone button near the top of this page
+ - check in each of the listed releases for executable files
+ 
 
 ## Instructions for Compiling ##
 
@@ -42,7 +57,7 @@ This will:
  - place the executable version in the build directory.  
  
 The file will be called `trf<version>.<operating system>.exe`.  
-For example the file on a linux 64 bit operating system for version 4.10.0 will be called `trf.10.0.linux64.exe`
+For example the file on a linux 64 bit operating system for version 4.10.0 will be called `trf4.10.0.linux64.exe`
 
  
 
