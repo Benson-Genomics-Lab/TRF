@@ -286,7 +286,7 @@ they were caught during launch. They are officially present in 4.10.0.
 Major:
 
 * TRF now has an exit status of 0 on success, and non-zero otherwise.
-Previously, TRF would have a non-zero exit statys which was to
+Previously, TRF would have a non-zero exit status which was to be
 interpreted by the user as the number of TRs processed. However, this is
 impractical since the maximum value an exit status might take is 255.
 Also, the UNIX convention is to exit with a status of 0 on success. Non-
@@ -295,10 +295,8 @@ reserved for specific meaning.
 * TRF will throw an error if a value of over 2000 is given for MaxPeriod
 parameter. Our documentation states that this value must be between 1
 and 2000, inclusive. Minor changes to the code have been made in
-anticipation for raising this limit. However, very large TRs might be
-considered outside the scope of TRF, as the dynamics involved in
-duplication may be different than the assumptions made in the algorithm
-are designed for.
+anticipation for raising this limit. However, very large TRs are
+outside the scope of the TRF statistical models.
 
 Minor:
 
@@ -318,7 +316,7 @@ Internal changes:
 
 trf.c:
 
-* Fix: Defer checking presence of -v flag avoid a crash when the
+* Fix: Defer checking presence of -v flag to avoid a crash when the
 argument list is empty.
 * Check contents of `outputcount` and `endstatus` members of `paramset`
 struct to determine success after running TRFControlRoutine. Print
