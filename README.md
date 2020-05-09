@@ -2,9 +2,6 @@
 **Tandem Repeats Finder:** https://tandem.bu.edu/trf/trf.html  
 **Tandem Repeats Database:** http://tandem.bu.edu/cgi-bin/trdb/trdb.exe
 
-**Notes**  
-Need to find code for TRF website and include in repository so it can be moved to linux machine.
-Look in oLd tandem trf/trf.html
 
 ## Table of Contents ##
  - [Purpose](#purpose)   
@@ -40,8 +37,6 @@ Alfredo Rodriguez
 ## License ##
 Tandem Repeats Finder
 Copyright (C) 1999-2020 Gary Benson
-
-This file is part of the Tandem Repeats Finder (TRF) program.
 
 TRF is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -282,6 +277,94 @@ Tandem Repeats Finder finds repeats for period sizes in the range from 1 to 2000
 
   
 ## What's New ##
+
+### New for version 4.10.0 ###
+
+Some of these changes may be present in 4.09 and were undocumented, if
+they were caught during launch. They are officially present in 4.10.0.
+
+Major:
+
+* TRF now has an exit status of 0 on success, and non-zero otherwise.
+Previously, TRF would have a non-zero exit statys which was to
+interpreted by the user as the number of TRs processed. However, this is
+impractical since the maximum value an exit status might take is 255.
+Also, the UNIX convention is to exit with a status of 0 on success. Non-
+zero statuses are to be interpreted as errors, with certain values being
+reserved for specific meaning.
+* TRF will throw an error if a value of over 2000 is given for MaxPeriod
+parameter. Our documentation states that this value must be between 1
+and 2000, inclusive. Minor changes to the code have been made in
+anticipation for raising this limit. However, very large TRs might be
+considered outside the scope of TRF, as the dynamics involved in
+duplication may be different than the assumptions made in the algorithm
+are designed for.
+
+Minor:
+
+* We are beginning to adopt Semantic Versioning (https://semver.org/).
+We may not be fully compliant yet, and compliance will rely on future
+developers adhering to the convention. TRF 4.10.0 will be the first
+version released with a semver complaint version numbers.
+
+Fixes:
+
+* TRF will no longer crash if the argument list is empty (regression in
+4.09)
+* TRF will no longer crash when given a MaxPeriod value of over 2004. As
+above, TRF will simply not allow any value of MaxPeriod over 2000.
+
+Internal changes:
+
+trf.c:
+
+* Fix: Defer checking presence of -v flag avoid a crash when the
+argument list is empty.
+* Check contents of `outputcount` and `endstatus` members of `paramset`
+struct to determine success after running TRFControlRoutine. Print
+informative messages on exit.
+* Parameter validation. Will now print an error on most bad parameters,
+along with a helpful message. Exits with status 1 in case of a bad
+parameter.
+
+trfrun.h:
+
+* TRFControlRoutine now has a void return type. We no longer rely on a
+return value from this function.
+* Set paramset.endstatus (now a `char *`) to some informative message,
+rather than returning some integer value defined by macros, when
+exiting.
+* More error checking. Don't exit immediately when allocating memory for
+AlignPair struct. Instead, set error message and propagate back to main.
+
+tr30dat.h:
+
+* Reformatted with astyle.
+* Some `char *` variables changed to `unsigned char *` if they were ever
+used as an index to an array. Avoids compiler warnings, safer.
+* Some `int` members in TRFPARAMSET definition changed to `unsigned int`
+for safety/semantics.
+* Note added on changes needed to EC array for support of pattern sizes
+over 2000. See below, and major changes above.
+
+tr30dat.c:
+
+* Some `char *` variables changed to `unsigned char *` if they were ever
+used as an index to an array. Avoids compiler warnings, safer.
+* Set paramset.endstatus message in function-generating macro
+new1Darrayfunc. Avoid exiting right away so that the exact error is
+visible to callers/main.
+* Also in new1Darrayfunc, use type of pointer, rather than type name.
+Less important in a macro written in this way, but more consistent.
+* Use `MAXPATTERNSIZECONSTANT` to walk through Consensus struct's
+members, since that is the value used to initialize them. Added note on
+changes needed to implementation should the limit on pattern size ever
+be raised.
+* Similarly when setting the `waiting_time_criteria` and
+`k_run_sums_criteria` members in the structs in Distance array. Code in
+place to "round down" pattern sizes above 2000, but too many other code
+changes need to be made to actually support this, and I have no time to
+test them.
 
 ### New For Version 4.09 (Feb 22, 2016) ###
  - this version fixes issues with centromeres in HG38
