@@ -59,18 +59,38 @@ To obtain current and/or earlier, pre-compiled versions of TRF:
  
 
 ## Instructions for Compiling ##
+To compile TRF, you will need a C compiler (e.g., gcc, clang) with the standard library installed.
+We have tested compiling and installing TRF under UNIX-based systems (Linux, macOS) and for Windows under Cygwin/MinGW.
 
-To compile TRF:
+Brief instructions (advanced):
+
+```bash
+# Check actual version
+tar xzvf trf-4.10.0.tar.gz
+cd trf-4.10.0
+mkdir build
+cd build
+../configure
+make
+# To install to system
+sudo make install
+# To copy binary elsewhere
+cp src/trf DESTINATION
+```
+
+Step by step:
  - Open a terminal window and change directory to the TRF directory created by a clone of this repository.
- - Type `make` in the terminal.  
+ - Create a directory named 'build': `mkdir build` and change directory to that
+ - Type `../configure` in the terminal.
+ - Type `make` in the terminal.
+ - If you wish to install the binary, type `sudo make install` in the terminal. Otherwise, simply copy the binary from the `src` directory under `build`.
  
 This will:
  - compile the code
- - create a `build/` directory
- - place the executable version in the build directory.  
+ - place the executable version in the build/src directory.  
  
-The file will be called `trf<version>.<operating system>.exe`.  
-For example the file on a linux 64 bit operating system for version 4.10.0 will be called `trf4.10.0.linux64.exe`
+The file will be called `trf` (`trf.exe` on Windows). For backwards compatibility with automated scripts exepcting TRF to follow a certain naming scheme, the installation will also create a symbolic link named `trf<version>.<operating system>.exe`.
+For example the file on a linux 64 bit operating system for version 4.10.0 will be called `trf4.10.0.linux64.exe`.
  
 
 ## Quick Start ##

@@ -5,7 +5,7 @@ trf_CFLAGS = -fno-align-functions -fno-align-loops
 
 install-exec-hook:
 	$(LN_S) $(DESTDIR)$(bindir)/trf$(EXEEXT) \
-	$(DESTDIR)$(bindir)/trf@PACKAGE_VERSION@.@TARGET_NAME@$(EXEEXT)
+	$(DESTDIR)$(bindir)/trf@PACKAGE_VERSION@.@TARGET_NAME@.exe
 
 uninstall-hook:
-	rm $(DESTDIR)$(bindir)/trf@PACKAGE_VERSION@.@TARGET_NAME@$(EXEEXT)
+	rm $(DESTDIR)$(bindir)/trf@PACKAGE_VERSION@.@TARGET_NAME@.exe
