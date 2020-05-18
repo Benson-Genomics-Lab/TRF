@@ -78,6 +78,13 @@ sudo make install
 cp src/trf DESTINATION
 ```
 
+If you are cloning the repository, replace the first two lines above with:
+
+```bash
+git clone https://github.com/Benson-Genomics-Lab/TRF.git
+cd TRF
+```
+
 Step by step:
 
 - Open a terminal window and change directory to the TRF directory created by a clone of this repository.
