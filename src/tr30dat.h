@@ -160,74 +160,16 @@ unsigned int maxwraplength = 0;
 /* programming and for which we set d_range */
 /* by hand */
 
-int Min_Distance_Entries = 20; /* minimum number of places to store a tuple
-                                match.  Usually this is the same as the
-                                distance, but for small distances, we
-                                allow more tuple matches because we want
-                                see a significant number of matches */
-
-int Min_Distance_Window = 20; /* minimum size of distance window. */
-/* Usually this is the same as the */
-/* distance, but for small distances we */
-/* allow more space because we want a */
-/* significant number of matches */
-
 #define TAGSEP 50 /* index separation for tags table for linking */
 /* active distances for distance range addition of */
 /* matches */
-int    PM;
-int    PI;
-double Pindel; /* expected probability of a single character indel in
-                  the worst case tandem repeat. Pindel should be tied
-                  to the indel cost parameter */
 
-int        MAXDISTANCE    = 500;
-int        MAXPATTERNSIZE = 500;
-/* */ char debugbuffer[500];
-
-/* G. Benson 1/28/2004 */
-/* size of EC increased to avoid memory error when consensus length exceeds
-   MAXPATTERNSIZECONSTANT after returning from get_consensus(d) */
-/* Y. Hernandez 10/15/2018 */
-/* If patternsize over 2000 is ever allowed, must change how this
- * variable is initialized. Must be a dynamically allocated array,
- * should use MAXPATTERNSIZE instead (but set elsewhere, after
- * user parameters have been processed).
- */
-unsigned char EC[2 * ( MAXPATTERNSIZECONSTANT + 1 )];
-
-int *Index;
-int *ACGTcount;
-
-unsigned char *Sequence;
-int            Length;
-
-/* int S[MAXWRAPLENGTH+1][MAXPATTERNSIZE];*/
-int    Delta;   /* indel penalty */
-int    Alpha;   /* match bonus */
-int    Beta;    /* mismatch penalty */
-int    AFDelta; /* affine gap initiation penalty */
-int    AFGamma; /* affine gap extension penalty */
-int    pwidth = 75;
-int    Reportmin, Heading;
-int    Classlength;
-int    Test;
-double Rows;
-double Totalcharacters;
-/* int Lookcount;*/
-int  Wrapend;
-int  Maxrealrow, Maxrow, Maxcol;
-int  Maxscore;
-int  ConsClasslength;
-int *Tag;    /* list of tags for linking active distances */
-int  Toptag; /* last tag in list */
-
-struct pairalign {
+typedef struct {
     int   length;
     int   score;
     char *textprime, *textsecnd;
     int * indexprime, *indexsecnd;
-} AlignPair;
+} pairalign;
 
 struct cons_data {
     char pattern[2 * ( MAXPATTERNSIZECONSTANT + 1 )];
@@ -246,7 +188,7 @@ struct cons_data {
 /*******************************************/
 /*** new program started 11-29-95 **********/
 
-struct bestperiodlistelement {
+typedef struct bestperiodlistelement {
     int                           indexhigh;
     int                           indexlow;
     int                           best1;
@@ -255,21 +197,62 @@ struct bestperiodlistelement {
     int                           best4;
     int                           best5;
     struct bestperiodlistelement *next;
-} Bestperiodlist[1];
+} bestperiodlistelement;
 
-struct distanceentry {
+typedef struct distanceentry {
     int location;
     int size;
-};
+} distanceentry;
 
-struct distancelist {
+typedef struct distancelist {
     int k_run_sums_criteria, waiting_time_criteria, lo_d_range, hi_d_range;
     int numentries, nummatches;
     int lowindex, highindex;
     int linked;
     int linkdown, linkup;
     struct distanceentry *entry;
-} * Distance;
+} distancelist;
+
+struct distancelist *new_distancelist();
+void                 clear_distancelist( struct distancelist *objptr );
+void                 init_index();
+void                 init_links();
+void                 init_distanceseenarray( void );
+void                 init_and_fill_coin_toss_stats2000_with_4tuplesizes( void );
+
+/* These declarations moved by Yevgeniy Gelfand on Jan 27, 2010  */
+/* To have smaller sequences not send results */
+/* to disc to improve performance             */
+
+/* define Index List structure */
+
+typedef struct index_list {
+    int   count;   /* indicates order in original file */
+    char  ref[45]; /* records label for linking */
+    int   first;   /* first index */
+    int   last;    /* last index */
+    int   period;  /* period size */
+    float copies;  /* number of copies */
+    int   size;    /* consensus size */
+    int   matches;
+    int   indels;
+    int   score;
+    int   acount;
+    int   ccount;
+    int   gcount;
+    int   tcount;
+    float entropy;
+    char *pattern;
+
+    struct index_list *next;
+} IL;
+
+IL *GlobalIndexList     = NULL;
+IL *GlobalIndexListTail = NULL;
+
+void FreeList( IL *headptr );
+
+/* end of changes  on Jan 27, 2010  */
 
 #define Lookratio .4
 
@@ -278,13 +261,15 @@ struct distancelist {
    alignments, both pre- or post-consensus, and is used to block an
    alignment in the same region with the same distance */
 
-struct distanceseenarrayelement {
+typedef struct distanceseenarrayelement {
     int index;
     int end;
     int score;
-} * Distanceseenarray;
+} distanceseenarrayelement;
 
-struct distancelistelement {
+void free_distanceseenarray( void );
+
+typedef struct distancelistelement {
     int index;
     int distance;
     int changed_from_distance; /* use for test in
@@ -295,7 +280,8 @@ struct distancelistelement {
     int best_possible_score; /* number of copies X length X match weight */
     int accepted;
     struct distancelistelement *next;
-} Distanceseenlist[1];
+} distancelistelement;
+
 /*******************************************/
 
 /* macros */
@@ -433,6 +419,9 @@ int Tuplecode[MAXTUPLESIZES + 1]; /* this is where the actual tuple codes
 int *Tuplehash[MAXTUPLESIZES + 1]; /* points to last location of code
                                     in history list */
 
+void newtupbo( void );
+int  d_range( int d );
+
 int Historysize[MAXTUPLESIZES + 1]; /* size of history lists */
 
 int Nextfreehistoryindex[MAXTUPLESIZES +
@@ -464,23 +453,6 @@ struct MDDtype {
     char *direction;
 }; /* MDD[MAXWRAPLENGTH+1][MAXBANDWIDTH+1];*/
 
-int F[MAXBANDWIDTH + 1], Fdistance[MAXBANDWIDTH + 1];
-
-int ldong;
-
-int *Statistics_Distance;
-
-FILE *Fptxt;
-FILE *Fpdat;
-
-int Minsize = 1;
-int Minscore;
-int MaxPeriod;
-
-int Period;
-
-int print_flanking = 0;
-
 #define CTRL_SUCCESS 0
 #define CTRL_BADFNAME -1
 #define CTRL_BADFORMAT -2
@@ -499,19 +471,6 @@ typedef struct {
 
 } FASTASEQUENCE;
 
-void trf_message( char *format, ... ) {
-
-    va_list argp;
-
-    if ( format == NULL )
-        return;
-
-    va_start( argp, format );
-
-    if ( !paramset.HTMLoff )
-        vfprintf( Fptxt, format, argp );
-
-    va_end( argp );
-}
+void trf_message( char *format, ... );
 
 #endif

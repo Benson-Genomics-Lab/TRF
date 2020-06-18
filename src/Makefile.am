@@ -1,7 +1,11 @@
+# TODO Figure out best way to compile the different units together
+AM_CFLAGS = -fno-align-functions -fno-align-loops
+# noinst_LIBRARIES = libtrfrun.a
+# libtrfrun_a_SOURCES = tr30dat.c trfrun.h trfclean.h tr30dat.h
+
 bin_PROGRAMS = trf
-trf_SOURCES = trf.c
-trf_DEPENDENCIES = tr30dat.c tr30dat.h trf.c trfclean.h trfrun.h
-trf_CFLAGS = -fno-align-functions -fno-align-loops
+trf_SOURCES = trf.c tr30dat.c trfrun.c trfrun.h trfclean.h tr30dat.h
+# trf_LDADD = libtrfrun.a
 
 install-exec-hook:
 	$(LN_S) $(DESTDIR)$(bindir)/trf$(EXEEXT) \
