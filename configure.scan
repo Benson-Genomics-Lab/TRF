@@ -1,0 +1,34 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+#AC_PREREQ([2.69])
+AC_INIT([trf], [4.10.0-rc.2], [https://github.com/Benson-Genomics-Lab/TRF/issues], [https://tandem.bu.edu/trf/trf.html])
+AC_CONFIG_SRCDIR([config.h.in])
+AC_CONFIG_HEADERS([config.h])
+
+# Checks for programs.
+AC_PROG_CC
+
+# Checks for libraries.
+
+# Checks for header files.
+AC_CHECK_HEADERS([limits.h stddef.h stdlib.h string.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_SIZE_T
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([memset strchr strerror strstr strtol])
+AC_SEARCH_LIBS([floor], [m], [], [
+  AC_MSG_ERROR([unable to find the floor() function])
+])
+AC_SEARCH_LIBS([sqrt], [m], [], [
+  AC_MSG_ERROR([unable to find the sqrt() function])
+])
+
+
+AC_CONFIG_FILES([Makefile
+                 src/Makefile])
+AC_OUTPUT
