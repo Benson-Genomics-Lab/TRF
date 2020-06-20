@@ -102,9 +102,11 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_trf_OBJECTS = trf.$(OBJEXT) tr30dat.$(OBJEXT) trfrun.$(OBJEXT)
+am_trf_OBJECTS = trf-trf.$(OBJEXT)
 trf_OBJECTS = $(am_trf_OBJECTS)
 trf_LDADD = $(LDADD)
+trf_LINK = $(CCLD) $(trf_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o \
+	$@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -120,9 +122,12 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/tr30dat.Po ./$(DEPDIR)/trf.Po \
-	./$(DEPDIR)/trfrun.Po
+am__depfiles_remade = ./$(DEPDIR)/trf-trf.Po
 am__mv = mv -f
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_@AM_V@)
@@ -265,10 +270,9 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-
-# TODO Figure out best way to compile the different units together
-AM_CFLAGS = -fno-align-functions -fno-align-loops
-trf_SOURCES = trf.c tr30dat.c trfrun.c trfrun.h trfclean.h tr30dat.h
+trf_SOURCES = trf.c
+trf_DEPENDENCIES = tr30dat.c tr30dat.h trf.c trfclean.h trfrun.h
+trf_CFLAGS = -fno-align-functions -fno-align-loops
 all: all-am
 
 .SUFFIXES:
@@ -347,7 +351,7 @@ clean-binPROGRAMS:
 
 trf$(EXEEXT): $(trf_OBJECTS) $(trf_DEPENDENCIES) $(EXTRA_trf_DEPENDENCIES) 
 	@rm -f trf$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(trf_OBJECTS) $(trf_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(trf_LINK) $(trf_OBJECTS) $(trf_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -355,9 +359,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tr30dat.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trf.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trfrun.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trf-trf.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -378,6 +380,20 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+trf-trf.o: trf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trf_CFLAGS) $(CFLAGS) -MT trf-trf.o -MD -MP -MF $(DEPDIR)/trf-trf.Tpo -c -o trf-trf.o `test -f 'trf.c' || echo '$(srcdir)/'`trf.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/trf-trf.Tpo $(DEPDIR)/trf-trf.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='trf.c' object='trf-trf.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trf_CFLAGS) $(CFLAGS) -c -o trf-trf.o `test -f 'trf.c' || echo '$(srcdir)/'`trf.c
+
+trf-trf.obj: trf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trf_CFLAGS) $(CFLAGS) -MT trf-trf.obj -MD -MP -MF $(DEPDIR)/trf-trf.Tpo -c -o trf-trf.obj `if test -f 'trf.c'; then $(CYGPATH_W) 'trf.c'; else $(CYGPATH_W) '$(srcdir)/trf.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/trf-trf.Tpo $(DEPDIR)/trf-trf.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='trf.c' object='trf-trf.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trf_CFLAGS) $(CFLAGS) -c -o trf-trf.obj `if test -f 'trf.c'; then $(CYGPATH_W) 'trf.c'; else $(CYGPATH_W) '$(srcdir)/trf.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -506,9 +522,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/tr30dat.Po
-	-rm -f ./$(DEPDIR)/trf.Po
-	-rm -f ./$(DEPDIR)/trfrun.Po
+		-rm -f ./$(DEPDIR)/trf-trf.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -555,9 +569,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/tr30dat.Po
-	-rm -f ./$(DEPDIR)/trf.Po
-	-rm -f ./$(DEPDIR)/trfrun.Po
+		-rm -f ./$(DEPDIR)/trf-trf.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -594,7 +606,6 @@ uninstall-am: uninstall-binPROGRAMS
 
 .PRECIOUS: Makefile
 
-# trf_LDADD = libtrfrun.a
 
 install-exec-hook:
 	$(LN_S) $(DESTDIR)$(bindir)/trf$(EXEEXT) \
