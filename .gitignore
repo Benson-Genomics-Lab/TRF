@@ -8,3 +8,4 @@ Debug/
 .vscode
 .vstags
 build/
+autom4te.cache/
