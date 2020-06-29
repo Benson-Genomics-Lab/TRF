@@ -54,56 +54,41 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 #include "trfclean.h"
 
 // Shared variables declared elsewhere (many in tr30dat.c)
-extern int                       counterInSeq;
-extern IL *                      GlobalIndexList;
-extern IL *                      GlobalIndexListTail;
-extern TRFPARAMSET               paramset;
-extern pairalign                 AlignPair;
-extern bestperiodlistelement     Bestperiodlist[1];
-extern distancelist *            Distance;
-extern distanceentry *           _DistanceEntries;
-extern distancelistelement       Distanceseenlist[1];
-extern distanceseenarrayelement *Distanceseenarray;
-extern int                       PI;
-extern int                       PM;
-extern int                       MAXDISTANCE;
-extern int                       MAXPATTERNSIZE;
-extern int                       ldong;
-extern int *                     Statistics_Distance;
-extern FILE *                    Fptxt;
-extern int                       Minsize;
-extern int                       Minscore;
-extern int                       MaxPeriod;
-extern int                       Period;
-extern int                       print_flanking;
-extern double                    WDPcount;
-extern int *                     Criteria_count;
-extern int *                     Consensus_count;
-extern int *                     Outputsize_count;
-extern double *                  Cell_count;
-extern double                    Cell_total, Wasted_total;
-extern int *                     Sortmultiples;
-extern int *                     Index;
-extern int *                     ACGTcount;
-extern unsigned char *           Sequence;
-extern int                       Length;
-/* extern int S[MAXWRAPLENGTH+1][MAXPATTERNSIZE];*/
-extern int    Delta;   /* indel penalty */
-extern int    Alpha;   /* match bonus */
-extern int    Beta;    /* mismatch penalty */
-extern int    AFDelta; /* affine gap initiation penalty */
-extern int    AFGamma; /* affine gap extension penalty */
-extern int    pwidth;
-extern int    Reportmin, Heading;
-extern int    Classlength;
-extern int    Test;
-extern double Rows;
-extern double Totalcharacters;
-/* extern int Lookcount;*/
-extern int                  Wrapend;
-extern int                  Maxrealrow, Maxrow, Maxcol;
-extern int                  Maxscore;
-extern int                  ConsClasslength;
+extern int                   counterInSeq;
+extern IL *                  GlobalIndexList;
+extern IL *                  GlobalIndexListTail;
+extern TRFPARAMSET           paramset /* defined in tr30dat.c */;
+extern pairalign             AlignPair;
+extern bestperiodlistelement Bestperiodlist[1];
+extern distancelist *        Distance;
+extern distanceentry *       _DistanceEntries;
+extern int                   PI;
+extern int                   PM;
+extern int                   MAXDISTANCE;
+extern int                   MAXPATTERNSIZE;
+extern int                   ldong;
+extern int *                 Statistics_Distance;
+extern FILE *                Fptxt;
+extern int                   Minscore;
+extern int                   MaxPeriod;
+extern int                   print_flanking;
+extern double                WDPcount;
+extern int *                 Criteria_count;
+extern int *                 Consensus_count;
+extern int *                 Outputsize_count;
+extern double *              Cell_count;
+extern double                Cell_total, Wasted_total;
+extern int *                 Sortmultiples;
+extern int *                 Index;
+extern unsigned char *       Sequence;
+extern int                   Length;
+extern int                   Delta; /* indel penalty */
+extern int                   Alpha; /* match bonus */
+extern int                   Beta;  /* mismatch penalty */
+extern int                   Reportmin;
+extern int                   Test;
+extern double                Rows;
+extern double                Totalcharacters;
 extern int *                Tag; /* list of tags for linking active distances */
 extern int                  Toptag; /* last tag in list */
 extern unsigned int         maxwraplength;
