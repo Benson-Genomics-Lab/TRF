@@ -171,18 +171,6 @@ typedef struct {
     int * indexprime, *indexsecnd;
 } pairalign;
 
-struct cons_data {
-    char pattern[2 * ( MAXPATTERNSIZECONSTANT + 1 )];
-    int  A[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
-      C[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
-      G[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
-      T[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
-      dash[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
-      insert[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
-      letters[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
-      total[2 * ( MAXPATTERNSIZECONSTANT + 1 )];
-} Consensus;
-
 /* int Up[MAXPATTERNSIZE+1], Diag[MAXPATTERNSIZE+1];*/
 
 /*******************************************/
@@ -315,15 +303,6 @@ int *SM = NULL;
 #define max( a, b ) ( ( ( a ) >= ( b ) ) ? ( a ) : ( b ) )
 #define min( a, b ) ( ( ( a ) <= ( b ) ) ? ( a ) : ( b ) )
 
-double  Copynumber;
-double  WDPcount;
-double  OUTPUTcount;
-int *   Criteria_count;
-int *   Consensus_count;
-int *   Outputsize_count;
-double *Cell_count;
-double  Try_waiting_time_count, Fail_waiting_time_count;
-double  Cell_total, Wasted_total;
 /**********************************************************************/
 /* New to 2A */
 
@@ -360,8 +339,6 @@ typedef struct {
     char *endstatus;
     int   percent;
 } TRFPARAMSET;
-
-TRFPARAMSET paramset; /* this global controls the algorithm */
 
 /* G. Benson */
 /* 1/26/10 */
@@ -435,10 +412,6 @@ struct distribution_parameters {
     double exp;
     double var;
 };
-
-int  Criteria_print      = 0;
-int  Meet_criteria_print = 0;
-int *Sortmultiples;
 
 /* define NUMBER_OF_PERIODS 3 */ /* returns <= 3 best periods for a repeat */
 /* modified 3/25/05 G. Benson */

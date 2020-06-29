@@ -26,6 +26,7 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 #include "tr30dat.h"
 
 // (Possibly) shared variables
+TRFPARAMSET               paramset; /* this global controls the algorithm */
 pairalign                 AlignPair;
 bestperiodlistelement     Bestperiodlist[1];
 distancelist *            Distance;
@@ -47,6 +48,29 @@ int                       Minscore;
 int                       MaxPeriod;
 int                       Period;
 int                       print_flanking = 0;
+double                    Copynumber;
+double                    WDPcount;
+double                    OUTPUTcount;
+int *                     Criteria_count;
+int *                     Consensus_count;
+int *                     Outputsize_count;
+double *                  Cell_count;
+double                    Try_waiting_time_count, Fail_waiting_time_count;
+double                    Cell_total, Wasted_total;
+int                       Criteria_print      = 0;
+int                       Meet_criteria_print = 0;
+int *                     Sortmultiples;
+struct cons_data {
+    char pattern[2 * ( MAXPATTERNSIZECONSTANT + 1 )];
+    int  A[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
+      C[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
+      G[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
+      T[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
+      dash[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
+      insert[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
+      letters[2 * ( MAXPATTERNSIZECONSTANT + 1 )],
+      total[2 * ( MAXPATTERNSIZECONSTANT + 1 )];
+} Consensus;
 /* G. Benson 1/28/2004 */
 /* size of EC increased to avoid memory error when consensus length exceeds
    MAXPATTERNSIZECONSTANT after returning from get_consensus(d) */

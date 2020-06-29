@@ -54,6 +54,7 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 #include "trfclean.h"
 
 // Shared variables declared elsewhere
+extern TRFPARAMSET               paramset;
 extern pairalign                 AlignPair;
 extern bestperiodlistelement     Bestperiodlist[1];
 extern distancelist *            Distance;
