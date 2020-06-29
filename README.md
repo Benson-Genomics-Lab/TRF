@@ -120,7 +120,7 @@ test_seqs.fasta.s3.2.5.7.80.10.50.2000.1.txt.html
 test_seqs.fasta.s4.2.5.7.80.10.50.2000.1.html
 test_seqs.fasta.s4.2.5.7.80.10.50.2000.1.txt.html
 ```
-Open the summary file in a browser.  It will point to the four .html files (without the .txt).  Each of those files contains a table describing one TR.  Below are the tables as they should appear.  
+Open the summary file in a browser.  It will point to the four .html files (without the .txt).  Each of those files contains a table describing one TR.  Below are the tables as they should appear.  It is only necessary to confirm that the files have been created and the tables are present.
 
 **test_seqs.fasta.s1.2.5.7.80.10.50.2000.1.html**
 <TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0>
