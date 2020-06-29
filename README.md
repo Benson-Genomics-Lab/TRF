@@ -202,7 +202,7 @@ The following is a more detailed description of the **parameters**:
 - **-f:** If this option is present, flanking sequence around each repeat is recorded in the alignment file. This may be useful for PCR primer determination. Flanking sequence consists of the 500 nucleotides on each side of a repeat.
 - **-d:** A data file is produced if this option is present. This file is a text file which contains the same information, in the same order, as the summary table file, plus consensus pattern and repeat sequences. This file contains no labeling and is suitable for additional processing, for example with a perl script, outside of the program.
 - **-h:** suppress HTML output (this automatically switches -d to ON)
-- **-l \<n\>:** Specifies that the longest TR array expected in the input is at most n million bp long. The default is 2 (for 2 million). Setting this option too high may result in an error message if you did not have enough availablememory. We have only tested this option uo to value 29.
+- **-l \<n\>:** Specifies that the longest TR array expected in the input is at most n million bp long. The default is 2 (for 2 million). Setting this option too high may result in an error message if you did not have enough available memory. We have only tested this option up to value 29.
 - **-u:** Prints the help/usage message above
 - **-v:** Prints the version information
 - **-ngs:** More compact .dat output on multisequence files, returns 0 on success. You may pipe input in with this option using - for file name. Short 50 flanks are appended to .dat output. .dat output actually goes to stdout instead of file. Sequence headers are displayed in output as @header. Only headers containing repeats are shown. 
