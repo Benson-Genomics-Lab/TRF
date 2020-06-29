@@ -25,7 +25,73 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 #include <math.h>
 #include "tr30dat.h"
 
-// (Possibly) shared variables
+//#define match(a, b) ((a==b)?Alpha:Beta)
+/* returns match mismatch matrix value */
+
+/* Jan 27, 2006, Gelfand, changed to use Similarity Matrix to avoid N matching
+ * itself */
+/* This function may be called multiple times (for different match/mismatch
+ * scores) */
+int *SM = NULL;
+#define match( a, b ) ( SM[256 * ( ( a ) ) + ( b )] )
+
+#define fill_align_pair( c1, c2, l, i, j ) \
+    AlignPair.textprime[l]  = c1;          \
+    AlignPair.textsecnd[l]  = c2;          \
+    AlignPair.indexprime[l] = i;           \
+    AlignPair.indexsecnd[l] = j
+
+/*******************************/
+/* (Possibly) shared variables */
+/*******************************/
+/* 02/05/16 Y. Hernandez */
+/* Since this is no longer a macro, use all lower case to avoid confusion. */
+unsigned int maxwraplength = 0;
+int *        Bandcenter    = NULL;
+int **       S;
+int          Up[MAXBANDWIDTH + 1], Diag[MAXBANDWIDTH + 1];
+int          Maxrealcol;
+
+/* new for 2Anewt */
+int four_to_the[] = {
+  1, 4, 16, 64, 256, 1024, 4096, 16384, 65536, 262144, 1048576 };
+
+/* #define Number_tuple_sizes  4 */
+/* #define Number_tuple_sizes  4 */
+int NTS; /* number of different tuple sizes to use;
+            preset for all distances */
+/* int Tuplesize[NTS+1]={0,2,3,5,7};*/ /* what the different sizes are */
+/* int Tuplesize[NTS+1]={0,4,5,6,7};*/ /* what the different sizes are */
+/* int Tuplesize[NTS+1]={0,3,4,5,7};*/
+int Tuplesize[MAXTUPLESIZES + 1];
+int Tuplemaxdistance[MAXTUPLESIZES + 1];
+/* int Tuplemaxdistance[MAXTUPLESIZES+1]={0,30,80,200,MAXDISTANCE};*/ /* upper
+                                                                         distance
+                                                                         for
+                                                                         each
+                                                                         tuplesize
+                                                                       */
+/* int Tuplemaxdistance[MAXTUPLESIZES+1]={0,29,83,159,MAXDISTANCE};*/
+/* int Tuplemaxdistance[MAXTUPLESIZES+1]={0,29,159,MAXDISTANCE};*/
+int Tuplecode[MAXTUPLESIZES + 1];   /* this is where the actual tuple codes
+                                     encountered at a sequence location
+                                     are stored. */
+int *Tuplehash[MAXTUPLESIZES + 1];  /* points to last location of code
+                                     in history list */
+int Historysize[MAXTUPLESIZES + 1]; /* size of history lists */
+int Nextfreehistoryindex[MAXTUPLESIZES +
+                         1]; /*next free location in history index*/
+struct historyentry {
+    int location, previous, code;
+} * History[MAXTUPLESIZES + 1];
+
+/* These declarations moved by Yevgeniy Gelfand on Jan 27, 2010  */
+/* To have smaller sequences not send results */
+/* to disc to improve performance             */
+int counterInSeq = 0;
+
+IL *                      GlobalIndexList     = NULL;
+IL *                      GlobalIndexListTail = NULL;
 TRFPARAMSET               paramset; /* this global controls the algorithm */
 pairalign                 AlignPair;
 bestperiodlistelement     Bestperiodlist[1];

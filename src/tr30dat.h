@@ -25,11 +25,6 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef TR30DAT_H
 #define TR30DAT_H
 
-/* These declarations moved by Yevgeniy Gelfand on Jan 27, 2010  */
-/* To have smaller sequences not send results */
-/* to disc to improve performance             */
-int counterInSeq = 0;
-
 /* uncomment only one platform target identifier */
 
 //#define WINDOWSGUI
@@ -126,12 +121,11 @@ int counterInSeq = 0;
  * without changing source. */
 /* 02/05/16 Y. Hernandez */
 /* End use of MAXWRAPLENGTHCONST macro, use a command line option instead. */
+/* 06/29/20 Y. Hernandez */
+/* Moved var maxwraplength to tr30dat.c */
 //#ifndef MAXWRAPLENGTHCONST
 //#define MAXWRAPLENGTHCONST 10000000
 //#endif
-/* 02/05/16 Y. Hernandez */
-/* Since this is no longer a macro, use all lower case to avoid confusion. */
-unsigned int maxwraplength = 0;
 
 /* Added by Yevgeniy Gelfand on Jan 27, 2010  */
 /* To have smaller sequences not send results */
@@ -235,9 +229,6 @@ typedef struct index_list {
     struct index_list *next;
 } IL;
 
-IL *GlobalIndexList     = NULL;
-IL *GlobalIndexListTail = NULL;
-
 void FreeList( IL *headptr );
 
 /* end of changes  on Jan 27, 2010  */
@@ -284,22 +275,6 @@ typedef struct distancelistelement {
     ( ( a >= b ) ? ( ( a >= c ) ? a : c ) : ( ( b >= c ) ? b : c ) )
 /* returns max of 3 in order a,b,c */
 
-//#define match(a, b) ((a==b)?Alpha:Beta)
-/* returns match mismatch matrix value */
-
-/* Jan 27, 2006, Gelfand, changed to use Similarity Matrix to avoid N matching
- * itself */
-/* This function may be called multiple times (for different match/mismatch
- * scores) */
-int *SM = NULL;
-#define match( a, b ) ( SM[256 * ( ( a ) ) + ( b )] )
-
-#define fill_align_pair( c1, c2, l, i, j ) \
-    AlignPair.textprime[l]  = c1;          \
-    AlignPair.textsecnd[l]  = c2;          \
-    AlignPair.indexprime[l] = i;           \
-    AlignPair.indexsecnd[l] = j
-
 #define max( a, b ) ( ( ( a ) >= ( b ) ) ? ( a ) : ( b ) )
 #define min( a, b ) ( ( ( a ) <= ( b ) ) ? ( a ) : ( b ) )
 
@@ -345,16 +320,13 @@ typedef struct {
 /* change MAXWRAPLENGTH to MAXWRAPLENGTHCONST so MAXWRAPLENGTH can be used as an
  * int */
 /* int Bandcenter[MAXWRAPLENGTH+1]; */
-int *Bandcenter = NULL;
 
 /* version 2A changes this */
 /* int S[MAXWRAPLENGTH+1][MAXDISTANCE+1];*/
 /* int Up[MAXDISTANCE+1], Diag[MAXDISTANCE+1];*/
 
 /* int S[MAXWRAPLENGTH+1][MAXBANDWIDTH+1];*/
-int **S;
 
-int Up[MAXBANDWIDTH + 1], Diag[MAXBANDWIDTH + 1];
 /* version 2A adds max3 and max2 */
 #define max2( a, b ) ( ( a >= b ) ? a : b )
 /* returns max of 2 in order a,b */
@@ -362,51 +334,6 @@ int Up[MAXBANDWIDTH + 1], Diag[MAXBANDWIDTH + 1];
 #define max3( a, b, c ) \
     ( ( a >= b ) ? ( ( a >= c ) ? a : c ) : ( ( b >= c ) ? b : c ) )
 /* returns max of 3 in order a,b,c */
-
-int Maxrealcol;
-
-/* new for 2Anewt */
-
-int four_to_the[] = {
-  1, 4, 16, 64, 256, 1024, 4096, 16384, 65536, 262144, 1048576 };
-
-/* #define Number_tuple_sizes  4 */
-/* #define Number_tuple_sizes  4 */
-
-int NTS; /* number of different tuple sizes to use;
-            preset for all distances */
-/* int Tuplesize[NTS+1]={0,2,3,5,7};*/ /* what the different sizes are */
-/* int Tuplesize[NTS+1]={0,4,5,6,7};*/ /* what the different sizes are */
-/* int Tuplesize[NTS+1]={0,3,4,5,7};*/
-int Tuplesize[MAXTUPLESIZES + 1];
-int Tuplemaxdistance[MAXTUPLESIZES + 1];
-
-/* int Tuplemaxdistance[MAXTUPLESIZES+1]={0,30,80,200,MAXDISTANCE};*/ /* upper
-                                                                         distance
-                                                                         for
-                                                                         each
-                                                                         tuplesize
-                                                                       */
-/* int Tuplemaxdistance[MAXTUPLESIZES+1]={0,29,83,159,MAXDISTANCE};*/
-/* int Tuplemaxdistance[MAXTUPLESIZES+1]={0,29,159,MAXDISTANCE};*/
-int Tuplecode[MAXTUPLESIZES + 1]; /* this is where the actual tuple codes
-                                   encountered at a sequence location
-                                   are stored. */
-
-int *Tuplehash[MAXTUPLESIZES + 1]; /* points to last location of code
-                                    in history list */
-
-void newtupbo( void );
-int  d_range( int d );
-
-int Historysize[MAXTUPLESIZES + 1]; /* size of history lists */
-
-int Nextfreehistoryindex[MAXTUPLESIZES +
-                         1]; /*next free location in history index*/
-
-struct historyentry {
-    int location, previous, code;
-} * History[MAXTUPLESIZES + 1];
 
 struct distribution_parameters {
     double exp;
@@ -445,5 +372,12 @@ typedef struct {
 } FASTASEQUENCE;
 
 void trf_message( char *format, ... );
+
+/**********************/
+/* "Public" functions */
+/**********************/
+
+void newtupbo( void );
+int  d_range( int d );
 
 #endif

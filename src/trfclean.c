@@ -55,9 +55,17 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 #include "tr30dat.h"
 #include "trfclean.h"
 
+/* Extern globals */
 extern TRFPARAMSET paramset;
+extern IL *        GlobalIndexList;
 
 extern void PrintError( char *errortext ); /* defined in trfrun.h */
+
+/* Globals */
+/* Global strings to store non-tabulated information in html file */
+char hsequence[256];
+char hparameters[256];
+char hlength[256];
 
 /***********************************
  *   Chief Procedure Definition

@@ -57,11 +57,6 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include "tr30dat.h"
 
-/* Global strings to store non-tabulated information in html file */
-char hsequence[256];
-char hparameters[256];
-char hlength[256];
-
 /* max # of items in tables for extended output format*/
 #define EO_MAX_TBL 120
 

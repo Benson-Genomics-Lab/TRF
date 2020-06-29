@@ -53,7 +53,10 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 #include "trfrun.h"
 #include "trfclean.h"
 
-// Shared variables declared elsewhere
+// Shared variables declared elsewhere (many in tr30dat.c)
+extern int                       counterInSeq;
+extern IL *                      GlobalIndexList;
+extern IL *                      GlobalIndexListTail;
 extern TRFPARAMSET               paramset;
 extern pairalign                 AlignPair;
 extern bestperiodlistelement     Bestperiodlist[1];
@@ -97,12 +100,21 @@ extern int    Test;
 extern double Rows;
 extern double Totalcharacters;
 /* extern int Lookcount;*/
-extern int  Wrapend;
-extern int  Maxrealrow, Maxrow, Maxcol;
-extern int  Maxscore;
-extern int  ConsClasslength;
-extern int *Tag;    /* list of tags for linking active distances */
-extern int  Toptag; /* last tag in list */
+extern int                  Wrapend;
+extern int                  Maxrealrow, Maxrow, Maxcol;
+extern int                  Maxscore;
+extern int                  ConsClasslength;
+extern int *                Tag; /* list of tags for linking active distances */
+extern int                  Toptag; /* last tag in list */
+extern unsigned int         maxwraplength;
+extern int **               S;
+extern int                  NTS;
+extern int *                Tuplehash[MAXTUPLESIZES + 1];
+extern struct historyentry *History[MAXTUPLESIZES + 1];
+
+extern char hsequence[256];
+extern char hparameters[256];
+extern char hlength[256];
 
 new1Darrayfunc( char, newAlignPairtext, length );
 
