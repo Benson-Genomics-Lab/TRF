@@ -9,7 +9,8 @@
  - [Authors](#authors)
  - [License](#license)
  - [Pre-compiled Versions](#pre-compiled-versions)
- - [Instructions for Compiling](#instructions-for-compiling) 
+ - [Instructions for Compiling](#instructions-for-compiling)
+ - [Testing the Installation](#testing-the-installation)
  - [Quick Start](#quick-start)
  - [Using Command Line Version of Tandem Repeats Finder](#using-command-line-version-of-tandem-repeats-finder)  
  - [TRF Definitions](#trf-definitions)  
@@ -101,10 +102,35 @@ This will:
 The file will be called `trf` (`trf.exe` on Windows). For backwards compatibility with automated scripts exepcting TRF to follow a certain naming scheme, the installation will also create a symbolic link named `trf<version>.<operating system>.exe`.
 For example the file on a linux 64 bit operating system for version 4.10.0 will be called `trf4.10.0.linux64.exe`.
 
+## Testing the Installation ##
+Run the executable on the included test file `test_seqs.fasta`.  (This assumes the executable has been named TRF.):
+
+```bash
+trf test_seqs.fasta 2 5 7 80 10 50 2000 -l 10
+```
+This should produce 9 files:
+```bash
+test_seqs.fasta.2.5.7.80.10.50.2000.summary.html
+test_seqs.fasta.s1.2.5.7.80.10.50.2000.1.html
+test_seqs.fasta.s1.2.5.7.80.10.50.2000.1.txt.html
+test_seqs.fasta.s2.2.5.7.80.10.50.2000.1.html
+test_seqs.fasta.s2.2.5.7.80.10.50.2000.1.txt.html
+test_seqs.fasta.s3.2.5.7.80.10.50.2000.1.html
+test_seqs.fasta.s3.2.5.7.80.10.50.2000.1.txt.html
+test_seqs.fasta.s4.2.5.7.80.10.50.2000.1.html
+test_seqs.fasta.s4.2.5.7.80.10.50.2000.1.txt.html
+```
+Open the summary file in a browser.  It will point to the four .html files (without the .txt).  Each of those files contains a table describing one TR.  For example:
+
+<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0>
+<TR><TD WIDTH=140><CENTER>Indices</CENTER></TD><TD WIDTH=80><CENTER>Period<BR>Size </CENTER></TD><TD WIDTH=70><CENTER>Copy<BR>Number</CENTER></TD><TD WIDTH=70><CENTER>Consensus<BR>Size</CENTER></TD><TD WIDTH=70><CENTER>Percent<BR>Matches</CENTER></TD><TD WIDTH=70><CENTER>Percent<BR>Indels</CENTER></TD><TD WIDTH=60><CENTER>Score</CENTER></TD><TD WIDTH=40><CENTER>A</CENTER></TD><TD WIDTH=40><CENTER>C</CENTER></TD><TD WIDTH=40><CENTER>G</CENTER></TD><TD WIDTH=40><CENTER>T</CENTER></TD><TD WIDTH=70><CENTER>Entropy<BR>(0-2)</CENTER></TD></TR>
+<TR><TD><CENTER><A HREF="test_seqs.fasta.s1.2.5.7.80.10.50.2000.1.txt.html#1--35,7,5.0,7,1">1--35</A></CENTER></TD><TD><CENTER>7</CENTER></TD><TD><CENTER>5.0</CENTER></TD><TD><CENTER>7</CENTER></TD><TD><CENTER>100</CENTER></TD><TD><CENTER>0</CENTER></TD><TD><CENTER>70</CENTER></TD><TD><CENTER>14</CENTER></TD><TD><CENTER>28</CENTER></TD><TD><CENTER>28</CENTER></TD><TD><CENTER>28</CENTER></TD><TD><CENTER>1.95</CENTER></TD></TR>
+</TABLE>
+
 ## Quick Start ##
 
 The following is a recommended command line to run TRF.  Parameters are explained further below. This assumes the executable has been renamed `trf`.
-
+	
 ```bash
 trf yourfile.fa 2 5 7 80 10 50 2000
 ```
