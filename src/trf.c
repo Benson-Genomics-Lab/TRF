@@ -31,7 +31,7 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 #include <limits.h> // LONG_MIN, LONG_MAX
 #include "trfrun.h" // core algorithm function
 
-extern TRFPARAMSET paramset;
+extern TRFPARAMSET paramset /* defined in tr30dat.c */;
 
 const char *usage =
   "\n\nPlease use: %s File Match Mismatch Delta PM PI Minscore MaxPeriod "
@@ -361,9 +361,9 @@ static int ParseUInt( const char *str, unsigned int *dest ) {
     if ( success && ( temp >= 0 ) ) {
         *dest = temp;
         return 1;
-    } else {
-        return 0;
     }
+
+    return 0;
 }
 
 void PrintBanner( void ) {
