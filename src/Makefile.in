@@ -102,7 +102,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_trf_OBJECTS = trf.$(OBJEXT) tr30dat.$(OBJEXT) trfrun.$(OBJEXT)
+am_trf_OBJECTS = trf.$(OBJEXT) tr30dat.$(OBJEXT) trfrun.$(OBJEXT) \
+	trfclean.$(OBJEXT)
 trf_OBJECTS = $(am_trf_OBJECTS)
 trf_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -121,7 +122,7 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/tr30dat.Po ./$(DEPDIR)/trf.Po \
-	./$(DEPDIR)/trfrun.Po
+	./$(DEPDIR)/trfclean.Po ./$(DEPDIR)/trfrun.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -268,7 +269,7 @@ top_srcdir = @top_srcdir@
 
 # TODO Figure out best way to compile the different units together
 AM_CFLAGS = -fno-align-functions -fno-align-loops
-trf_SOURCES = trf.c tr30dat.c trfrun.c trfrun.h trfclean.h tr30dat.h
+trf_SOURCES = trf.c tr30dat.c trfrun.c trfrun.h trfclean.c trfclean.h tr30dat.h
 all: all-am
 
 .SUFFIXES:
@@ -357,6 +358,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tr30dat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trf.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trfclean.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trfrun.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -508,6 +510,7 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/tr30dat.Po
 	-rm -f ./$(DEPDIR)/trf.Po
+	-rm -f ./$(DEPDIR)/trfclean.Po
 	-rm -f ./$(DEPDIR)/trfrun.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -557,6 +560,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/tr30dat.Po
 	-rm -f ./$(DEPDIR)/trf.Po
+	-rm -f ./$(DEPDIR)/trfclean.Po
 	-rm -f ./$(DEPDIR)/trfrun.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
