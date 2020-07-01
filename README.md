@@ -9,7 +9,8 @@
  - [Authors](#authors)
  - [License](#license)
  - [Pre-compiled Versions](#pre-compiled-versions)
- - [Instructions for Compiling](#instructions-for-compiling) 
+ - [Instructions for Compiling](#instructions-for-compiling)
+ - [Testing the Installation](#testing-the-installation)
  - [Quick Start](#quick-start)
  - [Using Command Line Version of Tandem Repeats Finder](#using-command-line-version-of-tandem-repeats-finder)  
  - [TRF Definitions](#trf-definitions)  
@@ -101,10 +102,54 @@ This will:
 The file will be called `trf` (`trf.exe` on Windows). For backwards compatibility with automated scripts exepcting TRF to follow a certain naming scheme, the installation will also create a symbolic link named `trf<version>.<operating system>.exe`.
 For example the file on a linux 64 bit operating system for version 4.10.0 will be called `trf4.10.0.linux64.exe`.
 
+## Testing the Installation ##
+Run the executable on the included test file `test_seqs.fasta`.  (This assumes the executable has been named TRF.):
+
+```bash
+trf test_seqs.fasta 2 5 7 80 10 50 2000 -l 10
+```
+This should produce 9 files:
+```bash
+test_seqs.fasta.2.5.7.80.10.50.2000.summary.html
+test_seqs.fasta.s1.2.5.7.80.10.50.2000.1.html
+test_seqs.fasta.s1.2.5.7.80.10.50.2000.1.txt.html
+test_seqs.fasta.s2.2.5.7.80.10.50.2000.1.html
+test_seqs.fasta.s2.2.5.7.80.10.50.2000.1.txt.html
+test_seqs.fasta.s3.2.5.7.80.10.50.2000.1.html
+test_seqs.fasta.s3.2.5.7.80.10.50.2000.1.txt.html
+test_seqs.fasta.s4.2.5.7.80.10.50.2000.1.html
+test_seqs.fasta.s4.2.5.7.80.10.50.2000.1.txt.html
+```
+Open the summary file in a browser.  It will point to the four .html files (without the .txt).  Each of those files contains a table describing one TR.  Below are the tables as they should appear.  It is only necessary to confirm that the files have been created and the tables are present.
+
+**test_seqs.fasta.s1.2.5.7.80.10.50.2000.1.html**
+<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0>
+<TR><TD WIDTH=140><CENTER>Indices</CENTER></TD><TD WIDTH=80><CENTER>Period<BR>Size </CENTER></TD><TD WIDTH=70><CENTER>Copy<BR>Number</CENTER></TD><TD WIDTH=70><CENTER>Consensus<BR>Size</CENTER></TD><TD WIDTH=70><CENTER>Percent<BR>Matches</CENTER></TD><TD WIDTH=70><CENTER>Percent<BR>Indels</CENTER></TD><TD WIDTH=60><CENTER>Score</CENTER></TD><TD WIDTH=40><CENTER>A</CENTER></TD><TD WIDTH=40><CENTER>C</CENTER></TD><TD WIDTH=40><CENTER>G</CENTER></TD><TD WIDTH=40><CENTER>T</CENTER></TD><TD WIDTH=70><CENTER>Entropy<BR>(0-2)</CENTER></TD></TR>
+<TR><TD><CENTER>1--35</CENTER></TD><TD><CENTER>7</CENTER></TD><TD><CENTER>5.0</CENTER></TD><TD><CENTER>7</CENTER></TD><TD><CENTER>100</CENTER></TD><TD><CENTER>0</CENTER></TD><TD><CENTER>70</CENTER></TD><TD><CENTER>14</CENTER></TD><TD><CENTER>28</CENTER></TD><TD><CENTER>28</CENTER></TD><TD><CENTER>28</CENTER></TD><TD><CENTER>1.95</CENTER></TD></TR>
+</TABLE>
+
+**test_seqs.fasta.s2.2.5.7.80.10.50.2000.1.html**
+<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0>
+<TR><TD WIDTH=140><CENTER>Indices</CENTER></TD><TD WIDTH=80><CENTER>Period<BR>Size </CENTER></TD><TD WIDTH=70><CENTER>Copy<BR>Number</CENTER></TD><TD WIDTH=70><CENTER>Consensus<BR>Size</CENTER></TD><TD WIDTH=70><CENTER>Percent<BR>Matches</CENTER></TD><TD WIDTH=70><CENTER>Percent<BR>Indels</CENTER></TD><TD WIDTH=60><CENTER>Score</CENTER></TD><TD WIDTH=40><CENTER>A</CENTER></TD><TD WIDTH=40><CENTER>C</CENTER></TD><TD WIDTH=40><CENTER>G</CENTER></TD><TD WIDTH=40><CENTER>T</CENTER></TD><TD WIDTH=70><CENTER>Entropy<BR>(0-2)</CENTER></TD></TR>
+<TR><TD><CENTER>1--84</CENTER></TD><TD><CENTER>12</CENTER></TD><TD><CENTER>7.0</CENTER></TD><TD><CENTER>12</CENTER></TD><TD><CENTER>100</CENTER></TD><TD><CENTER>0</CENTER></TD><TD><CENTER>168</CENTER></TD><TD><CENTER>16</CENTER></TD><TD><CENTER>41</CENTER></TD><TD><CENTER>25</CENTER></TD><TD><CENTER>16</CENTER></TD><TD><CENTER>1.89</CENTER></TD></TR>
+</TABLE>
+	
+**test_seqs.fasta.s3.2.5.7.80.10.50.2000.1.html**
+<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0>
+<TR><TD WIDTH=140><CENTER>Indices</CENTER></TD><TD WIDTH=80><CENTER>Period<BR>Size </CENTER></TD><TD WIDTH=70><CENTER>Copy<BR>Number</CENTER></TD><TD WIDTH=70><CENTER>Consensus<BR>Size</CENTER></TD><TD WIDTH=70><CENTER>Percent<BR>Matches</CENTER></TD><TD WIDTH=70><CENTER>Percent<BR>Indels</CENTER></TD><TD WIDTH=60><CENTER>Score</CENTER></TD><TD WIDTH=40><CENTER>A</CENTER></TD><TD WIDTH=40><CENTER>C</CENTER></TD><TD WIDTH=40><CENTER>G</CENTER></TD><TD WIDTH=40><CENTER>T</CENTER></TD><TD WIDTH=70><CENTER>Entropy<BR>(0-2)</CENTER></TD></TR>
+<TR><TD><CENTER>1--1225</CENTER></TD><TD><CENTER>35</CENTER></TD><TD><CENTER>35.0</CENTER></TD><TD><CENTER>35</CENTER></TD><TD><CENTER>100</CENTER></TD><TD><CENTER>0</CENTER></TD><TD><CENTER>2450</CENTER></TD><TD><CENTER>28</CENTER></TD><TD><CENTER>22</CENTER></TD><TD><CENTER>20</CENTER></TD><TD><CENTER>28</CENTER></TD><TD><CENTER>1.98</CENTER></TD></TR>
+</TABLE>
+
+**test_seqs.fasta.s4.2.5.7.80.10.50.2000.1.html**
+<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=0>
+<TR><TD WIDTH=140><CENTER>Indices</CENTER></TD><TD WIDTH=80><CENTER>Period<BR>Size </CENTER></TD><TD WIDTH=70><CENTER>Copy<BR>Number</CENTER></TD><TD WIDTH=70><CENTER>Consensus<BR>Size</CENTER></TD><TD WIDTH=70><CENTER>Percent<BR>Matches</CENTER></TD><TD WIDTH=70><CENTER>Percent<BR>Indels</CENTER></TD><TD WIDTH=60><CENTER>Score</CENTER></TD><TD WIDTH=40><CENTER>A</CENTER></TD><TD WIDTH=40><CENTER>C</CENTER></TD><TD WIDTH=40><CENTER>G</CENTER></TD><TD WIDTH=40><CENTER>T</CENTER></TD><TD WIDTH=70><CENTER>Entropy<BR>(0-2)</CENTER></TD></TR>
+<TR><TD><CENTER>1--10000000</CENTER></TD><TD><CENTER>125</CENTER></TD><TD><CENTER>80000.0</CENTER></TD><TD><CENTER>125</CENTER></TD><TD><CENTER>100</CENTER></TD><TD><CENTER>0</CENTER></TD><TD><CENTER>20000000</CENTER></TD><TD><CENTER>32</CENTER></TD><TD><CENTER>26</CENTER></TD><TD><CENTER>13</CENTER></TD><TD><CENTER>27</CENTER></TD><TD><CENTER>1.94</CENTER></TD></TR>
+</TABLE>
+
 ## Quick Start ##
 
 The following is a recommended command line to run TRF.  Parameters are explained further below. This assumes the executable has been renamed `trf`.
-
+	
 ```bash
 trf yourfile.fa 2 5 7 80 10 50 2000
 ```
@@ -157,7 +202,7 @@ The following is a more detailed description of the **parameters**:
 - **-f:** If this option is present, flanking sequence around each repeat is recorded in the alignment file. This may be useful for PCR primer determination. Flanking sequence consists of the 500 nucleotides on each side of a repeat.
 - **-d:** A data file is produced if this option is present. This file is a text file which contains the same information, in the same order, as the summary table file, plus consensus pattern and repeat sequences. This file contains no labeling and is suitable for additional processing, for example with a perl script, outside of the program.
 - **-h:** suppress HTML output (this automatically switches -d to ON)
-- **-l \<n\>:** Specifies that the longest TR array expected in the input is at most n million bp long. The default is 2 (for 2 million). Setting this option too high may result in an error message if you did not have enough availablememory. We have only tested this option uo to value 29.
+- **-l \<n\>:** Specifies that the longest TR array expected in the input is at most n million bp long. The default is 2 (for 2 million). Setting this option too high may result in an error message if you did not have enough available memory. We have only tested this option up to value 29.
 - **-u:** Prints the help/usage message above
 - **-v:** Prints the version information
 - **-ngs:** More compact .dat output on multisequence files, returns 0 on success. You may pipe input in with this option using - for file name. Short 50 flanks are appended to .dat output. .dat output actually goes to stdout instead of file. Sequence headers are displayed in output as @header. Only headers containing repeats are shown. 
