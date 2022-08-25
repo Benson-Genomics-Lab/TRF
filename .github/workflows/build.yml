@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [aarch64]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Build
+      uses: uraimo/run-on-arch-action@v2
+      with:
+        arch: ${{ matrix.arch }}
+        distro: ubuntu20.04
+        githubToken: ${{ github.token }}
+        dockerRunArgs: |
+          --volume "${PWD}:/trf" 
+        install: |
+          apt-get update -q -y
+          apt-get install -q -y automake make gcc file
+        run: |
+          cd /trf
+          mkdir -p build && cd build
+          ../configure
+          make install
+          ls -laR
+          file ./src/trf
+          ./src/trf ../t/test_seqs.fasta 2 5 7 80 10 50 2000 -l 10
