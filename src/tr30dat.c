@@ -2400,6 +2400,162 @@ int no_matches_so_unlink_Distance(int d, int location,
 
 
 
+int GetTopPeriods2(unsigned char* pattern, int length, int* toparray)
+{
+
+	int topind;
+	double topval;
+	int heads[16];
+	int tuple_counts[16];
+	int match_count[16];
+	int total_tuple_coun, total_match_distances, total_mismatch_distances;
+	int total_match_and_mismatch_distances;
+	int lookback_max = 6000;
+	int *history;
+	double* counts;
+	int i,t,end,tupid;
+	int curr,dist;
+	double n,xysum,xsum,ysum,x2sum,s;
+
+	/* allocate an array of counts */
+	counts = (double*) calloc(length,sizeof(double));
+	if(counts==NULL) return 1;
+
+	/* allocate history array */
+	history = (int*) malloc(length*sizeof(int));
+	if(history==NULL)
+	{
+		free(counts);
+		return 1;
+	}
+
+	/* clear the heads array which point into history array */
+	for(i=0;i<16;i++) heads[i]=-1;
+
+	/* scan pattern for tuples of size 2 */
+	for(i=0,end=length-2;i<=end;i++)
+	{
+		/* figure out tuple id */
+		tupid = Index[pattern[i]]*4+Index[pattern[i+1]];
+
+		/* record last occurence into history and update heads[] pointer */
+		history[i] = heads[tupid];
+		heads[tupid]=i;
+	}
+	
+	//count number of indexes of each tupleid stored
+	//and the total number of indices stored
+	total_tuple_count = 0;
+	for(i=0;i<16;i++)
+	{
+		tuple_count[i] = 0;
+		curr = heads[i];
+		while (curr != -1)
+		{
+			tuple_count[i]++;
+			curr = history[curr];
+		}
+		total_tuple_count+=tuplecount[i];
+	}
+	
+	//report counts
+	printf("\ntotal_tuple_count: %d\nlength-1: %d",total_tuple_count, length -1);
+
+	//test that the total_tuple_county adds up to expected total number of tuples (length - 1)
+	if (total_tuple_count!=length-1) 
+	{
+	 	printf("\nMismatch between total_tuple_count and length-1 (%d, %d)", total_tuple_count, length-1);
+	 }	
+	
+	//compute the number of match distances for each tupleid based on their count: count*(count+1)/2
+	//and the total number of match distances
+	total_match_distances = 0;
+	for(i=0;i<16;i++)
+	{
+		match_count[i] = tuple_count[i]*(tuple_count[i] + 1)/2;
+		total_match_distances	+=match_count[i];
+	}	
+	
+	//sum of match and mismatch distances is based on the length
+	total_match_and_mismatch_distances = (length - 2)*(length - 1)/2;
+	
+	//reduce the sum if the length > lookback_max + 2
+	if(length > lookback_max + 2)
+	{
+		total_match_and_mismatch_distances -= (lookback_max−2)∗(lookback_max−1)/2;
+	}
+	
+	//compute total mismatch distances 
+	total_mismatch_distances = total_match_and_mismatch_distances - total_match_distances
+	
+	//report all values
+	printf("\ntotal_match_and_mismatch_distances: %d\ntotal_match_distances: %d\ntotal_mismatch_distances", total_match_and_mismatch_distances, total_match_distances, total_mismatch_distances);
+	
+	exit(-3);
+	
+		/* loop into history and add distances */
+		/* 11/17/15 G. Benson */
+		/* limit maximum length of distance recorded between tuples to MAXDISTANCECONSTANT*3 = 6,000*/
+		/* this should be long enough to deter finding periods that are not the most frequent */
+		/* Without this change, this procudure is quadratic in the length, which could be several million */
+		/* and caused the program to hang with long centromeric repeats */
+		/* for(curr=i;history[curr]!=-1;curr=history[curr])*/
+		dist = 0;
+		for(curr=i;((history[curr]!=-1)&&(dist<(MAXDISTANCECONSTANT*3)));curr=history[curr])
+		{
+			dist = i-history[curr];
+			counts[dist]+=1.0;
+		}
+	
+
+	/* compute slope using least-square regression */
+	xysum=xsum=ysum=x2sum=0.0;
+	end = length-2;
+	for(i=1;i<=end;i++)
+	{
+		xysum += (i*counts[i]);
+		xsum += (i);
+		ysum += (counts[i]);
+		x2sum += (i*i);
+	}
+	n = end;
+	s = (n*xysum-xsum*ysum)/(n*x2sum-xsum*xsum);
+
+	/* flatten trend by adding -s per increment */
+	end = length-2;
+	for(i=1;i<=end;i++)
+	{
+		counts[i] = counts[i] - i*s;
+	}
+
+	/* pick highest values */
+	end = length-2;
+	if(end>MAXDISTANCE) end = MAXDISTANCE; /* 3/14/05 accepts smaller multiples is best ones are too large */
+	for(t=0;t<NUMBER_OF_PERIODS;t++)
+	{
+		/* do t passes to find t highes counts */
+		topind=0;
+		topval=0.0;
+		for(i=1;i<=end;i++)
+		{
+			if(counts[i]>topval)
+			{
+				topind=i;
+				topval = counts[i];
+			}
+		}
+
+		/* copy to array passed as parameter */
+		toparray[t] = topind;
+		counts[topind]=0.0;
+	}
+
+	/* free memory */
+	free(counts);
+	free(history);
+
+	return 0;
+}
 
 
 
@@ -2408,8 +2564,6 @@ int no_matches_so_unlink_Distance(int d, int location,
 int GetTopPeriods(unsigned char* pattern, int length, int* toparray)
 {
 
-	/* Make a change */
-	
 	int topind;
 	double topval;
 	int heads[16];
@@ -2544,7 +2698,8 @@ int multiples_criteria_4(int found_d)
 	}
 
 
-	if(GetTopPeriods(pattern, length, topperiods)) /* gettopperiods returns zero on success */
+	if(GetTopPeriods2(pattern, length, topperiods)) /* gettopperiods returns zero on success */
+	//if(GetTopPeriods(pattern, length, topperiods)) /* gettopperiods returns zero on success */
 	{
 		fprintf(stderr,"\nUnable to allocate counts array in GetTopPeriods()!!!");
 		exit(-1);
