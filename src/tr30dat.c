@@ -2407,6 +2407,9 @@ int no_matches_so_unlink_Distance(int d, int location,
 
 int GetTopPeriods(unsigned char* pattern, int length, int* toparray)
 {
+
+	/* Make a change */
+	
 	int topind;
 	double topval;
 	int heads[16];
