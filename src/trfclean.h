@@ -83,7 +83,8 @@ void    CleanAlignments(IL * headptr, char * alignmentfile);
 void    BreakAlignments(IL * headptr, char * alignmentfile);
 void    OutputHTML(IL * headptr, char * tablefile, char * alignmentfile);
 void    MakeDataFile(IL * headptr,char * datafile,int data);
-void    MakeMaskedFile(IL* headptr,int masked,char*  Sequence,char* maskfile);
+// G. Benson 1/1/23 changed Sequence to unsigned char * from char * to remove compiler warnings
+void    MakeMaskedFile(IL* headptr,int masked,unsigned char*  Sequence,char* maskfile);
 
 void    FreeList(IL * headptr);
 
@@ -96,8 +97,9 @@ void    OutputHeading(FILE* fp, char* tablefile, char* alignmentfile);
  *   Chief Procedure Definition
  ***********************************/
 
+// G. Benson 1/1/23 changed Sequence to unsigned char * from char * to remove compiler warnings
 void TRFClean( char * datafile, char* alignmentfile, char* tablefile,
-		int maxsize, int data, int masked, char* Sequence,
+		int maxsize, int data, int masked, unsigned char* Sequence,
 		char* maskfile)
 {
 	IL *headptr=NULL,*currptr;
@@ -874,8 +876,8 @@ void    MakeDataFile(IL * headptr,char * datafile,int data)
 	return;
 }
 
-
-void    MakeMaskedFile(IL* headptr,int masked,char*  Sequence,char* maskfile)
+// G. Benson 1/1/23 changed Sequence to unsigned char * from char * to remove compiler warnings
+void    MakeMaskedFile(IL* headptr,int masked, unsigned char*  Sequence,char* maskfile)
 {
 	int count,printcr;
 	int masker;

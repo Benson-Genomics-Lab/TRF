@@ -792,7 +792,9 @@ void TRF(FASTASEQUENCE* pseq)
 
 
 	/* set the sequence pointer. more global vars! */
-	Sequence = pseq->sequence-1; /* start one character before */
+	// G. Benson 1/1/23 changed to cast as unsigned char * to match Sequence and remove compiler warnings
+	//Sequence = pseq->sequence-1; /* start one character before */
+	Sequence = (unsigned char *) pseq->sequence-1; /* start one character before */
 	Length=pseq->length;
 
 	if (!paramset.HTMLoff) {

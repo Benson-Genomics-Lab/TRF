@@ -2407,10 +2407,11 @@ int GetTopPeriods2(unsigned char* pattern, int length, int* toparray)
 	double topval;
 	int heads[16];
 	int tuple_counts[16];
-	int match_count[16];
-	int total_tuple_coun, total_match_distances, total_mismatch_distances;
-	int total_match_and_mismatch_distances;
-	int lookback_max = 6000;
+	int total_tuple_count;
+	long long int match_counts[16];
+	long long int total_match_distances, total_mismatch_distances;
+	long long int total_match_and_mismatch_distances;
+	int lookback_max = MAXDISTANCECONSTANT*3;
 	int *history;
 	double* counts;
 	int i,t,end,tupid;
@@ -2428,6 +2429,74 @@ int GetTopPeriods2(unsigned char* pattern, int length, int* toparray)
 		free(counts);
 		return 1;
 	}
+
+	//scan the array for tuples of size two and count the number of each
+	//count the total and test that it matches the expected number 
+	for(i=0;i<16;i++) 
+	{
+		tuple_counts[i] = 0;
+	}
+	for(i=0,end=length-2;i<=end;i++)
+	{
+		/* figure out tuple id */
+		tupid = Index[pattern[i]]*4+Index[pattern[i+1]];
+		tuple_counts[tupid]++;
+	}
+	total_tuple_count = 0;
+	for(i=0;i<16;i++)
+	{
+		printf("\ntuple_counts[%d]: %d",i, tuple_counts[i]);
+		total_tuple_count+=tuple_counts[i];
+	}
+	
+	//report counts
+	printf("\ntotal_tuple_count: %d\nlength-1: %d",total_tuple_count, length -1);
+
+	//test that the total_tuple_county adds up to expected total number of tuples (length - 1)
+	//note that this won't happen if there are Ns in the sequence
+	if (total_tuple_count!=length-1) 
+	{
+	 	printf("\nMismatch between total_tuple_count and length-1 (%d, %d)", total_tuple_count, length-1);
+	 }	
+
+	//compute the number of match distances for each tupleid based on their count: (count-1)*(count)/2
+	//compute the total number of match distances
+	total_match_distances = 0;
+	for(i=0;i<16;i++)
+	{
+		match_counts[i] = (long long int) (tuple_counts[i] - 1)*(tuple_counts[i] )/2;
+		total_match_distances	+=match_counts[i];
+		printf("\nmatch_counts[%d]: %lld", i, match_counts[i]);
+	}	
+	
+	//sum of match and mismatch distances is based on the length
+	total_match_and_mismatch_distances = (long long int) (length - 2)*(length - 1)/2;
+	
+	//reduce the sum if the length > lookback_max + 2
+	if(length > lookback_max + 2)
+	{
+		total_match_and_mismatch_distances -= (long long int) (lookback_max - 2)*(lookback_max - 1)/2;
+	}
+	
+	//compute total mismatch distances 
+	total_mismatch_distances = total_match_and_mismatch_distances - total_match_distances;
+	
+	//report all values
+	printf("\n**total_match_and_mismatch_distances: %lld\ntotal_match_distances: %lld\ntotal_mismatch_distances: %lld", total_match_and_mismatch_distances, total_match_distances, total_mismatch_distances);
+
+	for(i=0;i<16;i++)
+	{
+		tuple_counts[i] = 0;
+		curr = heads[i];
+		while (curr != -1)
+		{
+			tuple_counts[i]++;
+			curr = history[curr];
+		}
+		total_tuple_count+=tuple_counts[i];
+		printf("\ntuple_counts[%d]: %d",i, tuple_counts[i]);
+	}
+
 
 	/* clear the heads array which point into history array */
 	for(i=0;i<16;i++) heads[i]=-1;
@@ -2448,50 +2517,86 @@ int GetTopPeriods2(unsigned char* pattern, int length, int* toparray)
 	total_tuple_count = 0;
 	for(i=0;i<16;i++)
 	{
-		tuple_count[i] = 0;
+		tuple_counts[i] = 0;
 		curr = heads[i];
 		while (curr != -1)
 		{
-			tuple_count[i]++;
+			tuple_counts[i]++;
 			curr = history[curr];
 		}
-		total_tuple_count+=tuplecount[i];
+		total_tuple_count+=tuple_counts[i];
+		printf("\ntuple_counts[%d]: %d",i, tuple_counts[i]);
 	}
 	
-	//report counts
-	printf("\ntotal_tuple_count: %d\nlength-1: %d",total_tuple_count, length -1);
-
-	//test that the total_tuple_county adds up to expected total number of tuples (length - 1)
-	if (total_tuple_count!=length-1) 
-	{
-	 	printf("\nMismatch between total_tuple_count and length-1 (%d, %d)", total_tuple_count, length-1);
-	 }	
 	
-	//compute the number of match distances for each tupleid based on their count: count*(count+1)/2
-	//and the total number of match distances
-	total_match_distances = 0;
-	for(i=0;i<16;i++)
-	{
-		match_count[i] = tuple_count[i]*(tuple_count[i] + 1)/2;
-		total_match_distances	+=match_count[i];
-	}	
-	
-	//sum of match and mismatch distances is based on the length
-	total_match_and_mismatch_distances = (length - 2)*(length - 1)/2;
-	
-	//reduce the sum if the length > lookback_max + 2
-	if(length > lookback_max + 2)
-	{
-		total_match_and_mismatch_distances -= (lookback_max−2)∗(lookback_max−1)/2;
-	}
-	
-	//compute total mismatch distances 
-	total_mismatch_distances = total_match_and_mismatch_distances - total_match_distances
-	
-	//report all values
-	printf("\ntotal_match_and_mismatch_distances: %d\ntotal_match_distances: %d\ntotal_mismatch_distances", total_match_and_mismatch_distances, total_match_distances, total_mismatch_distances);
 	
 	exit(-3);
+	
+	//detect and count all matching distances
+	for(i=0;i<16;i++)
+	{
+		//uses two pointers into history list for all to all comparions
+		//currtop is the pointer closest to the top (the head)
+		//curr steps down through the list below currtop
+		currtop = heads[i];
+		while (currtop != -1)
+		{
+			curr = history[currtop];
+			dist = currtop - curr;
+			while (curr != -1)&&(dist<(MAXDISTANCECONSTANT*3)))
+			{
+				counts[dist]+=1.0;
+				curr = history[curr];
+				dist = currtop - curr;
+			}
+			currtop = history[currtop];
+		}
+	}
+	
+	//detect and count all mismatch distances
+	for(i=0;i<16;i++)
+	{
+		for(j=0;j<16;j++)
+		{
+			if (j != i)
+			{
+				currtop = heads[i];
+				curr = heads[j];
+				dist = currtop - curr;
+				while(dist < 1)
+				{
+					curr = history[curr];
+					dist = currtop - curr;
+				}
+				
+		//uses two pointers into history list for all to all comparions
+		//currtop is the pointer closest to the top (the head)
+		//curr steps down through a different list
+		currtop = heads[i];
+		while (currtop != -1)
+		{
+			for(j=0;j<16;j++)
+			{
+				if (j != i)
+				{
+					curr = heads[j];
+					dist = currtop - curr;
+					while(dist < 1)
+					{
+						curr = history[curr];
+						dist = currtop - curr;
+					}
+					while ((curr != -1) &&(dist<(MAXDISTANCECONSTANT*3)))
+					{
+						counts[dist]+=1.0;
+						curr = history[curr];
+						dist = currtop - curr;
+					}
+				}
+			}
+			currtop = history[currtop];
+		}
+	}
 	
 		/* loop into history and add distances */
 		/* 11/17/15 G. Benson */
