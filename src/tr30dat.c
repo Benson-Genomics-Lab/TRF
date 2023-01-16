@@ -978,11 +978,17 @@ int search_for_range_in_bestperiodlist(int start, int distance)
 	struct bestperiodlistelement *entry, *entrylast, *temp;
 	int range_covered;
 
+	//added G. Benson 1.16.23 for testing
+	int count;
+	
 	entry=Bestperiodlist->next;
 	entrylast=Bestperiodlist;
 	range_covered=FALSE;
 	while (entry!=NULL)
 	{
+		//added G. Benson 1.16.23 for testing
+		count++;
+		
 		if(entry->indexhigh<start-2*MAXDISTANCE)
 		{
 			/* remove current entry, too far back */
@@ -1024,6 +1030,8 @@ int search_for_range_in_bestperiodlist(int start, int distance)
 		entrylast=entry;  
 		entry=entry->next;
 	}
+	//added G. Benson 1.16.23 for testing
+	printf("\nBest period entries examined: %d", count);
 	if(!range_covered) return(TRUE);
 	else return(FALSE);
 
@@ -2409,18 +2417,30 @@ int GetTopPeriods2(unsigned char* pattern, int length, int* toparray)
 	int tuple_counts[16];
 	int total_tuple_count;
 	long long int match_counts[16];
+	long long int mismatch_counts[16];
 	long long int total_match_distances, total_mismatch_distances;
 	long long int total_match_and_mismatch_distances;
 	int lookback_max = MAXDISTANCECONSTANT*3;
 	int *history;
-	double* counts;
-	int i,t,end,tupid;
+	double	*counts;
+	double *mismatchcounts, *allcounts;
+	int i,j,t,end,tupid;
 	int curr,dist;
 	double n,xysum,xsum,ysum,x2sum,s;
+	
+	int printcounter;
 
-	/* allocate an array of counts */
+	/* allocate an array of match counts for all distances */
 	counts = (double*) calloc(length,sizeof(double));
 	if(counts==NULL) return 1;
+
+	/* allocate an array of mismatch counts for all distances */
+	mismatchcounts = (double*) calloc(length,sizeof(double));
+	if(mismatchcounts==NULL) return 1;
+
+	/* allocate an array of all counts (match and mismatch) for all distances */
+	allcounts = (double*) calloc(length,sizeof(double));
+	if(allcounts==NULL) return 1;
 
 	/* allocate history array */
 	history = (int*) malloc(length*sizeof(int));
@@ -2445,28 +2465,29 @@ int GetTopPeriods2(unsigned char* pattern, int length, int* toparray)
 	total_tuple_count = 0;
 	for(i=0;i<16;i++)
 	{
-		printf("\ntuple_counts[%d]: %d",i, tuple_counts[i]);
+		//printf("\ntuple_counts[%d]: %d",i, tuple_counts[i]);
 		total_tuple_count+=tuple_counts[i];
 	}
 	
 	//report counts
-	printf("\ntotal_tuple_count: %d\nlength-1: %d",total_tuple_count, length -1);
+	//printf("\ntotal_tuple_count: %d\nlength-1: %d",total_tuple_count, length -1);
 
 	//test that the total_tuple_county adds up to expected total number of tuples (length - 1)
-	//note that this won't happen if there are Ns in the sequence
+	//note that if Ns are the in the sequence, they're treated here like As, so will not affect the computation
 	if (total_tuple_count!=length-1) 
 	{
 	 	printf("\nMismatch between total_tuple_count and length-1 (%d, %d)", total_tuple_count, length-1);
 	 }	
 
-	//compute the number of match distances for each tupleid based on their count: (count-1)*(count)/2
+	//compute the number of match distances for each tupleid based on their count: 
+	//(count-1)*(count)/2
 	//compute the total number of match distances
 	total_match_distances = 0;
 	for(i=0;i<16;i++)
 	{
 		match_counts[i] = (long long int) (tuple_counts[i] - 1)*(tuple_counts[i] )/2;
 		total_match_distances	+=match_counts[i];
-		printf("\nmatch_counts[%d]: %lld", i, match_counts[i]);
+		//printf("\nmatch_counts[%d]: %lld", i, match_counts[i]);
 	}	
 	
 	//sum of match and mismatch distances is based on the length
@@ -2484,20 +2505,8 @@ int GetTopPeriods2(unsigned char* pattern, int length, int* toparray)
 	//report all values
 	printf("\n**total_match_and_mismatch_distances: %lld\ntotal_match_distances: %lld\ntotal_mismatch_distances: %lld", total_match_and_mismatch_distances, total_match_distances, total_mismatch_distances);
 
-	for(i=0;i<16;i++)
-	{
-		tuple_counts[i] = 0;
-		curr = heads[i];
-		while (curr != -1)
-		{
-			tuple_counts[i]++;
-			curr = history[curr];
-		}
-		total_tuple_count+=tuple_counts[i];
-		printf("\ntuple_counts[%d]: %d",i, tuple_counts[i]);
-	}
 
-
+	//this is the matching distances calculation
 	/* clear the heads array which point into history array */
 	for(i=0;i<16;i++) heads[i]=-1;
 
@@ -2510,94 +2519,7 @@ int GetTopPeriods2(unsigned char* pattern, int length, int* toparray)
 		/* record last occurence into history and update heads[] pointer */
 		history[i] = heads[tupid];
 		heads[tupid]=i;
-	}
-	
-	//count number of indexes of each tupleid stored
-	//and the total number of indices stored
-	total_tuple_count = 0;
-	for(i=0;i<16;i++)
-	{
-		tuple_counts[i] = 0;
-		curr = heads[i];
-		while (curr != -1)
-		{
-			tuple_counts[i]++;
-			curr = history[curr];
-		}
-		total_tuple_count+=tuple_counts[i];
-		printf("\ntuple_counts[%d]: %d",i, tuple_counts[i]);
-	}
-	
-	
-	
-	exit(-3);
-	
-	//detect and count all matching distances
-	for(i=0;i<16;i++)
-	{
-		//uses two pointers into history list for all to all comparions
-		//currtop is the pointer closest to the top (the head)
-		//curr steps down through the list below currtop
-		currtop = heads[i];
-		while (currtop != -1)
-		{
-			curr = history[currtop];
-			dist = currtop - curr;
-			while (curr != -1)&&(dist<(MAXDISTANCECONSTANT*3)))
-			{
-				counts[dist]+=1.0;
-				curr = history[curr];
-				dist = currtop - curr;
-			}
-			currtop = history[currtop];
-		}
-	}
-	
-	//detect and count all mismatch distances
-	for(i=0;i<16;i++)
-	{
-		for(j=0;j<16;j++)
-		{
-			if (j != i)
-			{
-				currtop = heads[i];
-				curr = heads[j];
-				dist = currtop - curr;
-				while(dist < 1)
-				{
-					curr = history[curr];
-					dist = currtop - curr;
-				}
-				
-		//uses two pointers into history list for all to all comparions
-		//currtop is the pointer closest to the top (the head)
-		//curr steps down through a different list
-		currtop = heads[i];
-		while (currtop != -1)
-		{
-			for(j=0;j<16;j++)
-			{
-				if (j != i)
-				{
-					curr = heads[j];
-					dist = currtop - curr;
-					while(dist < 1)
-					{
-						curr = history[curr];
-						dist = currtop - curr;
-					}
-					while ((curr != -1) &&(dist<(MAXDISTANCECONSTANT*3)))
-					{
-						counts[dist]+=1.0;
-						curr = history[curr];
-						dist = currtop - curr;
-					}
-				}
-			}
-			currtop = history[currtop];
-		}
-	}
-	
+
 		/* loop into history and add distances */
 		/* 11/17/15 G. Benson */
 		/* limit maximum length of distance recorded between tuples to MAXDISTANCECONSTANT*3 = 6,000*/
@@ -2611,8 +2533,69 @@ int GetTopPeriods2(unsigned char* pattern, int length, int* toparray)
 			dist = i-history[curr];
 			counts[dist]+=1.0;
 		}
+	}
 	
+	//this is the mismatching distance calculation
+	
+	/* clear the heads array which point into history array */
+	for(i=0;i<16;i++) heads[i]=-1;
 
+	/* scan pattern for tuples of size 2 */
+	for(i=0,end=length-2;i<=end;i++)
+	{
+		/* figure out tuple id */
+		tupid = Index[pattern[i]]*4+Index[pattern[i+1]];
+
+		/* record last occurence into history and update heads[] pointer */
+		history[i] = heads[tupid];
+		heads[tupid]=i;
+		
+		// add distance mismatches
+		for(j=0;j<16;j++)
+		{
+			//look for mismatch distances in history lists of other tupleids
+			if(j!=tupid)
+			{
+				dist = 0;
+				curr = heads[j];
+				//printf("\nj: %d, heads[%d]: %d", j, j, heads[j]);
+				/* 11/17/15 G. Benson */
+				/* limit maximum length of distance recorded between tuples to */
+				/* MAXDISTANCECONSTANT*3 = 6,000 */
+				/* this should be long enough to deter finding periods that are not the most frequent */
+				/* Without this change, this procudure is quadratic in the length, which could be several million */
+				/* and caused the program to hang with long centromeric repeats */
+				while ((curr != -1)&&(dist<(MAXDISTANCECONSTANT*3)))
+				{
+					dist = i-curr;
+					mismatchcounts[dist]+=1.0;
+					curr = history[curr];
+					//printf("\ndist: %d, mistmatchcounts[%d]: %f",dist, dist, mismatchcounts[dist]);
+				}
+			}
+		}
+	}
+	
+	//test if the two counts add to the correct value
+	printcounter=0;
+	for(i=1,end=length-2;i<=end;i++)
+	{
+		if (i<=lookback_max) 
+		{
+			allcounts[i] = length - i - 1;
+			if ((mismatchcounts[i] + counts[i] != allcounts[i])&&(printcounter<=10))
+			{
+				printcounter++;
+				printf("\n%d counts not the same: match[%d]: %8f, mismatch[%d]: %8f, allcounts[%d]:%8f", 
+					i,i, counts[i], i, mismatchcounts[i], i, allcounts[i]);
+			}
+		}		
+	}	
+	
+	return 0;
+	
+	
+	
 	/* compute slope using least-square regression */
 	xysum=xsum=ysum=x2sum=0.0;
 	end = length-2;
@@ -2773,7 +2756,7 @@ int multiples_criteria_4(int found_d)
 	int topperiods[NUMBER_OF_PERIODS];
 	unsigned char* pattern;
 	int length;
-
+	
 	lowerindex=AlignPair.indexprime[AlignPair.length];
 	upperindex=AlignPair.indexprime[1];
 	pattern = Sequence+lowerindex;
@@ -2802,9 +2785,28 @@ int multiples_criteria_4(int found_d)
 		else return FALSE;
 	}
 
+	//added by G. Benson for test
+	/* 
+	Sortmultiples[0]=1;
+	Sortmultiples[1]=2;
+	Sortmultiples[2]=3;
+	Sortmultiples[3]=9;
+	Sortmultiples[4]=11;
+	Sortmultiples[5]=6;
 
-	if(GetTopPeriods2(pattern, length, topperiods)) /* gettopperiods returns zero on success */
-	//if(GetTopPeriods(pattern, length, topperiods)) /* gettopperiods returns zero on success */
+	if((found_d == 1) || (found_d == 2) || (found_d == 3) || (found_d == 9) || (found_d == 11))
+	{
+		printf(".");
+
+		return(TRUE);
+	}
+	
+	printf("found_d: %d", found_d);
+	return(FALSE);
+	*/
+	 
+	if(!GetTopPeriods2(pattern, length, topperiods)){printf("\nfound_d: %d, length: %d", found_d, length);} /* gettopperiods returns zero on success */
+	if(GetTopPeriods(pattern, length, topperiods)) /* gettopperiods returns zero on success */
 	{
 		fprintf(stderr,"\nUnable to allocate counts array in GetTopPeriods()!!!");
 		exit(-1);
@@ -2822,6 +2824,11 @@ int multiples_criteria_4(int found_d)
 	for(g=0;g<NUMBER_OF_PERIODS_INTO_SORTMULTIPLES; g++)
 		Sortmultiples[g] = topperiods[g];
 
+	//added by G. Benson for test
+	for(g=0;g<NUMBER_OF_PERIODS_INTO_SORTMULTIPLES; g++)
+		printf("\nTopperiod[%d]: %d",g,topperiods[g]);
+
+	
 	/*
 	   for(g=0;g<NUMBER_OF_PERIODS; g++)
 	   {
@@ -4394,7 +4401,9 @@ void newtupbo(void)
 
 							if((new_meet_criteria_3(d,i,Tuplesize[g]))
 									/* change 2: changed 250 into 100 */
-									&&((d<=250)||(search_for_range_in_bestperiodlist(i,d)))) 
+									// change by G Benson for testing
+									//&&((d<=250)||(search_for_range_in_bestperiodlist(i,d)))) 
+									&&((d<=10)||(search_for_range_in_bestperiodlist(i,d)))) 
 								/* use bestperiod list only for distances greater than 500 */           
 							{
 								/* align sequence against candidate */
