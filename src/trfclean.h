@@ -174,7 +174,7 @@ IL*     GetList(char * datafile)
 	for (counter =0; counter<3; counter++) fgets(hparameters, 255, fp);
 
 	/* get hlength from another global variable (bad practice)*/
-	sprintf(hlength, "Length:  %d", Length);
+	sprintf(hlength, "Length:  %zu", Length);
 
 	/* loop to fill out list from buffer */
 	counter = 1; /* keeps track of order they are found */

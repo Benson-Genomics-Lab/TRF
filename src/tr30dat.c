@@ -37,7 +37,7 @@ License along with TRF.  If not, see <https://www.gnu.org/licenses/>.
 
 
 #define new1Darrayfunc(type,functionname,length)\
-	type *functionname(int length)\
+	type *functionname(size_t length)\
 {\
 	type *objptr=calloc(length,sizeof(*objptr));\
 	if(objptr==NULL)\

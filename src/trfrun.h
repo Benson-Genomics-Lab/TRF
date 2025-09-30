@@ -63,8 +63,8 @@ struct index_list
 {
 	int     count;      /* indicates order in original file */
 	char    ref[45];    /* records label for linking */
-	int     first;      /* first index */
-	int     last;       /* last index */
+	size_t     first;      /* first index */
+	size_t     last;       /* last index */
 	int     period;     /* period size */
 	float   copies;     /* number of copies */
 	int     size;  /* consensus size */
@@ -192,7 +192,7 @@ void TRFControlRoutine(void)
 	{
 
 		sprintf(hsequence,"Sequence: %s\n",seq.name);
-		sprintf(hlength,"Length:  %d",seq.length);
+		sprintf(hlength,"Length:  %zu",seq.length);
 
 		paramset.multisequencefile = 0;
 		paramset.sequenceordinal = 1;
@@ -230,7 +230,7 @@ void TRFControlRoutine(void)
 			{
 
 				IL* lpointer;
-				int charcount;
+				size_t charcount;
 
 				if (paramset.ngs != 1) {
 					fprintf(destdfp,"Tandem Repeats Finder Program written by:\n\n");
@@ -256,7 +256,7 @@ void TRFControlRoutine(void)
 
 				for(lpointer=GlobalIndexList;lpointer!=NULL;lpointer=lpointer->next)
 				{
-					fprintf(destdfp,"%d %d %d %.1f %d %d %d %d %d %d %d %d %.2f %s ",
+					fprintf(destdfp,"%zu %zu %d %.1f %d %d %d %d %d %d %d %d %.2f %s ",
 							lpointer->first, lpointer->last, lpointer->period,
 							lpointer->copies, lpointer->size, lpointer->matches,
 							lpointer->indels, lpointer->score, lpointer->acount,
@@ -267,7 +267,7 @@ void TRFControlRoutine(void)
 
 					/* print short flanks to .dat file */
 					if (paramset.ngs) {
-						int flankstart,flankend;
+						size_t flankstart,flankend;
 
 	  					flankstart = lpointer->first - 50; 
 						flankstart=max(1,flankstart);
@@ -414,7 +414,7 @@ void TRFControlRoutine(void)
 	{
 
 		sprintf(hsequence,"Sequence: %s\n",seq.name);
-		sprintf(hlength,"Length:  %d",seq.length);
+		sprintf(hlength,"Length:  %zu",seq.length);
 
 		/* set the prefix to be used for naming of output */
 		sprintf(input,"%s.s%d",prefix,i);
@@ -434,7 +434,7 @@ void TRFControlRoutine(void)
 			{
 
 				IL* lpointer;
-				int charcount;
+				size_t charcount;
 
 				/* only for the first one write the header */
 				if (i==1) {
@@ -463,7 +463,7 @@ void TRFControlRoutine(void)
 
 				for(lpointer=GlobalIndexList;lpointer!=NULL;lpointer=lpointer->next)
 				{
-					fprintf(destdfp,"%d %d %d %.1f %d %d %d %d %d %d %d %d %.2f %s ",
+					fprintf(destdfp,"%zu %zu %d %.1f %d %d %d %d %d %d %d %d %.2f %s ",
 							lpointer->first, lpointer->last, lpointer->period,
 							lpointer->copies, lpointer->size, lpointer->matches,
 							lpointer->indels, lpointer->score, lpointer->acount,
@@ -474,7 +474,7 @@ void TRFControlRoutine(void)
 
 					/* print short flanks to .dat file */
 					if (paramset.ngs) {
-						int flankstart,flankend;
+						size_t flankstart,flankend;
 
 	  					flankstart = lpointer->first - 50; 
 						flankstart=max(1,flankstart);
@@ -796,7 +796,7 @@ void TRF(FASTASEQUENCE* pseq)
 	Length=pseq->length;
 
 	if (!paramset.HTMLoff) {
-		fprintf(Fptxt,"\n\nLength: %d",Length);
+		fprintf(Fptxt,"\n\nLength: %zu",Length);
 		fprintf(Fptxt,"\nACGTcount: A:%3.2f, C:%3.2f, G:%3.2f, T:%3.2f\n\n",
 				(double)pseq->composition['A'-'A']/Length,
 				(double)pseq->composition['C'-'A']/Length,
@@ -1076,7 +1076,9 @@ void SetProgressBar(void)
  ******************************************************/
 int LoadSequenceFromFileBenson(FASTASEQUENCE *pseq,FILE* fp)
 {
-	int letter,i,pos1,length,next;
+	int letter,i,next;
+	long pos1;
+	size_t length;
 	char *ptext;
 
 	// read the FASTA '>' symbol
@@ -1174,7 +1176,8 @@ int LoadSequenceFromFileBenson(FASTASEQUENCE *pseq,FILE* fp)
 
 int LoadSequenceFromFileEugene(FASTASEQUENCE *pseq, FILE* fp)
 {
-	int i, j, c;
+	size_t i, j;
+	int c;
 	int next = -1;	// whether a next sequence was encountered
 	char *ptemp;
 	char to_upper;

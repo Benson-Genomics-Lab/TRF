@@ -81,6 +81,7 @@ char* GetNamePartAddress(char* name);
 void PrintBanner(void);
 static int ParseInt(const char *str, int *dest);
 static int ParseUInt(const char *str, unsigned int *dest);
+static int ParseSize(const char *str, size_t *dest);
 
 int main(int ac, char** av)
 {
@@ -204,7 +205,7 @@ int main(int ac, char** av)
 				exit(2);
 			}
 
-			if (ParseUInt(av[8], &paramset.maxwraplength) == 0) {
+			if (ParseSize(optarg, &paramset.maxwraplength) == 0) {
 				fprintf(stderr, "Error while parsing max TR length (option '-L') value\n");
 				PrintBanner();
 				exit(1);
@@ -366,6 +367,20 @@ static int ParseUInt(const char *str, unsigned int *dest)
     else {
     	return 0;
     }
+}
+
+static int ParseSize(const char *str, size_t *dest)
+{
+    errno = 0;
+    char *temp;
+    unsigned long long val = strtoull(str, &temp, 0);
+
+    if (temp == str || *temp != '\0' || (val == ULLONG_MAX && errno == ERANGE)) {
+   		return 0;
+	}
+
+	*dest = val;
+    return 1;
 }
 
 void    PrintBanner(void)
