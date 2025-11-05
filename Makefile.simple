@@ -1,0 +1,65 @@
+# Simple Makefile for TRF
+# No autotools required - just plain gcc
+
+CC = gcc
+# Note: -fno-align-loops removed as it's not supported by clang
+CFLAGS = -O2 -Wall -fno-align-functions
+LDFLAGS = -lm
+
+# Platform detection
+UNAME_S := $(shell uname -s)
+UNAME_M := $(shell uname -m)
+
+ifeq ($(UNAME_S),Linux)
+    PLATFORM = linux
+    ifeq ($(UNAME_M),x86_64)
+        TARGET = linux64
+    else
+        TARGET = linux32
+    endif
+endif
+
+ifeq ($(UNAME_S),Darwin)
+    PLATFORM = mac
+    TARGET = mac
+endif
+
+VERSION = 4.10.0
+
+# Source files
+# Note: tr30dat.c is included via trfrun.h, so we only compile trf.c
+SRCDIR = src
+SOURCES = $(SRCDIR)/trf.c
+HEADERS = $(SRCDIR)/tr30dat.h $(SRCDIR)/tr30dat.c $(SRCDIR)/trfrun.h $(SRCDIR)/trfclean.h
+
+# Output binary
+BINARY = trf
+VERSIONED_BINARY = trf$(VERSION).$(TARGET).exe
+
+# Build target
+all: $(BINARY)
+
+$(BINARY): $(SOURCES) $(HEADERS)
+	@echo "Building TRF for $(PLATFORM) ($(TARGET))..."
+	$(CC) $(CFLAGS) -DUNIXCONSOLE $(SOURCES) -o $(BINARY) $(LDFLAGS)
+	@echo "Build complete: $(BINARY)"
+
+# Create versioned binary
+versioned: $(BINARY)
+	cp $(BINARY) $(VERSIONED_BINARY)
+	@echo "Created versioned binary: $(VERSIONED_BINARY)"
+
+# Install (optional)
+install: $(BINARY)
+	install -m 755 $(BINARY) /usr/local/bin/
+
+# Clean
+clean:
+	rm -f $(BINARY) $(VERSIONED_BINARY)
+	@echo "Clean complete"
+
+# Test build
+test: $(BINARY)
+	./$(BINARY) -v
+
+.PHONY: all versioned install clean test
