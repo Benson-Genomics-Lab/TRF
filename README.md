@@ -61,52 +61,58 @@ To obtain current and/or earlier, pre-compiled versions of TRF:
 
 ## Instructions for Compiling ##
 To compile TRF, you will need a C compiler (e.g., gcc, clang) with the standard library installed.
-We have tested compiling and installing TRF under UNIX-based systems (Linux, macOS) and for Windows under Cygwin/MinGW.
+We have tested compiling and installing TRF under UNIX-based systems (Linux, macOS including Apple Silicon/ARM) and for Windows under Cygwin/MinGW.
 
-Brief instructions (advanced):
+### Simple Build (Recommended) ###
+
+The easiest way to build TRF requires only gcc/clang - no autotools needed:
 
 ```bash
-# Check actual version
-tar xzvf trf-4.10.0.tar.gz
-cd trf-4.10.0
+# Build with the simple script
+./build.sh
+```
+
+That's it! The binary `trf` is ready to use.
+
+Alternatively, you can use the simple Makefile:
+
+```bash
+make -f Makefile.simple
+```
+
+Or compile directly with a single command:
+
+```bash
+gcc -O2 -Wall -fno-align-functions -DUNIXCONSOLE src/trf.c -o trf -lm
+```
+
+For more details on simplified building, see [BUILD.md](BUILD.md).
+
+### Traditional Build with Autotools ###
+
+If you prefer the traditional autotools build process:
+
+```bash
 mkdir build
 cd build
 ../configure
 make
+
 # To install to system
 sudo make install
-# To copy binary elsewhere
+
+# Or to copy binary elsewhere
 cp src/trf DESTINATION
 ```
 
-If you are cloning the repository, replace the first two lines above with:
-
-```bash
-git clone https://github.com/Benson-Genomics-Lab/TRF.git
-cd TRF
-```
-
-Step by step:
-
-- Open a terminal window and change directory to the TRF directory created by a clone of this repository.
-- Create a directory named 'build': `mkdir build` and change directory to that
-- Type `../configure` in the terminal.
-- Type `make` in the terminal.
-- If you wish to install the binary, type `sudo make install` in the terminal. Otherwise, simply copy the binary from the `src` directory under `build`.
- 
-This will:
-
-- compile the code
-- place the executable version in the build/src directory.  
-
-The file will be called `trf` (`trf.exe` on Windows). For backwards compatibility with automated scripts exepcting TRF to follow a certain naming scheme, the installation will also create a symbolic link named `trf<version>.<operating system>.exe`.
+The file will be called `trf` (`trf.exe` on Windows). For backwards compatibility with automated scripts expecting TRF to follow a certain naming scheme, the installation will also create a symbolic link named `trf<version>.<operating system>.exe`.
 For example the file on a linux 64 bit operating system for version 4.10.0 will be called `trf4.10.0.linux64.exe`.
 
 ## Testing the Installation ##
-Run the executable on the included test file `test_seqs.fasta`.  (This assumes the executable has been named TRF.):
+Run the executable on the included test file `t/test_seqs.fasta`:
 
 ```bash
-trf test_seqs.fasta 2 5 7 80 10 50 2000 -l 10
+./trf t/test_seqs.fasta 2 5 7 80 10 50 2000 -l 10
 ```
 This should produce 9 files:
 ```bash
@@ -361,6 +367,12 @@ Tandem Repeats Finder finds repeats for period sizes in the range from 1 to 2000
 
 Some of these changes may be present in 4.09 and were undocumented, if
 they were caught during launch. They are officially present in 4.10.0.
+
+**Build improvements:**
+
+* **ARM Mac (Apple Silicon) support:** TRF now compiles and runs natively on ARM-based Macs (M1, M2, M3, etc.)
+* **Simplified build process:** New simple build script (`build.sh`) and Makefile (`Makefile.simple`) that require only gcc/clang - no autotools needed. See [BUILD.md](BUILD.md) for details.
+* **One-command compilation:** TRF can now be built with a single gcc command for easy integration into containers and build systems.
 
 Major:
 

@@ -131,7 +131,7 @@ int counterInSeq = 0;
 //#endif
 /* 02/05/16 Y. Hernandez */
 /* Since this is no longer a macro, use all lower case to avoid confusion. */
-unsigned int maxwraplength = 0;
+size_t maxwraplength = 0;
 
 /* Added by Yevgeniy Gelfand on Jan 27, 2010  */
 /* To have smaller sequences not send results */
@@ -200,7 +200,7 @@ int *Index;
 int *ACGTcount;
 
 unsigned char *Sequence;
-int            Length;
+size_t         Length;
 
 /* int S[MAXWRAPLENGTH+1][MAXPATTERNSIZE];*/
 int    Delta;   /* indel penalty */
@@ -223,10 +223,10 @@ int *Tag;    /* list of tags for linking active distances */
 int  Toptag; /* last tag in list */
 
 struct pairalign {
-    int   length;
-    int   score;
-    char *textprime, *textsecnd;
-    int * indexprime, *indexsecnd;
+    size_t length;
+    int    score;
+    char  *textprime, *textsecnd;
+    int   *indexprime, *indexsecnd;
 } AlignPair;
 
 struct cons_data {
@@ -247,8 +247,8 @@ struct cons_data {
 /*** new program started 11-29-95 **********/
 
 struct bestperiodlistelement {
-    int                           indexhigh;
-    int                           indexlow;
+    size_t                        indexhigh;
+    size_t                        indexlow;
     int                           best1;
     int                           best2;
     int                           best3;
@@ -258,14 +258,14 @@ struct bestperiodlistelement {
 } Bestperiodlist[1];
 
 struct distanceentry {
-    int location;
+    size_t location;
     int size;
 };
 
 struct distancelist {
     int k_run_sums_criteria, waiting_time_criteria, lo_d_range, hi_d_range;
     int numentries, nummatches;
-    int lowindex, highindex;
+    size_t lowindex, highindex;
     int linked;
     int linkdown, linkup;
     struct distanceentry *entry;
@@ -279,18 +279,18 @@ struct distancelist {
    alignment in the same region with the same distance */
 
 struct distanceseenarrayelement {
-    int index;
-    int end;
+    size_t index;
+    size_t end;
     int score;
 } * Distanceseenarray;
 
 struct distancelistelement {
-    int index;
+    size_t index;
     int distance;
     int changed_from_distance; /* use for test in
                                   search_for_distance_match_in_distanceseenlist
                                   3/10/05 */
-    int end;
+    size_t end;
     int score;
     int best_possible_score; /* number of copies X length X match weight */
     int accepted;
@@ -360,7 +360,7 @@ typedef struct {
     int          redundoff;
     int          ngs;
     int          use_stdin;
-    unsigned int maxwraplength;
+    size_t       maxwraplength;
 
     char  inputfilename[_MAX_PATH]; /* constant defined in stdlib */
     char  outputprefix[_MAX_PATH];
@@ -491,11 +491,11 @@ int print_flanking = 0;
 
 typedef struct {
     /* Changed to unsigned Feb 16, 2016 Yozen */
-    unsigned int length;
-    int          composition[26];
-    int          nucleotides;
-    char         name[MAXSEQNAMELEN];
-    char *       sequence;
+    size_t length;
+    int    composition[26];
+    int    nucleotides;
+    char   name[MAXSEQNAMELEN];
+    char  *sequence;
 
 } FASTASEQUENCE;
 
